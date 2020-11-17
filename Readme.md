@@ -1,7 +1,8 @@
 # Проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [OLGA AVRAMENKO](https://up.htmlacademy.ru/ecmascript/13/user/89110).
-* Наставник: `Неизвестно`.
+* Наставник: `Александр Мастеров`.
+
 
 ---
 
