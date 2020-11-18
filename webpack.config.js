@@ -6,5 +6,10 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
   },
-  devtool: 'source-map'
+  devtool: 'source-map',
+  devServer: {
+    contentBase: path.resolve(__dirname, 'public'),
+    publicPath: 'http://localhost:8080/',
+    watchContentBase: true,
+  }
 };
