@@ -1,43 +1,36 @@
 
-import {createEditFormTemplate} from "./view/edit-form.js";
-import {createTripInfoTemplate} from "./view/trip-info.js";
-import {createMenuTemplate} from "./view/menu.js";
-import {createFilterTemplate} from "./view/filter.js";
-import {createCardTemplate} from "./view/card.js";
-import {createNewPointTemplate} from "./view/new-point.js";
-import {createTripCostTemplate} from "./view/trip-cost.js";
-import {createSortTemplate} from "./view/sort.js";
+import {createCardsTemplate} from './view/cards-template.js';
+import {createSortTemplate} from './view/sort.js';
+import {createTripInfoTemplate} from './view/trip-info.js';
+import {createTripCostTemplate} from './view/trip-cost.js';
+import {createEditFormTemplate} from './view/edit-form.js';
+import {createCardTemplate} from './view/card.js';
+import {createFilterTemplate} from './view/filter.js';
+import {createMenuTemplate} from './view/menu.js';
+// import {createNewPointTemplate} from './view/new-point.js';
 
-
-const render = (container, template, place) => {
+const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
+const tripInfoElement = document.querySelector(`.page-header__logo`);
+render(tripInfoElement, createTripInfoTemplate(), `afterend`);
 
-const tripEventsElement = document.querySelector(`.trip-events`);
-render(tripEventsElement, createEditFormTemplate(), `beforeend`);
-render(tripEventsElement, createEditFormTemplate(), `beforeend`);
-render(tripEventsElement, createEditFormTemplate(), `beforeend`);
-
-const tripInfoElement = document.querySelector(`.trip-main__trip-info`);
-render(tripInfoElement, createTripInfoTemplate(), `afterbegin`);
-
-const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
-render(tripControlsElement, createFilterTemplate(), `beforeend`);
-
-const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
-render(tripControlsMenuElement, createMenuTemplate(), `afterend`);
-
-
-const tripNewPointElement = document.querySelector(`.trip-main__event-add-btn`);
-render(tripNewPointElement, createNewPointTemplate(), `beforeend`);
-
-const tripCardElement = document.querySelector(`.trip-events__item`);
-render(tripCardElement, createCardTemplate(), `beforeend`);
-
-
-const tripCostElement = document.querySelector(`.trip-info__cost`);
+const tripCostElement = document.querySelector(`.trip-main`);
 render(tripCostElement, createTripCostTemplate(), `beforeend`);
 
-const tripSortElement = document.querySelector(`.trip-events__trip-sort`);
-render(tripSortElement, createSortTemplate(), `beforeend`);
+
+const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
+render(tripControlsElement, createMenuTemplate(), `beforeend`);
+
+const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
+render(tripControlsMenuElement, createFilterTemplate(), `afterend`);
+
+
+const tripEventsElement = document.querySelector(`.trip-events`);
+render(tripEventsElement, createSortTemplate());
+render(tripEventsElement, createEditFormTemplate()); // не поняла нужна ли сейчас большая карточка или нет
+render(tripEventsElement, createCardsTemplate());
+
+const tripCardsElement = document.querySelector(`.trip-events__list`);
+render(tripCardsElement, createCardTemplate());
