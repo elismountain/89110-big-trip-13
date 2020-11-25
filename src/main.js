@@ -37,7 +37,7 @@ render(tripEventsElement, createCardsTemplate());
 const tripCardsElement = document.querySelector(`.trip-events__list`);
 
 new Array(CARDS_COUNT)
-  .fill(``)
+.fill(``)
   .forEach(
       () => render(tripCardsElement, createCardTemplate())
   );
