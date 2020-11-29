@@ -1,4 +1,3 @@
-
 export const createEditFormTemplate = () => {
   return (
     `<form class="event event--edit" action="#" method="post">

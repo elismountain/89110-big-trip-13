@@ -1,4 +1,3 @@
-
 import {createCardsTemplate} from './view/cards.js';
 import {createSortTemplate} from './view/sort.js';
 import {createTripInfoTemplate} from './view/trip-info.js';
@@ -8,9 +7,9 @@ import {createMenuTemplate} from './view/menu.js';
 import {createEditFormTemplate} from './view/edit-form.js';
 import {createCardTemplate} from './view/card.js';
 import {createNewPointTemplate} from './view/new-point.js';
+import {generateEvents} from './mocks/event.js';
 
 const CARDS_COUNT = 3;
-
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -35,9 +34,14 @@ render(tripEventsElement, createEditFormTemplate());
 render(tripEventsElement, createCardsTemplate());
 
 const tripCardsElement = document.querySelector(`.trip-events__list`);
+const events = generateEvents(CARDS_COUNT);
 
-new Array(CARDS_COUNT)
-.fill(``)
-  .forEach(
-      () => render(tripCardsElement, createCardTemplate())
-  );
+events.forEach(
+    (eventItem) => render(tripCardsElement, createCardTemplate(eventItem))
+);
+
+// new Array(CARDS_COUNT)
+// .fill(``)
+//   .forEach(
+//       () => render(tripCardsElement, createCardTemplate())
+//   );

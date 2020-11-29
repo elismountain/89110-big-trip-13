@@ -1,4 +1,4 @@
-import {makeCheckedArray} from "../util";
+import {makeCheckedArray} from "../mocks/random.js";
 
 const FILTERS = [
   `Everything`,

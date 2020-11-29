@@ -1,9 +1,9 @@
-import {TYPES_STAY} from "../mocks/event";
-import {calculateTimeDifference} from "../util";
-import {castTimeDateFormat} from "../util";
-import {events} from "../mocks/event";
+import {PLACES} from "../mocks/const.js";
+// import {TRANSPORTS} from "../mocks/const.js";
+import {calculateTimeDifference} from "../util.js";
+import {castTimeDateFormat} from "../util.js";
 
-const createOffersTemplate = (array) => {
+const createOfferTemplates = (array) => {
   return array.map(({name, cost}) => {
     return (
       `<li class="event__offer">
@@ -15,35 +15,35 @@ const createOffersTemplate = (array) => {
   }).join(`\n`);
 };
 
-export const createCardTemplate = (cardObject) => {
-  const {type, city, price, startTime, endTime, options} = cardObject;
+export const createCardTemplate = (card) => {
+  const {type, city, price, startTime, endTime, options} = card;
   const difference = calculateTimeDifference(startTime, endTime);
   const [days, hours, minutes] = difference;
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">MAR 18</time>
+        <time class="event__date" datetime="${startTime.toISOString()}">${castTimeDateFormat(startTime.getHours())}:${castTimeDateFormat(startTime.getMinutes())}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${TYPES_STAY.includes(type) ? `in` : `to`} ${city}</h3>
+        <h3 class="event__title">${type} ${PLACES.includes(type) ? `IN` : `TO`} ${city}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startTime}">${castTimeDateFormat(startTime.getHours())}:${castTimeDateFormat(startTime.getMinutes())}</time>
+            <time class="event__start-time" datetime="${startTime.toISOString()}">${castTimeDateFormat(startTime.getHours())}:${castTimeDateFormat(startTime.getMinutes())}</time>
             &mdash;
-            <time class="event__end-time" datetime="${endTime}">${castTimeDateFormat(endTime.getHours())}:${castTimeDateFormat(endTime.getMinutes())}</time>
+            <time class="event__end-time" datetime="${startTime.toISOString()}">${castTimeDateFormat(endTime.getHours())}:${castTimeDateFormat(endTime.getMinutes())}</time>
           </p>
           <p class="event__duration">${days === 0 ? `` : `${castTimeDateFormat(days)}D`} ${days + hours === 0 ? `` : `${castTimeDateFormat(hours)}H`} ${castTimeDateFormat(minutes)}M</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
 
           <li class="event__offer">
-            <span class="event__offer-title"> ${createOffersTemplate(options)}</span>
+            <span class="event__offer-title"> ${createOfferTemplates(options)}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>
@@ -61,5 +61,3 @@ export const createCardTemplate = (cardObject) => {
     </li>`
   );
 };
-
-export const eventsMarkup = events.slice(1).map(createCardTemplate);

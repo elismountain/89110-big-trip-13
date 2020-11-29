@@ -1,7 +1,7 @@
-import {generateFilters} from "../mocks/filter";
+import {generateFilters} from "../mocks/filter.js";
 
-const generateFilterMarkup = generateFilters().map((el) => {
-  let {title, isChecked} = el;
+const generateFilterMarkup = generateFilters().map((element) => {
+  const {title, isChecked} = element;
   return (
     `<div class="trip-filters__filter">
        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" ${isChecked ? `checked` : ``}>
