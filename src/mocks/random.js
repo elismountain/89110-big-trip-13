@@ -6,7 +6,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
 };
 
 export const getRandomArrayElement = (arr) => {
-  const element = getRandomInteger(0, arr.length);
+  const element = getRandomInteger(0, arr.length - 1);
   return arr[element];
 };
 

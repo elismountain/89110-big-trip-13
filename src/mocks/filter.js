@@ -9,10 +9,10 @@ const FILTERS = [
 const checkedArray = makeCheckedArray(FILTERS);
 
 export const generateFilters = () => {
-  return FILTERS.map((name, number) => {
+  return FILTERS.map((name, filter) => {
     return {
       title: name,
-      isChecked: checkedArray[number]
+      isChecked: checkedArray[filter]
     };
   });
 };

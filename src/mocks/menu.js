@@ -8,10 +8,10 @@ const MENU_ITEMS = [
 const checkedMenuArray = makeCheckedArray(MENU_ITEMS);
 
 export const generateMenuItems = () => {
-  return MENU_ITEMS.map((name, number) => {
+  return MENU_ITEMS.map((name, item) => {
     return {
       title: name,
-      isChecked: checkedMenuArray[number]
+      isChecked: checkedMenuArray[item]
     };
   });
 };
