@@ -1,7 +1,10 @@
 import {PLACES} from "../mocks/const.js";
-// import {TRANSPORTS} from "../mocks/const.js";
-import {calculateTimeDifference} from "../util.js";
 import {castTimeDateFormat} from "../util.js";
+
+import dayjs from 'dayjs';
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
+export const getDuration = (time) => dayjs.duration(time).$d;
 
 const createOfferTemplates = (array) => {
   return array.map(({name, cost}) => {
@@ -17,8 +20,7 @@ const createOfferTemplates = (array) => {
 
 export const createCardTemplate = (card) => {
   const {type, city, price, startTime, endTime, options} = card;
-  const difference = calculateTimeDifference(startTime, endTime);
-  const [days, hours, minutes] = difference;
+  const {days, hours, minutes} = getDuration(endTime - startTime);
   return (
     `<li class="trip-events__item">
       <div class="event">

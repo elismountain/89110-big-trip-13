@@ -20,7 +20,7 @@ export const getRandomArrayElements = (arr, max) => {
 
 export const makeCheckedArray = (arr) => {
   let checkedArray = [];
-  let num = getRandomInteger(0, arr.length);
+  let num = getRandomInteger(0, arr.length - 1);
   arr.forEach((el, number) => {
     if (number === num) {
       checkedArray.push(true);
