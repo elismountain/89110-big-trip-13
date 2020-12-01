@@ -1,17 +1,18 @@
 import {generateFilters} from "../mocks/filter.js";
 
-const generateFilterMarkup = generateFilters().map((element) => {
-  const {title, isChecked} = element;
+const generateFilterMarkup = generateFilters().map((filter) => {
+  const {title, isChecked} = filter;
+  const id = title.toLowerCase();
   return (
     `<div class="trip-filters__filter">
-       <input id="${title.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${title.toLowerCase()}" ${isChecked ? `checked` : ``}>
-       <label class="trip-filters__filter-label" for="filter-${title.toLowerCase()}">${title}</label>
+       <input id="${id}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${id}" ${isChecked ? `checked` : ``}>
+       <label class="trip-filters__filter-label" for="filter-${id}">${title}</label>
      </div>`
   );
 }).join(`\n`);
 
 
-export const createFilterTemplate = () => { // Фильтры
+export const createFilterTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
               ${generateFilterMarkup}

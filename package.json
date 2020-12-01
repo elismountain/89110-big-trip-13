@@ -20,6 +20,6 @@
     "node": "10"
   },
   "dependencies": {
-    "dayjs": "^1.9.6"
+    "dayjs": "1.9.6"
   }
 }

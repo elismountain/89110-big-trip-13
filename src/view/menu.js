@@ -1,7 +1,7 @@
 import {generateMenuItems} from "../mocks/menu.js";
 
-const generateMenuMarkup = generateMenuItems().map((element) => {
-  const {title, isChecked} = element;
+const generateMenuMarkup = generateMenuItems().map((menu) => {
+  const {title, isChecked} = menu;
   return (
     `<a class="trip-tabs__btn ${isChecked ? `trip-tabs__btn--active` : ``}" href="#">${title}</a>`
   );

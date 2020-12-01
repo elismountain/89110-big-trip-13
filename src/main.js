@@ -8,6 +8,8 @@ import {createEditFormTemplate} from './view/edit-form.js';
 import {createCardTemplate} from './view/card.js';
 import {createNewPointTemplate} from './view/new-point.js';
 import {generateEvents} from './mocks/event.js';
+import {generateMenuItems} from './mocks/menu.js';
+import {generateFilters} from './mocks/filter.js';
 
 const CARDS_COUNT = 3;
 const render = (container, template, place = `beforeend`) => {
@@ -20,12 +22,13 @@ render(tripInfoElement, createTripInfoTemplate(), `afterbegin`);
 const tripCostElement = document.querySelector(`.trip-info__main`);
 render(tripCostElement, createTripCostTemplate(), `afterend`);
 
-
 const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
 const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
+const menuTabs = generateMenuItems();
+const filterTabs = generateFilters();
 
-render(tripControlsElement, createFilterTemplate());
-render(tripControlsMenuElement, createMenuTemplate(), `afterend`);
+render(tripControlsElement, createFilterTemplate(filterTabs));
+render(tripControlsMenuElement, createMenuTemplate(menuTabs), `afterend`);
 render(tripControlsElement, createNewPointTemplate(), `afterend`);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
@@ -35,6 +38,7 @@ render(tripEventsElement, createCardsTemplate());
 
 const tripCardsElement = document.querySelector(`.trip-events__list`);
 const events = generateEvents(CARDS_COUNT);
+
 
 events.forEach(
     (eventItem) => render(tripCardsElement, createCardTemplate(eventItem))

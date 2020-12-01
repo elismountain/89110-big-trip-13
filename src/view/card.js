@@ -1,13 +1,10 @@
-import {PLACES} from "../mocks/const.js";
-import {castTimeDateFormat} from "../util.js";
+import {PLACES} from "../const.js";
+import {castTimeDateFormat} from "../utils/date.js";
+import {getDuration} from "../utils/date.js";
+import {humanizeDate} from "../utils/date.js";
 
-import dayjs from 'dayjs';
-import duration from "dayjs/plugin/duration";
-dayjs.extend(duration);
-export const getDuration = (time) => dayjs.duration(time).$d;
-
-const createOfferTemplates = (array) => {
-  return array.map(({name, cost}) => {
+const createOfferTemplates = (arrays) => {
+  return arrays.map(({name, cost}) => {
     return (
       `<li class="event__offer">
         <span class="event__offer-title">${name}</span>
@@ -21,14 +18,16 @@ const createOfferTemplates = (array) => {
 export const createCardTemplate = (card) => {
   const {type, city, price, startTime, endTime, options} = card;
   const {days, hours, minutes} = getDuration(endTime - startTime);
+  const date = humanizeDate();
+
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${startTime.toISOString()}">${castTimeDateFormat(startTime.getHours())}:${castTimeDateFormat(startTime.getMinutes())}</time>
+        <time class="event__date" datetime="${date}">${date}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${PLACES.includes(type) ? `IN` : `TO`} ${city}</h3>
+        <h3 class="event__title">${type} ${PLACES.includes(type) ? `in` : `to`} ${city}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
