@@ -39,7 +39,6 @@ render(tripEventsElement, createCardsTemplate());
 const tripCardsElement = document.querySelector(`.trip-events__list`);
 const events = generateEvents(CARDS_COUNT);
 
-
 events.forEach(
     (eventItem) => render(tripCardsElement, createCardTemplate(eventItem))
 );
