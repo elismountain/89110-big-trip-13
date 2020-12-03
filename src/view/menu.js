@@ -1,15 +1,14 @@
-import {generateMenuItems} from "../mocks/menu.js";
 import {createElement} from "../utils/render.js";
 
-const generateMenuMarkup = generateMenuItems().map((menu) => {
-  const {title, isChecked} = menu;
-  return (
-    `<a class="trip-tabs__btn ${isChecked ? `trip-tabs__btn--active` : ``}" href="#">${title}</a>`
-  );
-}).join(``);
+export const createMenuTemplate = (menuTabs) => {
 
+  const generateMenuMarkup = menuTabs.map((menu) => {
+    const {title, isChecked} = menu;
+    return (
+      `<a class="trip-tabs__btn ${isChecked ? `trip-tabs__btn--active` : ``}" href="#">${title}</a>`
+    );
+  }).join(``);
 
-export const createMenuTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
         ${generateMenuMarkup}

@@ -1,11 +1,9 @@
-// import SiteMenu from "./view/menu.js";
-
+import {createTripInfoTemplate} from './view/trip-info.js';
+import {createMenuTemplate} from './view/menu.js';
 import {createCardsTemplate} from './view/cards.js';
 import {createSortTemplate} from './view/sort.js';
-import {createTripInfoTemplate} from './view/trip-info.js';
 import {createTripCostTemplate} from './view/trip-cost.js';
 import {createFilterTemplate} from './view/filter.js';
-import {createMenuTemplate} from './view/menu.js'; // удалить
 import {createEditFormTemplate} from './view/edit-form.js';
 import {createCardTemplate} from './view/card.js';
 import {createNewPointTemplate} from './view/new-point.js';
@@ -25,7 +23,7 @@ renderTemplate(tripCostElement, createTripCostTemplate(), `afterend`);
 const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
 const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
 
-const menuTabs = generateMenuItems(); // только массив с данными (объекты) меню
+const menuTabs = generateMenuItems();
 renderTemplate(tripControlsMenuElement, createMenuTemplate(menuTabs), `afterend`);
 
 const filterTabs = generateFilters();
