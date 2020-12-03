@@ -66,7 +66,7 @@ export const generateEvent = () => {
     startTime: new Date(randomDate),
     endTime: new Date(getRandomNextDate(randomDate)),
     options: generateAddOptions(),
-    isFavorite: getRandomInteger(0, 1)
+    isFavorite: getRandomInteger(0, 1) === 1 // строгое сравнение
   };
 };
 

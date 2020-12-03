@@ -2,19 +2,26 @@ import dayjs from 'dayjs';
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-export const getDuration = (time) => dayjs.duration(time).$d;
+const getDuration = (time) => dayjs.duration(time).$d;
 
-export const castTimeDateFormat = (value) => String(value).padStart(2, `0`);
+const castTimeDateFormat = (value) => String(value).padStart(2, `0`);
 
-export const formatDateTime = (date) => {
-  const day = castTimeDateFormat(date.getDate());
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const hours = castTimeDateFormat(date.getHours());
-  const minutes = castTimeDateFormat(date.getMinutes());
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+export const formatDateTime = (date) => (date) ? dayjs(date) : dayjs();
+
+export const Date = (startTime) => {
+  return dayjs(startTime).format(`D MMM`);
 };
 
-export const humanizeDate = (currentDate) => {
-  return dayjs(currentDate).format(`D MMM`);
+export const formatDuration = (time) => {
+  const {days, hours, minutes} = getDuration(time);
+  let result = ``;
+  if (days !== 0) {
+    result = castTimeDateFormat(days) + `D ` + castTimeDateFormat(hours) + `H ` + castTimeDateFormat(minutes) + `M`;
+  } else if (hours !== 0) {
+    result = castTimeDateFormat(hours) + `H ` + castTimeDateFormat(minutes) + `M`;
+  } else {
+    result = castTimeDateFormat(minutes) + `M`;
+  }
+
+  return result;
 };

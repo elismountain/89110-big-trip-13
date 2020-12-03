@@ -1,44 +1,46 @@
+// import SiteMenu from "./view/menu.js";
+
 import {createCardsTemplate} from './view/cards.js';
 import {createSortTemplate} from './view/sort.js';
 import {createTripInfoTemplate} from './view/trip-info.js';
 import {createTripCostTemplate} from './view/trip-cost.js';
 import {createFilterTemplate} from './view/filter.js';
-import {createMenuTemplate} from './view/menu.js';
+import {createMenuTemplate} from './view/menu.js'; // удалить
 import {createEditFormTemplate} from './view/edit-form.js';
 import {createCardTemplate} from './view/card.js';
 import {createNewPointTemplate} from './view/new-point.js';
 import {generateEvents} from './mocks/event.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
+import {renderTemplate} from "./utils/render.js";
 
 const CARDS_COUNT = 3;
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
+const events = generateEvents(CARDS_COUNT);
 
 const tripInfoElement = document.querySelector(`.trip-main`);
-render(tripInfoElement, createTripInfoTemplate(), `afterbegin`);
-
+renderTemplate(tripInfoElement, createTripInfoTemplate(events[0].startTime, events[events.length - 1].endTime), `afterbegin`);
 const tripCostElement = document.querySelector(`.trip-info__main`);
-render(tripCostElement, createTripCostTemplate(), `afterend`);
+renderTemplate(tripCostElement, createTripCostTemplate(), `afterend`);
 
 const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
 const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
-const menuTabs = generateMenuItems();
-const filterTabs = generateFilters();
 
-render(tripControlsElement, createFilterTemplate(filterTabs));
-render(tripControlsMenuElement, createMenuTemplate(menuTabs), `afterend`);
-render(tripControlsElement, createNewPointTemplate(), `afterend`);
+const menuTabs = generateMenuItems(); // только массив с данными (объекты) меню
+renderTemplate(tripControlsMenuElement, createMenuTemplate(menuTabs), `afterend`);
+
+const filterTabs = generateFilters();
+renderTemplate(tripControlsElement, createFilterTemplate(filterTabs));
+
+renderTemplate(tripControlsElement, createNewPointTemplate(), `afterend`);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
-render(tripEventsElement, createSortTemplate());
-render(tripEventsElement, createEditFormTemplate());
-render(tripEventsElement, createCardsTemplate());
+renderTemplate(tripEventsElement, createSortTemplate());
+renderTemplate(tripEventsElement, createEditFormTemplate(events[0]));
+renderTemplate(tripEventsElement, createCardsTemplate());
 
 const tripCardsElement = document.querySelector(`.trip-events__list`);
-const events = generateEvents(CARDS_COUNT);
+
 
 events.forEach(
-    (eventItem) => render(tripCardsElement, createCardTemplate(eventItem))
+    (eventItem) => renderTemplate(tripCardsElement, createCardTemplate(eventItem))
 );

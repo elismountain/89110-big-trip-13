@@ -1,10 +1,13 @@
 import {PLACES} from "../const.js";
-import {castTimeDateFormat} from "../utils/date.js";
-import {getDuration} from "../utils/date.js";
-import {humanizeDate} from "../utils/date.js";
 
-const createOfferTemplates = (arrays) => {
-  return arrays.map(({name, cost}) => {
+import {
+  formatDateTime,
+  formatDuration
+} from "../utils/date.js";
+
+
+const createOfferTemplates = (offers) => {
+  return offers.map(({name, cost}) => {
     return (
       `<li class="event__offer">
         <span class="event__offer-title">${name}</span>
@@ -12,30 +15,28 @@ const createOfferTemplates = (arrays) => {
         &euro;&nbsp;<span class="event__offer-price">${cost}</span>
        </li>`
     );
-  }).join(`\n`);
+  }).join(``);
 };
 
 export const createCardTemplate = (card) => {
   const {type, city, price, startTime, endTime, options, isFavorite} = card;
-  const {days, hours, minutes} = getDuration(endTime - startTime);
-  const date = humanizeDate();
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${date}">${date}</time>
+        <time class="event__date" datetime="${formatDateTime(startTime).format(`YYYY-MM-DD`)}">${formatDateTime(startTime).format(`MMM D`)}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${card.type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${PLACES.includes(type) ? `in` : `to`} ${city}</h3>
+        <h3 class="event__title">${card.type} ${PLACES.includes(type) ? `in` : `to`} ${city}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startTime.toISOString()}">${castTimeDateFormat(startTime.getHours())}:${castTimeDateFormat(startTime.getMinutes())}</time>
+            <time class="event__start-time" datetime="${formatDateTime(startTime).format(`YYYY-MM-DDTHH:mm:ss`)}">${formatDateTime(startTime).format(`HH:mm`)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${startTime.toISOString()}">${castTimeDateFormat(endTime.getHours())}:${castTimeDateFormat(endTime.getMinutes())}</time>
+            <time class="event__end-time" datetime="${formatDateTime(endTime).format(`YYYY-MM-DDTHH:mm:ss`)}">${formatDateTime(endTime).format(`HH:mm`)}</time>
           </p>
-          <p class="event__duration">${days === 0 ? `` : `${castTimeDateFormat(days)}D`} ${days + hours === 0 ? `` : `${castTimeDateFormat(hours)}H`} ${castTimeDateFormat(minutes)}M</p>
+          <p class="event__duration">${formatDuration(endTime - startTime)}</p>
         </div>
 
         <p class="event__price">

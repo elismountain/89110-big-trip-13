@@ -9,7 +9,7 @@ const generateFilterMarkup = generateFilters().map((filter) => {
        <label class="trip-filters__filter-label" for="filter-${id}">${title}</label>
      </div>`
   );
-}).join(`\n`);
+}).join(``);
 
 
 export const createFilterTemplate = () => {
