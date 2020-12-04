@@ -7,13 +7,15 @@ import {createFilterTemplate} from './view/filter.js';
 import {createEditFormTemplate} from './view/edit-form.js';
 import {createCardTemplate} from './view/card.js';
 import {createNewPointTemplate} from './view/new-point.js';
-import {generateEvents} from './mocks/event.js';
+import {generateEventsArrey} from './mocks/event.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
 import {renderTemplate} from "./utils/render.js";
 
 const CARDS_COUNT = 3;
-const events = generateEvents(CARDS_COUNT);
+const events = generateEventsArrey(CARDS_COUNT);
+// const destinations = generateDestinations();
+// const offers = generateOffers();
 
 const tripInfoElement = document.querySelector(`.trip-main`);
 renderTemplate(tripInfoElement, createTripInfoTemplate(events[0].startTime, events[events.length - 1].endTime), `afterbegin`);
@@ -28,8 +30,8 @@ renderTemplate(tripControlsMenuElement, createMenuTemplate(menuTabs), `afterend`
 
 const filterTabs = generateFilters();
 renderTemplate(tripControlsElement, createFilterTemplate(filterTabs));
-
-renderTemplate(tripControlsElement, createNewPointTemplate(), `afterend`);
+renderTemplate(tripControlsElement, createNewPointTemplate(events[0]), `afterend`);
+// renderTemplate(tripControlsElement, createNewPointTemplate(events[0], destinations, offers), `afterend`);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 renderTemplate(tripEventsElement, createSortTemplate());

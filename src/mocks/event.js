@@ -1,17 +1,15 @@
-import {getRandomArrayElements} from "../mocks/random.js";
-import {getRandomArrayElement} from "../mocks/random.js";
-import {getRandomInteger} from "../mocks/random.js";
-import {TYPES} from "../const.js";
-import {CITIES} from "../mocks/const.js";
+import {getRandomArrayElements, getRandomArrayElement, getRandomInteger} from "../mocks/random.js";
+import {formatDateTime} from "../utils/date.js";
+import {TYPES, CITIES, DESCRIPTION, OFFER_TYPES, OTHER_OPTIONS} from "../mocks/const.js";
 
-const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 const PHOTOS_MAX_COUNT = 10;
-const PRICE_MAX = 100;
-const PRICE_MIN = 1;
+const PRICE_MAX = 500;
+const PRICE_MIN = 5;
 const EVENTS_COUNT = 4;
 
 // от одного до 5 предложений. до точки
 export const DESCRIPTION_ARRAY = DESCRIPTION.split(`. `);
+
 export const generateDescription = () => {
   return getRandomArrayElements(DESCRIPTION_ARRAY, 3);
 };
@@ -27,6 +25,9 @@ export const generatePhotosArray = () => {
   return photos;
 };
 
+const generateId = () => {
+  return Date.now() + parseInt(Math.random() * 10000, 10);
+};
 
 export const OFFERS = [
   {name: `Add luggage`, type: `luggage`, cost: 10},
@@ -60,20 +61,31 @@ export const generateEvent = () => {
   return {
     type: getRandomArrayElement(TYPES),
     city: getRandomArrayElement(CITIES),
-    photos: generatePhotosArray(),
-    description: generateDescription(),
-    price: getRandomInteger(PRICE_MIN, PRICE_MAX),
+
+    offers: {
+      offerType: OFFER_TYPES[getRandomInteger(OFFER_TYPES.length - 1)],
+      title: OTHER_OPTIONS[getRandomInteger(OTHER_OPTIONS.length - 1)],
+      price: getRandomInteger(PRICE_MIN, PRICE_MAX),
+      checked: Boolean(getRandomInteger())
+    },
+    destination: {
+      description: generateDescription(),
+      photos: generatePhotosArray()
+    },
     startTime: new Date(randomDate),
     endTime: new Date(getRandomNextDate(randomDate)),
     options: generateAddOptions(),
-    isFavorite: getRandomInteger(0, 1) === 1
+    isFavorite: getRandomInteger(0, 1) === 1,
+    id: generateId(),
+    mainPrice: getRandomInteger(500, 5000),
+    date: formatDateTime()
   };
 };
 
-export const generateEvents = (count) => {
+export const generateEventsArrey = (count) => {
   return new Array(count)
     .fill(``)
     .map(generateEvent);
 };
 
-export const events = generateEvents(EVENTS_COUNT);
+export const events = generateEventsArrey(EVENTS_COUNT);

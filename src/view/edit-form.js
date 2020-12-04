@@ -1,3 +1,6 @@
+// import {createElement} from "../utils/render.js";
+// import {formatDateTime} from "../utils/date.js";
+
 export const createEditFormTemplate = () => {
   return (
     `<form class="event event--edit" action="#" method="post">

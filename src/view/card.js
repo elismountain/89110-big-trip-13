@@ -1,4 +1,4 @@
-import {PLACES} from "../const.js";
+import {PLACES} from "../mocks/const.js";
 
 import {
   formatDateTime,
