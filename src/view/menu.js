@@ -1,10 +1,39 @@
-// menu `stats.html`
+import {createElement} from "../utils/render.js";
 
-export const createMenuTemplate = () => {
+export const createMenuTemplate = (menuTabs) => {
+
+  const generateMenuMarkup = menuTabs.map((menu) => {
+    const {title, isChecked} = menu;
+    return (
+      `<a class="trip-tabs__btn ${isChecked ? `trip-tabs__btn--active` : ``}" href="#">${title}</a>`
+    );
+  }).join(``);
+
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
-        <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-        <a class="trip-tabs__btn" href="#">Stats</a>
-      </nav>`
+        ${generateMenuMarkup}
+     </nav>`
   );
 };
+
+export default class SiteMenu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMenuTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

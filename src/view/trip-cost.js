@@ -1,5 +1,3 @@
-// trip info
-
 export const createTripCostTemplate = () => {
   return (
     `<p class="trip-info__cost">
