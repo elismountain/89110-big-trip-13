@@ -2,6 +2,10 @@ import {
   formatDateTime
 } from "../utils/date.js";
 
+import {
+  createElement
+} from "../utils/render.js";
+
 export const createTripInfoTemplate = (startTime, endTime) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -13,3 +17,27 @@ export const createTripInfoTemplate = (startTime, endTime) => {
     </section>`
   );
 };
+
+
+export default class TripInfo {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,3 +1,5 @@
+import {createElement} from "../utils/render.js";
+
 export const createFilterTemplate = (filterTabs) => {
   const generateFilterMarkup = filterTabs.map((filter) => {
     const {title, isChecked} = filter;
@@ -17,3 +19,26 @@ export const createFilterTemplate = (filterTabs) => {
             </form>`
   );
 };
+
+export default class SiteFilter {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createFilterTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

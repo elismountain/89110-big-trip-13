@@ -3,6 +3,10 @@ import {
   formatDuration
 } from "../utils/date.js";
 
+import {
+  createElement
+} from "../utils/render.js";
+
 
 const createOfferTemplates = (offers) => {
   return offers.map((offer) => {
@@ -56,3 +60,27 @@ export const createCardTemplate = (waypoint, cities) => {
     </li>`
   );
 };
+
+
+export default class CreateCard {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createCardTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
