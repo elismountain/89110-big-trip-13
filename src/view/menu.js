@@ -1,6 +1,6 @@
 import {createElement} from "../utils/render.js";
 
-export const createMenuTemplate = (menuTabs) => {
+const createMenuTemplate = (menuTabs) => {
 
   const generateMenuMarkup = menuTabs.map((menu) => {
     const {title, isChecked} = menu;

@@ -20,7 +20,7 @@ const createOfferTemplates = (offers) => {
   }).join(``);
 };
 
-export const createCardTemplate = (waypoint, cities) => {
+const createCardTemplate = (waypoint, cities) => {
   return (
     `<li class="trip-events__item">
       <div class="event">

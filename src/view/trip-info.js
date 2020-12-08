@@ -6,7 +6,7 @@ import {
   createElement
 } from "../utils/render.js";
 
-export const createTripInfoTemplate = (startTime, endTime) => {
+const createTripInfoTemplate = (startTime, endTime) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">

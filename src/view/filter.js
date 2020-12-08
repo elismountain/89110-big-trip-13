@@ -1,6 +1,6 @@
 import {createElement} from "../utils/render.js";
 
-export const createFilterTemplate = (filterTabs) => {
+const createFilterTemplate = (filterTabs) => {
   const generateFilterMarkup = filterTabs.map((filter) => {
     const {title, isChecked} = filter;
     const id = title.toLowerCase();

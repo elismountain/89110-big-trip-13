@@ -41,8 +41,7 @@ const getOffersByWaypointType = (offers, waypointType) => {
   return [];
 };
 
-
-export const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) => {
+const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) => {
   const destinationsTemplate = createOptionsTemplate(destinations);
   const waypointTypeTemplate = createWaypointTypeTemplate(waypointTypes);
   const offerSelectorTemplate = createOfferSelectorTemplate(getOffersByWaypointType(offers, waypoint.type));

@@ -2,7 +2,7 @@ import {
   createElement
 } from "../utils/render.js";
 
-export const createCardsTemplate = () => {
+const createCardsTemplate = () => {
   return (
     `<ul class="trip-events__list"></ul>`
   );
