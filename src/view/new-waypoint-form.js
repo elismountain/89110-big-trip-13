@@ -7,14 +7,14 @@ const createNewWaypointTemplate = () => {
 };
 
 
-export default class WaypointButton {
-  constructor(task) {
+export default class NewWaypoint {
+  constructor(waypoints) {
     this._element = null;
-    this._task = task;
+    this._waypoints = waypoints;
   }
 
   getTemplate() {
-    return createNewWaypointTemplate(this._task);
+    return createNewWaypointTemplate(this._waypoints);
   }
 
   getElement() {

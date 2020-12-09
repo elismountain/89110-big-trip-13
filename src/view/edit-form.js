@@ -12,8 +12,8 @@ const createWaypointTypeTemplate = (elements) => {
   return elements
           .map((waypointType) => {
             return `<div class="event__type-item">
-              <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">${waypointType}</label>
+              <input id="event-type-${waypointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" checked>
+              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-taxi-1">${waypointType}</label>
             </div>`;
           }).join(``);
 };
@@ -108,14 +108,17 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
 };
 
 
-export default class EditForm {
-  constructor(task) {
+export default class Form {
+  constructor(waypoint, destinations, waypointTypes, offers) {
     this._element = null;
-    this._task = task;
+    this._waypoint = waypoint;
+    this._destinations = destinations;
+    this._waypointTypes = waypointTypes;
+    this._offers = offers;
   }
 
   getTemplate() {
-    return createEditFormTemplate(this._task);
+    return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
   }
 
   getElement() {

@@ -2,7 +2,7 @@ import {createElement} from "../utils/render.js";
 
 const createMenuTemplate = (menuTabs) => {
 
-  const generateMenuMarkup = menuTabs.map((menu) => {
+  const menuMarkup = menuTabs.map((menu) => {
     const {title, isChecked} = menu;
     return (
       `<a class="trip-tabs__btn ${isChecked ? `trip-tabs__btn--active` : ``}" href="#">${title}</a>`
@@ -11,18 +11,19 @@ const createMenuTemplate = (menuTabs) => {
 
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
-        ${generateMenuMarkup}
+        ${menuMarkup}
      </nav>`
   );
 };
 
-export default class SiteMenu {
-  constructor() {
+export default class Menu {
+  constructor(menuTabs) {
     this._element = null;
+    this._menuTabs = menuTabs;
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    return createMenuTemplate(this._menuTabs);
   }
 
   getElement() {

@@ -9,14 +9,13 @@ const createCardsTemplate = () => {
 };
 
 
-export default class CreateCardsList {
-  constructor(task) {
+export default class Cards {
+  constructor() {
     this._element = null;
-    this._task = task;
   }
 
   getTemplate() {
-    return createCardsTemplate(this._task);
+    return createCardsTemplate();
   }
 
   getElement() {

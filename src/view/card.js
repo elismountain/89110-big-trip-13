@@ -20,6 +20,8 @@ const createOfferTemplates = (offers) => {
   }).join(``);
 };
 
+// 31   <h3 class="event__title">${waypoint.type} ${cities.include(waypoint.destination.name) ? `in` : `to`} ${waypoint.destination.name}</h3>
+
 const createCardTemplate = (waypoint, cities) => {
   return (
     `<li class="trip-events__item">
@@ -28,7 +30,7 @@ const createCardTemplate = (waypoint, cities) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${waypoint.type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${waypoint.type} ${cities.includes(waypoint.destination.name) ? `in` : `to`} ${waypoint.destination.name}</h3>
+        <h3 class="event__title">${waypoint.type} ${waypoint.destination.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -62,14 +64,14 @@ const createCardTemplate = (waypoint, cities) => {
 };
 
 
-export default class CreateCard {
-  constructor(task) {
+export default class Card {
+  constructor(waypoint) {
     this._element = null;
-    this._task = task;
+    this._waypoint = waypoint;
   }
 
   getTemplate() {
-    return createCardTemplate(this._task);
+    return createCardTemplate(this._waypoint);
   }
 
   getElement() {

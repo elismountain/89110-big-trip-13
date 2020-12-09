@@ -1,7 +1,7 @@
 import {createElement} from "../utils/render.js";
 
 const createFilterTemplate = (filterTabs) => {
-  const generateFilterMarkup = filterTabs.map((filter) => {
+  const filterMarkup = filterTabs.map((filter) => {
     const {title, isChecked} = filter;
     const id = title.toLowerCase();
     return (
@@ -14,20 +14,20 @@ const createFilterTemplate = (filterTabs) => {
 
   return (
     `<form class="trip-filters" action="#" method="get">
-              ${generateFilterMarkup}
+              ${filterMarkup}
               <button class="visually-hidden" type="submit">Accept filter</button>
             </form>`
   );
 };
 
-export default class SiteFilter {
-  constructor(task) {
+export default class Filter {
+  constructor(filterTabs) {
     this._element = null;
-    this._task = task;
+    this._filterTabs = filterTabs;
   }
 
   getTemplate() {
-    return createFilterTemplate(this._task);
+    return createFilterTemplate(this._filterTabs);
   }
 
   getElement() {
