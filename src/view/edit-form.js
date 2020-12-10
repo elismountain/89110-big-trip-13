@@ -1,8 +1,8 @@
 import {formatDateTime} from "../utils/date.js";
 import {createElement} from "../utils/render.js";
 
-const createOptionsTemplate = (local) => {
-  return local
+const createOptionsTemplate = (destinations) => {
+  return destinations
     .map((item) => {
       return `<option value="${item}"></option>`;
     }).join(``);
@@ -13,7 +13,7 @@ const createWaypointTypeTemplate = (elements) => {
           .map((waypointType) => {
             return `<div class="event__type-item">
               <input id="event-type-${waypointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" checked>
-              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-taxi-1">${waypointType}</label>
+              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${waypointType}</label>
             </div>`;
           }).join(``);
 };

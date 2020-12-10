@@ -18,8 +18,7 @@ export const render = (container, element, place = RenderPosition.BEFOREEND) => 
   }
 };
 
-//
-// const renderTemplate = (container, element, place) => {
+// const renderTemplate = (container, element, place = RenderPosition.BEFOREEND ) => {
 //   container.insertAdjacentHTML(place, element);
 // };
 
