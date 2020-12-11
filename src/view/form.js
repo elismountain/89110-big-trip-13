@@ -4,15 +4,15 @@ import {createElement} from "../utils/render.js";
 const createOptionsTemplate = (destinations) => {
   return destinations
     .map((item) => {
-      return `<option value="${item}"></option>`;
+      return `<option value="${item.name}"></option>`;
     }).join(``);
 };
 
-const createWaypointTypeTemplate = (types) => {
+const createWaypointTypeTemplate = (types, selectedType) => {
   return types
           .map((waypointType, index) => {
             return `<div class="event__type-item">
-              <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === types ? `checked` : ``}>
+              <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === selectedType ? `checked` : ``}>
               <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${waypointType}</label>
             </div>`;
           }).join(``);
@@ -32,20 +32,39 @@ const createOfferSelectorTemplate = (offers) => {
           }).join(``);
 };
 
+const createDestinationPhotosTemplate = (waypoint) => {
+  return waypoint.destination.photos.map((item) => {
+    return `<img class="event__photo" src="${item}" alt="Event photo">`;
+  }).join(``);
+};
+
+const createDestinationsTemplate = (waypoint) => {
+  return (`<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${waypoint.destination.description}</p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${createDestinationPhotosTemplate(waypoint)}
+        </div>
+      </div>
+    </section>`
+  );
+};
+
 
 const getOffersByWaypointType = (offers, waypointType) => {
-  for (let i = 0; i < offers.length; i++) {
-    if (offers[i].type === waypointType) {
-      return offers[i].offers;
-    }
-  }
-  return [];
+  const result = offers.find((item) => {
+    return item.type === waypointType;
+  });
+
+  return result === undefined ? [] : result.offers;
 };
 
 
 const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) => {
   const destinationsTemplate = createOptionsTemplate(destinations);
-  const waypointTypeTemplate = createWaypointTypeTemplate(waypointTypes);
+  const waypointTypeTemplate = createWaypointTypeTemplate(waypointTypes, waypoint.type);
   const offerSelectorTemplate = createOfferSelectorTemplate(getOffersByWaypointType(offers, waypoint.type));
 
   return `<ol class="trip-events__item">
@@ -104,6 +123,7 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
           ${offerSelectorTemplate}
         </div>
       </section>
+      ${createDestinationsTemplate(waypoint)}
     </section>
   </form>
 </ol>`;

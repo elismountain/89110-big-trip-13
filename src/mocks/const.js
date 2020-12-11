@@ -25,7 +25,7 @@ export const DESTINATIONS = [
   {name: `Belfast`,
     description: `The capital of Northen Ireland `,
     photos: [
-      ``
+      `http://picsum.photos/300/150?r=${Math.random()}`
     ]
   },
 ];
@@ -59,21 +59,3 @@ export const OFFERS = [
     offers: []
   }
 ];
-
-//
-// export const OFFERS: [
-//   {type: OFFER_TYPES[0],
-//     title: OTHER_OPTIONS[getRandomInteger(OTHER_OPTIONS.length - 1)],
-//     price: getRandomInteger(PRICE_MIN, PRICE_MAX),
-//   },
-//
-//   { type: OFFER_TYPES[1],
-//     title: OTHER_OPTIONS[getRandomInteger(OTHER_OPTIONS.length - 1)],
-//     price: getRandomInteger(PRICE_MIN, PRICE_MAX),
-//   },
-//
-//   {type: OFFER_TYPES[2],
-//     title: OTHER_OPTIONS[getRandomInteger(OTHER_OPTIONS.length - 1)],
-//     price: getRandomInteger(PRICE_MIN, PRICE_MAX),
-//   }
-// ]
