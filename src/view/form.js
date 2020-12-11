@@ -12,7 +12,7 @@ const createWaypointTypeTemplate = (types) => {
   return types
           .map((waypointType, index) => {
             return `<div class="event__type-item">
-              <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" checked>
+              <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === types ? `checked` : ``}>
               <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${waypointType}</label>
             </div>`;
           }).join(``);
@@ -20,9 +20,9 @@ const createWaypointTypeTemplate = (types) => {
 
 const createOfferSelectorTemplate = (offers) => {
   return offers
-          .map((offer) => {
+          .map((offer, isChecked) => {
             return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${isChecked ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-${offer.title}-1">
                 <span class="event__offer-title">Add ${offer.title}</span>
                 &plus;&euro;&nbsp;
@@ -32,6 +32,7 @@ const createOfferSelectorTemplate = (offers) => {
           }).join(``);
 };
 
+
 const getOffersByWaypointType = (offers, waypointType) => {
   for (let i = 0; i < offers.length; i++) {
     if (offers[i].type === waypointType) {
@@ -40,6 +41,7 @@ const getOffersByWaypointType = (offers, waypointType) => {
   }
   return [];
 };
+
 
 const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) => {
   const destinationsTemplate = createOptionsTemplate(destinations);
@@ -88,7 +90,7 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${waypoint.price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${waypoint.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

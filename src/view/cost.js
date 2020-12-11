@@ -8,7 +8,7 @@ const createTripCostTemplate = () => {
   );
 };
 
-export default class TripCost {
+export default class Cost {
   constructor(point) {
     this._element = null;
     this._point = point;

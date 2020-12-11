@@ -19,14 +19,14 @@ const createTripInfoTemplate = (startTime, endTime) => {
 };
 
 
-export default class TripInfo {
+export default class Info {
   constructor(point) {
     this._element = null;
-    this._task = point;
+    this._point = point;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._task);
+    return createTripInfoTemplate(this._point);
   }
 
   getElement() {

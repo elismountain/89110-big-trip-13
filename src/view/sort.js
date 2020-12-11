@@ -32,14 +32,14 @@ const createSortTemplate = () => {
 };
 
 
-export default class SortingTab {
+export default class Sort {
   constructor(point) {
     this._element = null;
-    this._task = point;
+    this._point = point;
   }
 
   getTemplate() {
-    return createSortTemplate(this._task);
+    return createSortTemplate(this._point);
   }
 
   getElement() {
