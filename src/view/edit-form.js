@@ -8,11 +8,11 @@ const createOptionsTemplate = (destinations) => {
     }).join(``);
 };
 
-const createWaypointTypeTemplate = (elements) => {
-  return elements
-          .map((waypointType) => {
+const createWaypointTypeTemplate = (types) => {
+  return types
+          .map((waypointType, index) => {
             return `<div class="event__type-item">
-              <input id="event-type-${waypointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" checked>
+              <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" checked>
               <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${waypointType}</label>
             </div>`;
           }).join(``);
@@ -46,7 +46,7 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
   const waypointTypeTemplate = createWaypointTypeTemplate(waypointTypes);
   const offerSelectorTemplate = createOfferSelectorTemplate(getOffersByWaypointType(offers, waypoint.type));
 
-  return `<li class="trip-events__item">
+  return `<ol class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -104,7 +104,7 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
       </section>
     </section>
   </form>
-</li>`;
+</ol>`;
 };
 
 

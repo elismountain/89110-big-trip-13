@@ -8,10 +8,6 @@ const castTimeDateFormat = (value) => String(value).padStart(2, `0`);
 
 export const formatDateTime = (date) => (date) ? dayjs(date) : dayjs();
 
-export const Date = (startTime) => {
-  return dayjs(startTime).format(`D MMM`);
-};
-
 export const formatDuration = (time) => {
   const {days, hours, minutes} = getDuration(time);
   let result = ``;

@@ -20,8 +20,6 @@ const createOfferTemplates = (offers) => {
   }).join(``);
 };
 
-// 31   <h3 class="event__title">${waypoint.type} ${cities.include(waypoint.destination.name) ? `in` : `to`} ${waypoint.destination.name}</h3>
-
 const createCardTemplate = (waypoint) => {
   return (
     `<li class="trip-events__item">

@@ -1,7 +1,8 @@
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`
+  AFTEREND: `afterend`,
+  BEFORBEGIN: `beforebegin`
 };
 
 export const render = (container, element, place = RenderPosition.BEFOREEND) => {
@@ -15,12 +16,11 @@ export const render = (container, element, place = RenderPosition.BEFOREEND) => 
     case RenderPosition.AFTEREND:
       container.append(element);
       break;
+    case RenderPosition.BEFORBEGIN:
+      container.append(element);
+      break;
   }
 };
-
-// const renderTemplate = (container, element, place = RenderPosition.BEFOREEND ) => {
-//   container.insertAdjacentHTML(place, element);
-// };
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);

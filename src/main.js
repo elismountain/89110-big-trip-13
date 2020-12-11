@@ -20,23 +20,21 @@ const offers = OFFERS;
 
 const tripInfoElement = document.querySelector(`.trip-main`);
 render(tripInfoElement, new TripInfo(waypoints[0].startTime, waypoints[waypoints.length - 1].endTime).getElement(), RenderPosition.AFTERBEGIN);
-const tripCostElement = document.querySelector(`.trip-info__main`);
-render(tripCostElement, new TripCost().getElement(), RenderPosition.AFTEREND);
+
+const tripCostElement = document.querySelector(`.trip-main__trip-info`);
+render(tripCostElement, new TripCost().getElement(), RenderPosition.BEFOREEND);
+render(tripInfoElement, new NewWaypoint(waypoints[0]).getElement(), RenderPosition.BEFOREEND);
 
 const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
-const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
-
-const menuTabs = generateMenuItems();
-render(tripControlsMenuElement, new Menu(menuTabs).getElement(), RenderPosition.AFTEREND);
-
 const filterTabs = generateFilters();
-render(tripControlsElement, new Filter(filterTabs).getElement());
-render(tripControlsElement, new NewWaypoint(waypoints[0]).getElement(), RenderPosition.AFTERBEGIN);
+const menuTabs = generateMenuItems();
+render(tripControlsElement, new Filter(filterTabs).getElement(), RenderPosition.AFTERBEGIN);
+render(tripControlsElement, new Menu(menuTabs).getElement(), RenderPosition.AFTERBEGIN);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
-render(tripEventsElement, new SortingTab().getElement());
-render(tripEventsElement, new Form(waypoints[0], destinations, waypointTypes, offers).getElement());
-render(tripEventsElement, new Cards().getElement());
+render(tripEventsElement, new SortingTab().getElement(), RenderPosition.AFTERBEGIN);
+render(tripEventsElement, new Form(waypoints[0], destinations, waypointTypes, offers).getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new Cards().getElement(), RenderPosition.AFTEREND);
 
 const tripCardsElement = document.querySelector(`.trip-events__list`);
 
@@ -48,7 +46,7 @@ const renderWaypoint = (waypointListElement, waypoint) => {
   };
 
   const replaceFormToCard = () => {
-    waypointListElement.replaceChild(waypointComponent.getElement(), waypointEditComponent.getElement());
+    waypointListElement.replaceChild(waypointComponent.getElement(), waypointEditComponent.getElement(), RenderPosition.BEFOREEND);
   };
 
   const onEscKeyDown = (evt) => {
@@ -70,7 +68,7 @@ const renderWaypoint = (waypointListElement, waypoint) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(waypointListElement, waypointComponent.getElement(), RenderPosition.AFTEREND);
+  render(waypointListElement, waypointComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
 waypoints.forEach((waypointItem) => renderWaypoint(tripCardsElement, waypointItem));
