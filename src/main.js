@@ -12,7 +12,6 @@ import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
 import {render, RenderPosition} from "./utils/render.js";
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
-import {ESC_KEYCODE} from "./utils/accessibility.js";
 
 const destinations = DESTINATIONS;
 const waypointTypes = WAYPOINT_TYPES;
@@ -50,7 +49,8 @@ const renderWaypoint = (waypointListElement, waypoint) => {
   };
 
   const onEscKeyDown = (evt) => {
-    if (evt.keyCode === ESC_KEYCODE) {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    if (isEscKey) {
       evt.preventDefault();
       replaceFormToCard();
       document.removeEventListener(`keydown`, onEscKeyDown);
