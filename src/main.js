@@ -1,45 +1,74 @@
-import {createTripInfoTemplate} from './view/trip-info.js';
-import {createMenuTemplate} from './view/menu.js';
-import {createCardsTemplate} from './view/cards.js';
-import {createSortTemplate} from './view/sort.js';
-import {createTripCostTemplate} from './view/trip-cost.js';
-import {createFilterTemplate} from './view/filter.js';
-import {createEditFormTemplate} from './view/edit-form.js';
-import {createCardTemplate} from './view/card.js';
-import {createNewWaypointTemplate} from './view/new-waypoint-form.js';
+import Info from './view/info.js';
+import Menu from './view/menu.js';
+import Cards from './view/cards.js';
+import Sort from './view/sort.js';
+import Cost from './view/cost.js';
+import Filter from './view/filter.js';
+import Form from './view/form.js';
+import Card from './view/card.js';
+import NewWaypoint from './view/new-waypoint.js';
 import {waypoints} from './mocks/waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
-import {renderTemplate} from "./utils/render.js";
-import {CITIES, OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
+import {render, RenderPosition} from "./utils/render.js";
+import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
+import {isEscapeKey} from "./utils/dom-event.js";
 
 const destinations = DESTINATIONS;
 const waypointTypes = WAYPOINT_TYPES;
 const offers = OFFERS;
-const cities = CITIES;
 
 const tripInfoElement = document.querySelector(`.trip-main`);
-renderTemplate(tripInfoElement, createTripInfoTemplate(waypoints[0].startTime, waypoints[waypoints.length - 1].endTime), `afterbegin`);
-const tripCostElement = document.querySelector(`.trip-info__main`);
-renderTemplate(tripCostElement, createTripCostTemplate(), `afterend`);
+render(tripInfoElement, new Info(waypoints[0].startTime, waypoints[waypoints.length - 1].endTime).getElement(), RenderPosition.AFTERBEGIN);
+
+const tripCostElement = document.querySelector(`.trip-main__trip-info`);
+render(tripCostElement, new Cost().getElement(), RenderPosition.BEFOREEND);
+render(tripInfoElement, new NewWaypoint().getElement(), RenderPosition.BEFOREEND);
 
 const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
-const tripControlsMenuElement = tripControlsElement.querySelector(`h2`);
-
-const menuTabs = generateMenuItems();
-renderTemplate(tripControlsMenuElement, createMenuTemplate(menuTabs), `afterend`);
-
 const filterTabs = generateFilters();
-renderTemplate(tripControlsElement, createFilterTemplate(filterTabs));
-renderTemplate(tripControlsElement, createNewWaypointTemplate(waypoints[0]), `afterend`);
+const menuTabs = generateMenuItems();
+render(tripControlsElement, new Filter(filterTabs).getElement(), RenderPosition.AFTERBEGIN);
+render(tripControlsElement, new Menu(menuTabs).getElement(), RenderPosition.AFTERBEGIN);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
-renderTemplate(tripEventsElement, createSortTemplate());
-renderTemplate(tripEventsElement, createEditFormTemplate(waypoints[0], destinations, waypointTypes, offers));
-renderTemplate(tripEventsElement, createCardsTemplate());
+render(tripEventsElement, new Sort().getElement(), RenderPosition.AFTERBEGIN);
+render(tripEventsElement, new Form(waypoints[0], destinations, waypointTypes, offers).getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new Cards().getElement(), RenderPosition.AFTEREND);
 
 const tripCardsElement = document.querySelector(`.trip-events__list`);
 
-waypoints.forEach(
-    (waypointItem) => renderTemplate(tripCardsElement, createCardTemplate(waypointItem, cities))
-);
+const renderWaypoint = (waypointListElement, waypoint) => {
+  const waypointComponent = new Card(waypoint);
+  const waypointEditComponent = new Form(waypoint, destinations, waypointTypes, offers);
+  const replaceCardToForm = () => {
+    waypointListElement.replaceChild(waypointEditComponent.getElement(), waypointComponent.getElement());
+  };
+
+  const replaceFormToCard = () => {
+    waypointListElement.replaceChild(waypointComponent.getElement(), waypointEditComponent.getElement(), RenderPosition.BEFOREEND);
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  waypointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    replaceCardToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  waypointEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+
+  render(waypointListElement, waypointComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+waypoints.forEach((waypointItem) => renderWaypoint(tripCardsElement, waypointItem));

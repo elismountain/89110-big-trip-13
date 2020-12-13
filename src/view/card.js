@@ -3,6 +3,10 @@ import {
   formatDuration
 } from "../utils/date.js";
 
+import {
+  createElement
+} from "../utils/render.js";
+
 
 const createOfferTemplates = (offers) => {
   return offers.map((offer) => {
@@ -16,7 +20,7 @@ const createOfferTemplates = (offers) => {
   }).join(``);
 };
 
-export const createCardTemplate = (waypoint, cities) => {
+const createCardTemplate = (waypoint) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -24,7 +28,7 @@ export const createCardTemplate = (waypoint, cities) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${waypoint.type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${waypoint.type} ${cities.includes(waypoint.destination.name) ? `in` : `to`} ${waypoint.destination.name}</h3>
+        <h3 class="event__title">${waypoint.type} ${waypoint.destination.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -56,3 +60,27 @@ export const createCardTemplate = (waypoint, cities) => {
     </li>`
   );
 };
+
+
+export default class Card {
+  constructor(waypoint) {
+    this._element = null;
+    this._waypoint = waypoint;
+  }
+
+  getTemplate() {
+    return createCardTemplate(this._waypoint);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

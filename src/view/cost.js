@@ -1,21 +1,20 @@
-import {
-  createElement
-} from "../utils/render.js";
+import {createElement} from "../utils/render.js";
 
-const createCardsTemplate = () => {
+const createTripCostTemplate = () => {
   return (
-    `<ul class="trip-events__list"></ul>`
+    `<p class="trip-info__cost">
+      Total: &euro;&nbsp; <span class="trip-info__cost-value">1230</span>
+    </p>`
   );
 };
 
-
-export default class Cards {
+export default class Cost {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createCardsTemplate();
+    return createTripCostTemplate();
   }
 
   getElement() {

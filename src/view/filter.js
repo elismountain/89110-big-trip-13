@@ -1,5 +1,7 @@
-export const createFilterTemplate = (filterTabs) => {
-  const generateFilterMarkup = filterTabs.map((filter) => {
+import {createElement} from "../utils/render.js";
+
+const createFilterTemplate = (filterTabs) => {
+  const filterMarkup = filterTabs.map((filter) => {
     const {title, isChecked} = filter;
     const id = title.toLowerCase();
     return (
@@ -12,8 +14,31 @@ export const createFilterTemplate = (filterTabs) => {
 
   return (
     `<form class="trip-filters" action="#" method="get">
-              ${generateFilterMarkup}
+              ${filterMarkup}
               <button class="visually-hidden" type="submit">Accept filter</button>
             </form>`
   );
 };
+
+export default class Filter {
+  constructor(filterTabs) {
+    this._element = null;
+    this._filter = filterTabs;
+  }
+
+  getTemplate() {
+    return createFilterTemplate(this._filter);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
