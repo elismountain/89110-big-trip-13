@@ -47,7 +47,7 @@ export const generateWaypoint = () => {
     endTime: new Date(getRandomNextDate(randomDate)),
     isFavorite: getRandomInteger(0, 1) === 1,
     id: generateId(),
-    price: getRandomInteger(500, 5000)
+    price: getRandomInteger(500, 5000),
   };
   return waypoint;
 };

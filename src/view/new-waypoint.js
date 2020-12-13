@@ -8,13 +8,12 @@ const createNewWaypointTemplate = () => {
 
 
 export default class NewWaypoint {
-  constructor(waypoints) {
+  constructor() {
     this._element = null;
-    this._waypoints = waypoints;
   }
 
   getTemplate() {
-    return createNewWaypointTemplate(this._waypoints);
+    return createNewWaypointTemplate();
   }
 
   getElement() {

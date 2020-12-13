@@ -9,13 +9,12 @@ const createTripCostTemplate = () => {
 };
 
 export default class Cost {
-  constructor(point) {
+  constructor() {
     this._element = null;
-    this._point = point;
   }
 
   getTemplate() {
-    return createTripCostTemplate(this._point);
+    return createTripCostTemplate();
   }
 
   getElement() {

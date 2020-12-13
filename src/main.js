@@ -12,6 +12,7 @@ import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
 import {render, RenderPosition} from "./utils/render.js";
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
+import {isEscapeKey} from "./utils/dom-event.js";
 
 const destinations = DESTINATIONS;
 const waypointTypes = WAYPOINT_TYPES;
@@ -22,7 +23,7 @@ render(tripInfoElement, new Info(waypoints[0].startTime, waypoints[waypoints.len
 
 const tripCostElement = document.querySelector(`.trip-main__trip-info`);
 render(tripCostElement, new Cost().getElement(), RenderPosition.BEFOREEND);
-render(tripInfoElement, new NewWaypoint(waypoints[0]).getElement(), RenderPosition.BEFOREEND);
+render(tripInfoElement, new NewWaypoint().getElement(), RenderPosition.BEFOREEND);
 
 const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
 const filterTabs = generateFilters();
@@ -49,8 +50,7 @@ const renderWaypoint = (waypointListElement, waypoint) => {
   };
 
   const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    if (isEscKey) {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
       replaceFormToCard();
       document.removeEventListener(`keydown`, onEscKeyDown);

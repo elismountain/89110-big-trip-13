@@ -18,11 +18,11 @@ const createMenuTemplate = (menuTabs) => {
 export default class Menu {
   constructor(menuTabs) {
     this._element = null;
-    this._menu = menuTabs;
+    this._menus = menuTabs;
   }
 
   getTemplate() {
-    return createMenuTemplate(this._menu);
+    return createMenuTemplate(this._menus);
   }
 
   getElement() {

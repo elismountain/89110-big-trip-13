@@ -18,18 +18,23 @@ const createWaypointTypeTemplate = (types, selectedType) => {
           }).join(``);
 };
 
-const createOfferSelectorTemplate = (offers) => {
-  return offers
-          .map((offer, isChecked) => {
-            return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${isChecked ? `checked` : ``}>
+const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
+  const offersList = allOffers.map((offer) => {
+    return `
+            <div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${selectedOptions.includes(offer) ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-${offer.title}-1">
                 <span class="event__offer-title">Add ${offer.title}</span>
                 &plus;&euro;&nbsp;
                 <span class="event__offer-price">${offer.price}</span>
               </label>
             </div>`;
-          }).join(``);
+  }).join(``);
+
+  return `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <div class="event__available-offers">
+              ${offersList};
+            </div>`;
 };
 
 const createDestinationPhotosTemplate = (waypoint) => {
@@ -62,10 +67,13 @@ const getOffersByWaypointType = (offers, waypointType) => {
 };
 
 
-const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) => {
-  const destinationsTemplate = createOptionsTemplate(destinations);
+const createEditFormTemplate = (waypoint, allDestinations, waypointTypes, offers) => {
+
+  const destinationsSelector = createOptionsTemplate(allDestinations);
+  const needHideDestination = waypoint.destination.description.length === 0 && waypoint.destination.photos.length === 0;
   const waypointTypeTemplate = createWaypointTypeTemplate(waypointTypes, waypoint.type);
-  const offerSelectorTemplate = createOfferSelectorTemplate(getOffersByWaypointType(offers, waypoint.type));
+  const needHideOfferSelector = waypoint.options.length === 0;
+  const offerSelectorTemplate = createOfferSelectorTemplate(getOffersByWaypointType(offers, waypoint.type), waypoint.options);
 
   return `<ol class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -92,7 +100,7 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${waypoint.destination.name}" list="destination-list-1">
         <datalist id="destination-list-1">
-          ${destinationsTemplate}
+          ${destinationsSelector}
         </datalist>
       </div>
 
@@ -109,7 +117,7 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${waypoint.price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="0" value="${waypoint.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -117,13 +125,9 @@ const createEditFormTemplate = (waypoint, destinations, waypointTypes, offers) =
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-          ${offerSelectorTemplate}
-        </div>
+          ${needHideOfferSelector ? `` : offerSelectorTemplate}
       </section>
-      ${createDestinationsTemplate(waypoint)}
+      ${needHideDestination ? `` : createDestinationsTemplate(waypoint)}
     </section>
   </form>
 </ol>`;

@@ -23,11 +23,11 @@ const createFilterTemplate = (filterTabs) => {
 export default class Filter {
   constructor(filterTabs) {
     this._element = null;
-    this._filterTabs = filterTabs;
+    this._filter = filterTabs;
   }
 
   getTemplate() {
-    return createFilterTemplate(this._filterTabs);
+    return createFilterTemplate(this._filter);
   }
 
   getElement() {
