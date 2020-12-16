@@ -3,9 +3,7 @@ import {
   formatDuration
 } from "../utils/date.js";
 
-import {
-  createElement
-} from "../utils/render.js";
+import Abstract from "../utils/abstract.js";
 
 
 const createOfferTemplates = (offers) => {
@@ -62,25 +60,14 @@ const createCardTemplate = (waypoint) => {
 };
 
 
-export default class Card {
+export default class Card extends Abstract {
   constructor(waypoint) {
+    super();
     this._element = null;
     this._waypoint = waypoint;
   }
 
   getTemplate() {
     return createCardTemplate(this._waypoint);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

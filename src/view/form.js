@@ -1,5 +1,5 @@
 import {formatDateTime} from "../utils/date.js";
-import {createElement} from "../utils/render.js";
+import Abstract from "../utils/abstract.js";
 
 const createOptionsTemplate = (destinations) => {
   return destinations
@@ -134,8 +134,10 @@ const createEditFormTemplate = (waypoint, allDestinations, waypointTypes, offers
 };
 
 
-export default class Form {
+export default class Form extends Abstract {
+
   constructor(waypoint, destinations, waypointTypes, offers) {
+    super();
     this._element = null;
     this._waypoint = waypoint;
     this._destinations = destinations;
@@ -145,17 +147,5 @@ export default class Form {
 
   getTemplate() {
     return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

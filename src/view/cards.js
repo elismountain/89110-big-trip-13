@@ -1,6 +1,4 @@
-import {
-  createElement
-} from "../utils/render.js";
+import Abstract from "../utils/abstract.js";
 
 const createCardsTemplate = () => {
   return (
@@ -9,24 +7,9 @@ const createCardsTemplate = () => {
 };
 
 
-export default class Cards {
-  constructor() {
-    this._element = null;
-  }
+export default class Cards extends Abstract {
 
   getTemplate() {
     return createCardsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

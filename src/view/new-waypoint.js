@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import Abstract from "../utils/abstract.js";
 
 const createNewWaypointTemplate = () => {
   return (
@@ -7,24 +7,8 @@ const createNewWaypointTemplate = () => {
 };
 
 
-export default class NewWaypoint {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NewWaypoint extends Abstract {
   getTemplate() {
     return createNewWaypointTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import Abstract from "../utils/abstract.js";
 
 const createFilterTemplate = (filterTabs) => {
   const filterMarkup = filterTabs.map((filter) => {
@@ -20,25 +20,14 @@ const createFilterTemplate = (filterTabs) => {
   );
 };
 
-export default class Filter {
+export default class Filter extends Abstract {
   constructor(filterTabs) {
+    super();
     this._element = null;
     this._filter = filterTabs;
   }
 
   getTemplate() {
     return createFilterTemplate(this._filter);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

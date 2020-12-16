@@ -2,9 +2,7 @@ import {
   formatDateTime
 } from "../utils/date.js";
 
-import {
-  createElement
-} from "../utils/render.js";
+import Abstract from "../utils/abstract.js";
 
 const createTripInfoTemplate = (startTime, endTime) => {
   return (
@@ -19,8 +17,9 @@ const createTripInfoTemplate = (startTime, endTime) => {
 };
 
 
-export default class Info {
+export default class Info extends Abstract {
   constructor(startTime, endTime) {
+    super();
     this._element = null;
     this._start = startTime;
     this._end = endTime;
@@ -28,17 +27,5 @@ export default class Info {
 
   getTemplate() {
     return createTripInfoTemplate(this._start, this._end);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
