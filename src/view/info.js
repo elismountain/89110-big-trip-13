@@ -2,7 +2,7 @@ import {
   formatDateTime
 } from "../utils/date.js";
 
-import Abstract from "../utils/abstract.js";
+import Abstract from "./abstract.js";
 
 const createTripInfoTemplate = (startTime, endTime) => {
   return (

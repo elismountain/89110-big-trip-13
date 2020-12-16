@@ -3,7 +3,7 @@ import {
   formatDuration
 } from "../utils/date.js";
 
-import Abstract from "../utils/abstract.js";
+import Abstract from "./abstract.js";
 
 
 const createOfferTemplates = (offers) => {
@@ -65,9 +65,20 @@ export default class Card extends Abstract {
     super();
     this._element = null;
     this._waypoint = waypoint;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._waypoint);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
   }
 }

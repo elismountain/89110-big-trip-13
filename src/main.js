@@ -10,7 +10,7 @@ import NewWaypoint from './view/new-waypoint.js';
 import {waypoints} from './mocks/waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
-import {render, RenderPosition} from "./utils/render.js";
+import {render, RenderPosition} from "./utils/render.js"; // to add here  - replace, remove
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
 import {isEscapeKey} from "./utils/dom-event.js";
 
@@ -57,13 +57,13 @@ const renderWaypoint = (waypointListElement, waypoint) => {
     }
   };
 
-  waypointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+  waypointComponent.setClickHandler(() => {
     replaceCardToForm();
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  waypointEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
+
+  waypointEditComponent.setClickHandler(() => {
     replaceFormToCard();
     document.removeEventListener(`keydown`, onEscKeyDown);
   });

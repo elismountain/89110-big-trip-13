@@ -1,5 +1,5 @@
 import {formatDateTime} from "../utils/date.js";
-import Abstract from "../utils/abstract.js";
+import Abstract from "./abstract.js";
 
 const createOptionsTemplate = (destinations) => {
   return destinations
@@ -143,9 +143,20 @@ export default class Form extends Abstract {
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`form`).addEventListener(`click`, this._clickHandler);
   }
 }
