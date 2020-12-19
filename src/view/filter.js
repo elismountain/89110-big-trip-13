@@ -23,8 +23,7 @@ const createFilterTemplate = (filterTabs) => {
 export default class Filter extends Abstract {
   constructor(filterTabs) {
     super();
-    this._element = null;
-    this._filter = filterTabs;
+    this._filter = filter;
   }
 
   getTemplate() {

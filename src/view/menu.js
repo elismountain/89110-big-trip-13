@@ -18,7 +18,6 @@ const createMenuTemplate = (menuTabs) => {
 export default class Menu extends Abstract {
   constructor(menuTabs) {
     super();
-    this._element = null;
     this._menus = menuTabs;
   }
 

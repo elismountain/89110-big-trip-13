@@ -33,13 +33,8 @@ const createSortTemplate = () => {
 
 
 export default class Sort extends Abstract {
-  constructor(point) {
-    super();
-    this._element = null;
-    this._point = point;
-  }
 
   getTemplate() {
-    return createSortTemplate(this._point);
+    return createSortTemplate();
   }
 }

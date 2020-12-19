@@ -19,7 +19,7 @@ const createWaypointTypeTemplate = (types, selectedType) => {
 };
 
 const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
-  const offersList = allOffers.map((offer) => {
+  const offersListTemplate = allOffers.map((offer) => {
     return `
             <div class="event__offer-selector">
               <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${selectedOptions.includes(offer) ? `checked` : ``}>
@@ -138,25 +138,24 @@ export default class Form extends Abstract {
 
   constructor(waypoint, destinations, waypointTypes, offers) {
     super();
-    this._element = null;
     this._waypoint = waypoint;
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._formSubmitHandler  = this._formSubmitHandler .bind(this);
   }
 
   getTemplate() {
     return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
   }
 
-  _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
+  setSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler );
   }
 
-  setClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`form`).addEventListener(`click`, this._clickHandler);
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 }

@@ -20,7 +20,6 @@ const createTripInfoTemplate = (startTime, endTime) => {
 export default class Info extends Abstract {
   constructor(startTime, endTime) {
     super();
-    this._element = null;
     this._start = startTime;
     this._end = endTime;
   }
