@@ -30,8 +30,8 @@ export const render = (container, child, place = RenderPosition.BEFOREEND) => {
 
 export const createElement = (template) => {
   const wrapper = document.createElement(`div`);
-  newElement.innerHTML = template;
-  return newElement.firstChild;
+  wrapper.innerHTML = template;
+  return wrapper.firstChild;
 };
 
 export const remove = (component) => {

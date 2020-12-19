@@ -33,7 +33,7 @@ const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
 
   return `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-              ${offersList};
+              ${offersListTemplate};
             </div>`;
 };
 
@@ -142,7 +142,7 @@ export default class Form extends Abstract {
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
-    this._formSubmitHandler  = this._formSubmitHandler .bind(this);
+    this._formSubmitHandler = this._formSubmitHandler .bind(this);
   }
 
   getTemplate() {
@@ -151,7 +151,7 @@ export default class Form extends Abstract {
 
   setSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler );
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
   _formSubmitHandler(evt) {
