@@ -72,13 +72,13 @@ export default class Card extends Abstract {
     return createCardTemplate(this._waypoint);
   }
 
-  setCardClickHandler(callback) {
-    this._callback.cardClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onCardClickHandler);
-  }
-
   _onCardClickHandler(evt) {
     evt.preventDefault();
     this._callback.cardClick();
+  }
+
+  setCardClickHandler(callback) {
+    this._callback.cardClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onCardClickHandler);
   }
 }

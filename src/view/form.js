@@ -19,10 +19,36 @@ const createWaypointTypeTemplate = (types, selectedType) => {
 };
 
 const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
+
+  const compareOffers = (item1, item2) => {
+    return item1.price === item2.price && item1.title === item2.title;
+  };
+
+  const mergedOffers = [];
+
+  const isOfferSelected = (offer) => {
+    mergedOffers.find((item) => {
+      return compareOffers(item, offer);
+    });
+  };
+
+  const merge = (array) => {
+    array.forEach((item1) => {
+      const isDuplicate = mergedOffers.find((item2) => {
+        return compareOffers(item1, item2);
+      });
+      if (!isDuplicate) {
+        mergedOffers.push(item1);
+      }
+    });
+  };
+
+  merge(allOffers);
+  merge(selectedOptions);
+
   const offersListTemplate = allOffers.map((offer) => {
-    return `
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${selectedOptions.includes(offer) ? `checked` : ``}>
+    return `<div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${isOfferSelected(offer) ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-${offer.title}-1">
                 <span class="event__offer-title">Add ${offer.title}</span>
                 &plus;&euro;&nbsp;

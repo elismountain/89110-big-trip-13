@@ -25,6 +25,8 @@ export const render = (container, child, place = RenderPosition.BEFOREEND) => {
     case RenderPosition.AFTEREND:
       container.after(child);
       break;
+    default:
+      throw new Error(`Unknown render position: ${place}`);
   }
 };
 

@@ -6,9 +6,18 @@ const createNoPointsTemplate = () => {
   );
 };
 
+const createLoadingTemplate = () => {
+  return (
+    `<p class="trip-events__msg">Loading...</p>`
+  );
+};
 
-export default class NoPoint extends Abstract {
+export default class TripMessage extends Abstract {
   getTemplate() {
     return createNoPointsTemplate();
+  }
+
+  getTemplate() {
+    return createLoadingTemplate();
   }
 }

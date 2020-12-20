@@ -10,7 +10,7 @@ import NewWaypoint from './view/new-waypoint.js';
 import {waypoints} from './mocks/waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
-import {render, RenderPosition} from "./utils/render.js"; // to add here  - replace, remove
+import {render, replace, RenderPosition} from "./utils/render.js"; // add remove
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
 import {isEscapeKey} from "./utils/dom-event.js";
 
@@ -42,30 +42,30 @@ const renderWaypoint = (waypointListElement, waypoint) => {
   const waypointComponent = new Card(waypoint);
   const waypointEditComponent = new Form(waypoint, destinations, waypointTypes, offers);
   const replaceCardToForm = () => {
-    waypointListElement.replaceChild(waypointEditComponent.getElement(), waypointComponent.getElement());
+    replace(waypointEditComponent, waypointComponent);
   };
 
   const replaceFormToCard = () => {
-    waypointListElement.replaceChild(waypointComponent.getElement(), waypointEditComponent.getElement(), RenderPosition.BEFOREEND);
+    replace(waypointComponent, waypointEditComponent);
   };
 
-  const onEscKeyDown = (evt) => {
+  const escKeyDownHandler = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       replaceFormToCard();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, escKeyDownHandler);
     }
   };
 
-  waypointComponent.setClickHandler(() => {
+  waypointComponent.setCardClickHandler(() => {
     replaceCardToForm();
-    document.addEventListener(`keydown`, onEscKeyDown);
+    document.addEventListener(`keydown`, escKeyDownHandler);
   });
 
 
-  waypointEditComponent.setClickHandler(() => {
+  waypointEditComponent.setSubmitHandler(() => {
     replaceFormToCard();
-    document.removeEventListener(`keydown`, onEscKeyDown);
+    document.removeEventListener(`keydown`, escKeyDownHandler);
   });
 
   render(waypointListElement, waypointComponent.getElement(), RenderPosition.BEFOREEND);
