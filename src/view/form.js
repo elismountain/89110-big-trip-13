@@ -11,10 +11,10 @@ const createOptionsTemplate = (destinations) => {
 const createWaypointTypeTemplate = (types, selectedType) => {
   return types
           .map((waypointType, index) => {
-            const ucTypes = waypointType.charAt(0).toUpperCase() + waypointType.slice(1);
+            const upperCaseType = waypointType.charAt(0).toUpperCase() + waypointType.slice(1);
             return `<div class="event__type-item">
               <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === selectedType ? `checked` : ``}>
-              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${ucTypes}</label>
+              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${upperCaseType}</label>
             </div>`;
           }).join(``);
 };
@@ -33,8 +33,8 @@ const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
     });
   };
 
-  const merge = (arrays) => {
-    arrays.forEach((item1) => {
+  const merge = (offers) => {
+    offers.forEach((item1) => {
       const isDuplicate = mergedOffers.find((item2) => {
         return compareOffers(item1, item2);
       });
