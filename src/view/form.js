@@ -11,9 +11,10 @@ const createOptionsTemplate = (destinations) => {
 const createWaypointTypeTemplate = (types, selectedType) => {
   return types
           .map((waypointType, index) => {
+            const ucTypes = waypointType.charAt(0).toUpperCase() + waypointType.slice(1);
             return `<div class="event__type-item">
               <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === selectedType ? `checked` : ``}>
-              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${waypointType}</label>
+              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${ucTypes}</label>
             </div>`;
           }).join(``);
 };
@@ -32,8 +33,8 @@ const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
     });
   };
 
-  const merge = (array) => {
-    array.forEach((item1) => {
+  const merge = (arrays) => {
+    arrays.forEach((item1) => {
       const isDuplicate = mergedOffers.find((item2) => {
         return compareOffers(item1, item2);
       });
@@ -168,7 +169,7 @@ export default class Form extends Abstract {
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
-    this._formSubmitHandler = this._formSubmitHandler .bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
@@ -176,12 +177,12 @@ export default class Form extends Abstract {
   }
 
   setSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
+    this._callback.submitForm = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.submitForm();
   }
 }

@@ -7,12 +7,14 @@ import Filter from './view/filter.js';
 import Form from './view/form.js';
 import Card from './view/card.js';
 import NewWaypoint from './view/new-waypoint.js';
+// import TripMessage from './view/trip-message.js';
 import {waypoints} from './mocks/waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
 import {render, replace, RenderPosition} from "./utils/render.js"; // add remove
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
 import {isEscapeKey} from "./utils/dom-event.js";
+
 
 const destinations = DESTINATIONS;
 const waypointTypes = WAYPOINT_TYPES;
@@ -57,7 +59,7 @@ const renderWaypoint = (waypointListElement, waypoint) => {
     }
   };
 
-  waypointComponent.setCardClickHandler(() => {
+  waypointComponent.setRollupButtonClickHandler(() => {
     replaceCardToForm();
     document.addEventListener(`keydown`, escKeyDownHandler);
   });
@@ -68,7 +70,7 @@ const renderWaypoint = (waypointListElement, waypoint) => {
     document.removeEventListener(`keydown`, escKeyDownHandler);
   });
 
-  render(waypointListElement, waypointComponent.getElement(), RenderPosition.BEFOREEND);
+  render(waypointListElement, waypointComponent.getElement());
 };
 
 waypoints.forEach((waypointItem) => renderWaypoint(tripCardsElement, waypointItem));

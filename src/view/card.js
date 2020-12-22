@@ -65,20 +65,20 @@ export default class Card extends Abstract {
     super();
     this._waypoint = waypoint;
 
-    this._onCardClickHandler = this._onCardClickHandler.bind(this);
+    this._onRollupButtonClickHandler = this._onRollupButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._waypoint);
   }
 
-  _onCardClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.cardClick();
+  setRollupButtonClickHandler(callback) {
+    this._callback.clickCard = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onRollupButtonClickHandler);
   }
 
-  setCardClickHandler(callback) {
-    this._callback.cardClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onCardClickHandler);
+  _onRollupButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.clickCard();
   }
 }
