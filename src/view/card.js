@@ -3,9 +3,7 @@ import {
   formatDuration
 } from "../utils/date.js";
 
-import {
-  createElement
-} from "../utils/render.js";
+import Abstract from "./abstract.js";
 
 
 const createOfferTemplates = (offers) => {
@@ -62,25 +60,25 @@ const createCardTemplate = (waypoint) => {
 };
 
 
-export default class Card {
+export default class Card extends Abstract {
   constructor(waypoint) {
-    this._element = null;
+    super();
     this._waypoint = waypoint;
+
+    this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._waypoint);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  setRollupButtonClickHandler(callback) {
+    this._callback.clickCard = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupButtonClickHandler);
   }
 
-  removeElement() {
-    this._element = null;
+  _rollupButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.clickCard();
   }
 }

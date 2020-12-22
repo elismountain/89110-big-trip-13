@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import Abstract from "./abstract.js";
 
 const createMenuTemplate = (menuTabs) => {
   const menuMarkup = menuTabs.map((menu) => {
@@ -15,25 +15,13 @@ const createMenuTemplate = (menuTabs) => {
   );
 };
 
-export default class Menu {
+export default class Menu extends Abstract {
   constructor(menuTabs) {
-    this._element = null;
+    super();
     this._menus = menuTabs;
   }
 
   getTemplate() {
     return createMenuTemplate(this._menus);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

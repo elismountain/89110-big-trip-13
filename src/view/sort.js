@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import Abstract from "./abstract.js";
 
 const createSortTemplate = () => {
   return (
@@ -32,25 +32,9 @@ const createSortTemplate = () => {
 };
 
 
-export default class Sort {
-  constructor(point) {
-    this._element = null;
-    this._point = point;
-  }
+export default class Sort extends Abstract {
 
   getTemplate() {
-    return createSortTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return createSortTemplate();
   }
 }

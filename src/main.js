@@ -7,12 +7,14 @@ import Filter from './view/filter.js';
 import Form from './view/form.js';
 import Card from './view/card.js';
 import NewWaypoint from './view/new-waypoint.js';
+// import TripMessage from './view/trip-message.js';
 import {waypoints} from './mocks/waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
-import {render, RenderPosition} from "./utils/render.js";
+import {render, replace, RenderPosition} from "./utils/render.js"; // add remove
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
 import {isEscapeKey} from "./utils/dom-event.js";
+
 
 const destinations = DESTINATIONS;
 const waypointTypes = WAYPOINT_TYPES;
@@ -42,33 +44,33 @@ const renderWaypoint = (waypointListElement, waypoint) => {
   const waypointComponent = new Card(waypoint);
   const waypointEditComponent = new Form(waypoint, destinations, waypointTypes, offers);
   const replaceCardToForm = () => {
-    waypointListElement.replaceChild(waypointEditComponent.getElement(), waypointComponent.getElement());
+    replace(waypointEditComponent, waypointComponent);
   };
 
   const replaceFormToCard = () => {
-    waypointListElement.replaceChild(waypointComponent.getElement(), waypointEditComponent.getElement(), RenderPosition.BEFOREEND);
+    replace(waypointComponent, waypointEditComponent);
   };
 
-  const onEscKeyDown = (evt) => {
+  const escKeyDownHandler = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       replaceFormToCard();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, escKeyDownHandler);
     }
   };
 
-  waypointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+  waypointComponent.setRollupButtonClickHandler(() => {
     replaceCardToForm();
-    document.addEventListener(`keydown`, onEscKeyDown);
+    document.addEventListener(`keydown`, escKeyDownHandler);
   });
 
-  waypointEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
+
+  waypointEditComponent.setSubmitHandler(() => {
     replaceFormToCard();
-    document.removeEventListener(`keydown`, onEscKeyDown);
+    document.removeEventListener(`keydown`, escKeyDownHandler);
   });
 
-  render(waypointListElement, waypointComponent.getElement(), RenderPosition.BEFOREEND);
+  render(waypointListElement, waypointComponent.getElement());
 };
 
 waypoints.forEach((waypointItem) => renderWaypoint(tripCardsElement, waypointItem));

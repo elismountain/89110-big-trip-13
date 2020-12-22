@@ -1,5 +1,5 @@
 import {formatDateTime} from "../utils/date.js";
-import {createElement} from "../utils/render.js";
+import Abstract from "./abstract.js";
 
 const createOptionsTemplate = (destinations) => {
   return destinations
@@ -11,18 +11,45 @@ const createOptionsTemplate = (destinations) => {
 const createWaypointTypeTemplate = (types, selectedType) => {
   return types
           .map((waypointType, index) => {
+            const upperCaseType = waypointType.charAt(0).toUpperCase() + waypointType.slice(1);
             return `<div class="event__type-item">
               <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === selectedType ? `checked` : ``}>
-              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${waypointType}</label>
+              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${upperCaseType}</label>
             </div>`;
           }).join(``);
 };
 
 const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
-  const offersList = allOffers.map((offer) => {
-    return `
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${selectedOptions.includes(offer) ? `checked` : ``}>
+
+  const compareOffers = (item1, item2) => {
+    return item1.price === item2.price && item1.title === item2.title;
+  };
+
+  const mergedOffers = [];
+
+  const isOfferSelected = (offer) => {
+    mergedOffers.find((item) => {
+      return compareOffers(item, offer);
+    });
+  };
+
+  const merge = (offers) => {
+    offers.forEach((item1) => {
+      const isDuplicate = mergedOffers.find((item2) => {
+        return compareOffers(item1, item2);
+      });
+      if (!isDuplicate) {
+        mergedOffers.push(item1);
+      }
+    });
+  };
+
+  merge(allOffers);
+  merge(selectedOptions);
+
+  const offersListTemplate = allOffers.map((offer) => {
+    return `<div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${isOfferSelected(offer) ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-${offer.title}-1">
                 <span class="event__offer-title">Add ${offer.title}</span>
                 &plus;&euro;&nbsp;
@@ -33,7 +60,7 @@ const createOfferSelectorTemplate = (allOffers, selectedOptions) => {
 
   return `<h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-              ${offersList};
+              ${offersListTemplate};
             </div>`;
 };
 
@@ -134,28 +161,28 @@ const createEditFormTemplate = (waypoint, allDestinations, waypointTypes, offers
 };
 
 
-export default class Form {
+export default class Form extends Abstract {
+
   constructor(waypoint, destinations, waypointTypes, offers) {
-    this._element = null;
+    super();
     this._waypoint = waypoint;
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  setSubmitHandler(callback) {
+    this._callback.submitForm = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
-  removeElement() {
-    this._element = null;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitForm();
   }
 }
