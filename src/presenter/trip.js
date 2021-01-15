@@ -7,6 +7,7 @@ import FilterView from './view/filter.js';
 import NewWaypointView from './view/new-waypoint.js';
 import TripMessage from './view/trip-message.js';
 import TripEventListView from './view/trip-event-list.js';
+import {render, replace, RenderPosition} from "./utils/render.js";
 
 
 export default class Trip {
@@ -15,14 +16,15 @@ export default class Trip {
     this._menuComponent = new MenuView();
     this._filterComponent = new FilterView();
     this._sortComponent = new SortView();
-    this._noEventComponent = new NoEventView();
-    this._tripInfoComponent = new TripInfoView();
-    this._tripPriceComponent = new TripPriceView();
-    this._eventListComponent = new TripEventListView();
+    this._tripMessageComponent = new TripMessage();
+    this._tripInfoComponent = new InfoView();
+    this._tripCostComponent = new CostView();
+    this._cardsComponent = new CardsView();
   }
 
   init(tripEvents) {
     this._tripEvents = tripEvents;
+    this._renderTrip();
   }
 
   _renderMenu() {
@@ -59,5 +61,18 @@ export default class Trip {
 
   _renderTrip() {
 
+  this._renderMenu();
+  this._renderFilter();
+
+  if (this._tripEvents.length === 0) {
+    this._renderNoEvents();
+    return;
   }
+
+  this._renderTripInfo();
+  this._renderTripPrice();
+  this._renderSort();
+  this._renderEvents();
+
+}
 }

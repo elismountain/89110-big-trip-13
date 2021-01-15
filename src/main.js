@@ -1,10 +1,17 @@
+import Info from './view/info.js';
+import MenuView from './view/menu.js';
+import CardsView from './view/cards.js';
+import SortView from './view/sort.js';
+import CostView from './view/cost.js';
+import FilterView from './view/filter.js';
 import FormView from './view/form.js';
 import CardView from './view/card.js';
-
+import NewWaypointView from './view/new-waypoint.js';
+// import TripMessage from './view/trip-message.js';
 import {waypoints} from './mocks/waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
-import {render, replace, RenderPosition} from "./utils/render.js"; // add remove
+import {render, replace, RenderPosition} from "./utils/render.js";
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
 import {isEscapeKey} from "./utils/dom-event.js";
 
