@@ -1,9 +1,9 @@
 import {
   formatDateTime,
   formatDuration
-} from "../utils/date.js";
+} from "../utils/event.js";
 
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 
 const createOfferTemplates = (offers) => {
@@ -60,21 +60,38 @@ const createCardTemplate = (waypoint) => {
 };
 
 
-export default class Card extends Abstract {
+export default class TripEvent extends AbstractView {
   constructor(waypoint) {
     super();
     this._waypoint = waypoint;
 
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._waypoint);
   }
 
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
   setRollupButtonClickHandler(callback) {
     this._callback.clickCard = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupButtonClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, this._favoriteClickHandler);
   }
 
   _rollupButtonClickHandler(evt) {

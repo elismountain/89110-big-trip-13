@@ -1,8 +1,8 @@
 import {
   formatDateTime
-} from "../utils/date.js";
+} from "../utils/event.js";
 
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createTripInfoTemplate = (startTime, endTime) => {
   return (
@@ -17,14 +17,13 @@ const createTripInfoTemplate = (startTime, endTime) => {
 };
 
 
-export default class Info extends Abstract {
-  constructor(startTime, endTime) {
+export default class Info extends AbstractView {
+  constructor(tripInfo) {
     super();
-    this._start = startTime;
-    this._end = endTime;
+    this._tripInfo = tripInfo;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._start, this._end);
+    return createTripInfoTemplate(this._tripInfo);
   }
 }

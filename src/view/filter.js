@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createFilterTemplate = (filterTabs) => {
   const filterMarkup = filterTabs.map((filter) => {
@@ -20,7 +20,7 @@ const createFilterTemplate = (filterTabs) => {
   );
 };
 
-export default class Filter extends Abstract {
+export default class Filter extends AbstractView {
   constructor(filterTabs) {
     super();
     this._filters = filterTabs;

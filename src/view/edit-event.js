@@ -1,5 +1,5 @@
-import {formatDateTime} from "../utils/date.js";
-import Abstract from "./abstract.js";
+import {formatDateTime} from "../utils/event.js";
+import AbstractView from "./abstract.js";
 
 const createOptionsTemplate = (destinations) => {
   return destinations
@@ -161,7 +161,7 @@ const createEditFormTemplate = (waypoint, allDestinations, waypointTypes, offers
 };
 
 
-export default class Form extends Abstract {
+export default class EditEvent extends AbstractView {
 
   constructor(waypoint, destinations, waypointTypes, offers) {
     super();
@@ -176,7 +176,25 @@ export default class Form extends Abstract {
     return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
   }
 
-  setSubmitHandler(callback) {
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit(this._event);
+  }
+
+  setRollupButtonClickHandler(callback) {
+    this._callback.click = callback;
+
+    this.getElement()
+      .querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._clickHandler);
+  }
+
+  setFormSubmitHandler(callback) {
     this._callback.submitForm = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }

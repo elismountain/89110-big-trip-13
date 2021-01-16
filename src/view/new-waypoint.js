@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createNewWaypointTemplate = () => {
   return (
@@ -7,7 +7,7 @@ const createNewWaypointTemplate = () => {
 };
 
 
-export default class NewWaypoint extends Abstract {
+export default class NewWaypoint extends AbstractView {
   getTemplate() {
     return createNewWaypointTemplate();
   }

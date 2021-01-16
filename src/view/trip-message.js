@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createTripMessageTemplate = (message) => {
   return (
@@ -7,7 +7,7 @@ const createTripMessageTemplate = (message) => {
 };
 
 
-export default class TripMessage extends Abstract {
+export default class TripMessage extends AbstractView {
   constructor(message) {
     super();
     this._message = message;
