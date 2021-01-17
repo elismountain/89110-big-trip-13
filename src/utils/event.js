@@ -40,12 +40,12 @@ export const getTripInfo = (waypoints) => {
     return null;
   }
 
-  const eventsByDateAsc = waypoints.slice().sort(sortEventDateAsc);
+  const waypointsByDateAsc = waypoints.slice().sort(sortWaypointDateAsc);
 
   return {
-    startDate: eventsByDateAsc[0].startDate,
-    finishDate: eventsByDateAsc[eventsByDateAsc.length - 1].finishDate,
-    destinations: getDestinationsForTrip(eventsByDateAsc)
+    startTime: waypointsByDateAsc[0].startTime,
+    endTime: waypointsByDateAsc[waypointsByDateAsc.length - 1].endTime,
+    destination: getDestinationsForTrip(waypointsByDateAsc)
   };
 };
 
@@ -55,25 +55,25 @@ export const getTripPrice = (waypoints) => {
   }
 
 
-  const totalPriceForEvents = waypoints.reduce((total, waypoint) => {
-    const priceForEventOffers = Array.from(waypoint.offers).reduce((sum, offer) => sum + OFFERS.get(offer).price, 0);
-    return waypoint.price + priceForEventOffers + total;
+  const totalPriceForWaypoints = waypoints.reduce((total, waypoint) => {
+    const priceForWaypointOffers = Array.from(waypoint.offers).reduce((sum, offer) => sum + OFFERS.get(offer).price, 0);
+    return waypoint.price + priceForWaypointOffers + total;
   }, 0);
 
-  return totalPriceForEvents;
+  return totalPriceForWaypoints;
 };
 
-export const sortEventDateAsc = (lhsEvent, rhsEvent) => {
-  return dayjs(lhsEvent.startDate).diff(dayjs(rhsEvent.startDate));
+export const sortWaypointDateAsc = (lhsWaypoint, rhsWaypoint) => {
+  return dayjs(lhsWaypoint.startTime).diff(dayjs(rhsWaypoint.startTime));
 };
 
-export const sortEventPriceDesc = (lhsEvent, rhsEvent) => {
-  return rhsEvent.price - lhsEvent.price;
+export const sortWaypointPriceDesc = (lhsWaypoint, rhsWaypoint) => {
+  return rhsWaypoint.price - lhsWaypoint.price;
 };
 
-export const sortEventDurationDesc = (lhsEvent, rhsEvent) => {
-  const lhsDurationMs = dayjs.duration(dayjs(lhsEvent.finishDate).diff(dayjs(lhsEvent.startDate))).asMilliseconds();
-  const rhsDurationMs = dayjs.duration(dayjs(rhsEvent.finishDate).diff(dayjs(rhsEvent.startDate))).asMilliseconds();
+export const sortWaypointDurationDesc = (lhsWaypoint, rhsWaypoint) => {
+  const lhsDurationMs = dayjs.duration(dayjs(lhsWaypoint.endTime).diff(dayjs(lhsWaypoint.startTime))).asMilliseconds();
+  const rhsDurationMs = dayjs.duration(dayjs(rhsWaypoint.endTime).diff(dayjs(rhsWaypoint.startTime))).asMilliseconds();
 
   return rhsDurationMs - lhsDurationMs;
 };

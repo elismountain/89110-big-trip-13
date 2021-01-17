@@ -1,10 +1,7 @@
 import {getRandomArrayElement, getRandomInteger} from "../mocks/random.js";
 import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "../mocks/const.js";
 const WAYPOINTS_COUNT = 4;
-
-const generateId = () => {
-  return Date.now() + parseInt(Math.random() * 10000, 10);
-};
+import {nanoid} from 'nanoid';
 
 const getRandomDate = () => {
   const targetDate = new Date();
@@ -46,7 +43,7 @@ export const generateWaypoint = () => {
     startTime: new Date(randomDate),
     endTime: new Date(getRandomNextDate(randomDate)),
     isFavorite: getRandomInteger(0, 1) === 1,
-    id: generateId(),
+    id: nanoid(),
     price: getRandomInteger(500, 5000),
   };
   return waypoint;

@@ -161,7 +161,7 @@ const createEditFormTemplate = (waypoint, allDestinations, waypointTypes, offers
 };
 
 
-export default class EditEvent extends AbstractView {
+export default class EditWaypoint extends AbstractView {
 
   constructor(waypoint, destinations, waypointTypes, offers) {
     super();

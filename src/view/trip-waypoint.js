@@ -60,7 +60,7 @@ const createCardTemplate = (waypoint) => {
 };
 
 
-export default class TripEvent extends AbstractView {
+export default class TripWaypoint extends AbstractView {
   constructor(waypoint) {
     super();
     this._waypoint = waypoint;
