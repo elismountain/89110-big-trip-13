@@ -4,13 +4,15 @@ import NewWaypointView from './view/new-waypoint.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {generateFilters} from './mocks/filter.js';
 import {render, RenderPosition} from './utils/render.js';
-import {generateWaypoint} from './mocks/waypoint.js';
+import {generateWaypoint, getDataForAllEventTypes, getDataForAllOffers} from './mocks/waypoint.js';
 
 // Presenter
 
 import TripPresenter from './presenter/trip.js';
 const WAYPOINT_COUNT = 20;
 const generatedWaypoints = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint);
+const waypointTypeInfoMap = getDataForAllEventTypes();
+const offerInfoMap = getDataForAllOffers();
 
 const tripInfoElement = document.querySelector(`.trip-main`);
 const tripEventsElement = document.querySelector(`.trip-events`);
@@ -24,4 +26,4 @@ render(tripControlsElement, new MenuView(menuTabs).getElement(), RenderPosition.
 render(tripInfoElement, new NewWaypointView().getElement(), RenderPosition.BEFOREEND);
 
 const tripPresenter = new TripPresenter(tripInfoElement, tripEventsElement);
-tripPresenter.init(generatedWaypoints);
+tripPresenter.init(generatedWaypoints, waypointTypeInfoMap, offerInfoMap);

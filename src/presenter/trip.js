@@ -1,13 +1,13 @@
-import SortView from './view/sort.js';
-import TripMessageView from './view/trip-message.js';
-import InfoView from './view/info.js';
-import TripPriceView from './view/price.js';
-import CardsView from './view/cards.js';
-import {render, replace, RenderPosition, remove} from './utils/render.js';
-import {generateSort} from './mocks/sort.js';
-import {updateItem} from './utils/common.js';
-import {SortType} from './utils/const.js';
-import {getTripInfo, getTripPrice, sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from './utils/event.js';
+import SortView from '../view/sort.js';
+import TripMessageView from '../view/trip-message.js';
+import InfoView from '../view/info.js';
+import TripPriceView from '../view/trip-price.js';
+import CardsView from '../view/cards.js';
+import {render, replace, RenderPosition, remove} from '../utils/render.js';
+import {generateSort} from '../mocks/sort.js';
+import {updateItem} from '../utils/common.js';
+import {SortType} from '../utils/const.js';
+import {getTripInfo, getTripPrice, sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from '../utils/event.js';
 import WaypointPresenter from '../presenter/waypoint.js';
 
 
@@ -33,8 +33,11 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(waypoints) {
+  init(waypoints, waypointTypeInfoMap, offerInfoMap, destinationInfoMap) {
     this._waypoints = waypoints.slice();
+    this._waypointTypeInfoMap = new Map(waypointTypeInfoMap);
+    this._offerInfoMap = new Map(offerInfoMap);
+    this._destinationInfoMap = new Map(destinationInfoMap);
     this._sortWaypoints();
 
     this._renderTrip();
@@ -50,7 +53,7 @@ export default class Trip {
 
   _renderWaypoint(waypoint) {
     const waypointPresenter = new WaypointPresenter(this._cardsListComponent, this._handleWaypointChange, this._handleModeChange);
-    waypointPresenter.init(waypoint);
+    waypointPresenter.init(waypoint, this._waypointTypeInfoMap, this._offerInfoMap, this._destinationInfoMap);
     this._waypointPresenterMap.set(waypoint.id, waypointPresenter);
   }
 
@@ -135,7 +138,7 @@ export default class Trip {
 
   _handleWaypointChange(updatedWaypoint) {
     this._waypoints = updateItem(this._waypoints, updatedWaypoint);
-    this._waypointPresenterMap.get(updatedWaypoint.id).init(updatedWaypoint);
+    this._waypointPresenterMap.get(updatedWaypoint.id).init(updatedWaypoint, this._waypointTypeInfoMap, this._offerInfoMap);
 
     this._renderTripInfo();
     this._renderTripPrice();

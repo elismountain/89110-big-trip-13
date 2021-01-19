@@ -8,7 +8,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
 export const getRandomArrayElement = (arr) => {
   const element = getRandomInteger(0, arr.length - 1);
   return arr[element];
-};
+}; // проверить, использую ли еще в дргих местах
 
 export const getRandomArrayElements = (arr, max) => {
   const newArr = arr.filter(() => Math.random() > 0.5).slice(0, max);
@@ -29,4 +29,21 @@ export const makeCheckedArray = (arr) => {
     }
   });
   return checkedArray;
+};
+
+const shuffleItems = (items) => {
+  const shuffledItems = [...items];
+  for (let i = shuffledItems.length - 1; i >= 1; i--) {
+    const randomIndex = getRandomInteger(0, i);
+    const swap = shuffledItems[i];
+    shuffledItems[i] = shuffledItems[randomIndex];
+    shuffledItems[randomIndex] = swap;
+  }
+  return shuffledItems;
+};
+
+export const getRandomItems = (items) => {
+  const randomLength = getRandomInteger(1, items.length);
+  const shuffledItems = shuffleItems(items);
+  return shuffledItems.slice(0, randomLength);
 };

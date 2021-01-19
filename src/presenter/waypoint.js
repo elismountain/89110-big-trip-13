@@ -1,13 +1,13 @@
-import TripWaypointView from './view/trip-waypoint.js';
-import EditWaypointView from './view/edit-waypoint.js';
-import {isEscapeKey} from './utils/dom-event.js';
-import {render, replace, remove, RenderPosition} from './utils/render.js';
+import TripWaypointView from '../view/trip-waypoint.js';
+import EditWaypointView from '../view/edit-waypoint.js';
+import {isEscapeKey} from '../utils/dom-event.js';
+import {render, replace, remove, RenderPosition} from '../utils/render.js';
 
-import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from './mocks/const.js';
+// import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from './mocks/const.js';
 // import {waypoints} from './mocks/waypoint.js';
-const destinations = DESTINATIONS;
-const waypointTypes = WAYPOINT_TYPES;
-const offers = OFFERS;
+// const destinations = DESTINATIONS;
+// const waypointTypes = WAYPOINT_TYPES;
+// const offers = OFFERS;
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -30,14 +30,13 @@ export default class Waypoint {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
-  init(waypoint) {
+  init(waypoint, waypointTypeInfoMap, offerInfoMap) {
     this._waypoint = waypoint;
-
     const prevWaypointComponent = this._waypointComponent;
     const prevWaypointEditComponent = this._waypointEditComponent;
 
-    this._waypointComponent = new TripWaypointView(waypoint);
-    this._waypointEditComponent = new EditWaypointView(waypoint, destinations, waypointTypes, offers);
+    this._waypointComponent = new TripWaypointView(waypoint, offerInfoMap);
+    this._waypointEditComponent = new EditWaypointView(waypoint, waypointTypeInfoMap, offerInfoMap);
 
     this._waypointComponent.setRollupButtonClickHandler(this._handleClickRollupButtonDown);
     this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
