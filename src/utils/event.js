@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from "dayjs/plugin/duration";
-import OFFERS from "../mocks/const.js";
+// import OFFERS from "../mocks/const.js";
+import {getDataForAllOffers} from '../mocks/waypoint.js';
 dayjs.extend(duration);
 
 const getDuration = (time) => dayjs.duration(time).$d;
@@ -54,10 +55,11 @@ export const getTripPrice = (waypoints) => {
     return 0;
   }
 
+  const offersData = getDataForAllOffers();
 
   const totalPriceForWaypoints = waypoints.reduce((total, waypoint) => {
-    const priceForWaypointOffers = Array.from(waypoint.offers).reduce((sum, offer) => sum + OFFERS.get(offer).price, 0);
-    return waypoint.price + priceForWaypointOffers + total;
+    const priceForWaypointsOffers = Array.from(waypoint.offers).reduce((sum, offer) => sum + offersData.get(offer).price, 0);
+    return waypoint.price + priceForWaypointsOffers + total;
   }, 0);
 
   return totalPriceForWaypoints;

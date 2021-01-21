@@ -1,5 +1,20 @@
 import {formatDateTime} from "../utils/event.js";
 import AbstractView from "./abstract.js";
+// import dayjs from 'dayjs';
+
+// const EMPTY_EVENT = {
+//   type: ``,
+//   startTime: dayjs().startOf(`day`),
+//   endTime: dayjs().endOf(`day`),
+//   destination: ``,
+//   price: 0,
+//   offers: []
+// };
+
+// const DeleteButtonLabel = {
+//   ADD: `Cancel`,
+//   EDIT: `Delete`
+// };
 
 const createOptionsTemplate = (destinations) => {
   return destinations
@@ -10,11 +25,11 @@ const createOptionsTemplate = (destinations) => {
 
 const createWaypointTypeTemplate = (types, selectedType) => {
   return types
-          .map((waypointType, index) => {
-            const upperCaseType = waypointType.charAt(0).toUpperCase() + waypointType.slice(1);
+          .map((type, index) => {
+            const upperCaseType = type.charAt(0).toUpperCase() + type.slice(1);
             return `<div class="event__type-item">
-              <input id="event-type-${waypointType}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${waypointType}" ${waypointType === selectedType ? `checked` : ``}>
-              <label class="event__type-label  event__type-label--${waypointType}" for="event-type-${waypointType}-1">${upperCaseType}</label>
+              <input id="event-type-${type}-1-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${type === selectedType ? `checked` : ``}>
+              <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${upperCaseType}</label>
             </div>`;
           }).join(``);
 };
@@ -85,9 +100,9 @@ const createDestinationsTemplate = (waypoint) => {
 };
 
 
-const getOffersByWaypointType = (offers, waypointType) => {
+const getOffersByWaypointType = (offers, type) => {
   const result = offers.find((item) => {
-    return item.type === waypointType;
+    return item.type === type;
   });
 
   return result === undefined ? [] : result.offers;
@@ -169,7 +184,7 @@ export default class EditWaypoint extends AbstractView {
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
   getTemplate() {
@@ -183,7 +198,7 @@ export default class EditWaypoint extends AbstractView {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit(this._event);
+    this._callback.submit(this._waypoint);
   }
 
   setRollupButtonClickHandler(callback) {
@@ -196,10 +211,10 @@ export default class EditWaypoint extends AbstractView {
 
   setFormSubmitHandler(callback) {
     this._callback.submitForm = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._handleFormSubmit);
   }
 
-  _formSubmitHandler(evt) {
+  _handleFormSubmit(evt) {
     evt.preventDefault();
     this._callback.submitForm();
   }

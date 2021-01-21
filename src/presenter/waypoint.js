@@ -3,48 +3,41 @@ import EditWaypointView from '../view/edit-waypoint.js';
 import {isEscapeKey} from '../utils/dom-event.js';
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
 
-// import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from './mocks/const.js';
-// import {waypoints} from './mocks/waypoint.js';
-// const destinations = DESTINATIONS;
-// const waypointTypes = WAYPOINT_TYPES;
-// const offers = OFFERS;
-
 const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`
 };
 
 export default class Waypoint {
-  constructor(waypointListContainer, changeData, changeMode) {
-    this._waypointListContainer = waypointListContainer;
+  constructor(waypointListElements, changeData, changeMode) {
+    this._waypointListElements = waypointListElements;
     this._waypointComponent = null;
     this._waypointEditComponent = null;
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._mode = Mode.DEFAULT;
 
-    this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this); //
-    this._handleClickRollupButtonDown = this._handleClickRollupButtonDown.bind(this); //
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this); //
+    this._setRollupButtonClickHandlerUp = this._setRollupButtonClickHandlerUp.bind(this);
+    this._setRollupButtonClickHandlerDown = this._setRollupButtonClickHandlerDown.bind(this);
+    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
-  init(waypoint, waypointTypeInfoMap, offerInfoMap) {
-    this._waypoint = waypoint;
+  init(waypointTypeInfoMap, offerInfoMap) {
     const prevWaypointComponent = this._waypointComponent;
     const prevWaypointEditComponent = this._waypointEditComponent;
 
-    this._waypointComponent = new TripWaypointView(waypoint, offerInfoMap);
-    this._waypointEditComponent = new EditWaypointView(waypoint, waypointTypeInfoMap, offerInfoMap);
+    this._waypointComponent = new TripWaypointView(offerInfoMap);
+    this._waypointEditComponent = new EditWaypointView(waypointTypeInfoMap, offerInfoMap);
 
-    this._waypointComponent.setRollupButtonClickHandler(this._handleClickRollupButtonDown);
+    this._waypointComponent.setRollupButtonClickHandler(this._setRollupButtonClickHandlerUp);
     this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._waypointEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
+    this._waypointEditComponent.setRollupButtonClickHandler(this._setRollupButtonClickHandlerDown);
     this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if ((prevWaypointComponent === null) || (prevWaypointEditComponent === null)) {
-      render(this._waypointListContainer, this._waypointComponent, RenderPosition.BEFOREEND);
+      render(this._waypointListElements, this._waypointComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -60,11 +53,11 @@ export default class Waypoint {
     remove(prevWaypointEditComponent);
   }
 
-  _handleClickRollupButtonUp() {
+  _setRollupButtonClickHandlerUp() {
     this._switchToDisplay();
   }
 
-  _handleClickRollupButtonDown() {
+  _setRollupButtonClickHandlerDown() {
     this._switchToEdit();
   }
 
@@ -72,8 +65,8 @@ export default class Waypoint {
     isEscapeKey(evt, () => this._switchToDisplay());
   }
 
-  _handleFormSubmit(tripEvent) {
-    this._changeData(tripEvent);
+  _handleFormSubmit(waypoint) {
+    this._changeData(waypoint);
     this._switchToDisplay();
   }
 
@@ -105,41 +98,3 @@ export default class Waypoint {
     remove(this._waypointEditComponent);
   }
 }
-
-//
-//     const tripEventsElement = document.querySelector(`.trip-events`);
-//     render(tripEventsElement, new EditEventView(waypoints[0], destinations, waypointTypes, offers).getElement(), RenderPosition.BEFOREEND);
-//
-//     const renderWaypoint = (waypointListElement, waypoint) => {
-//       const waypointComponent = new TripEventView(waypoint);
-//       const waypointEditComponent = new EditEventView(waypoint, destinations, waypointTypes, offers);
-//       const replaceCardToForm = () => {
-//         replace(waypointEditComponent, waypointComponent);
-//       };
-//
-//       const replaceFormToCard = () => {
-//         replace(waypointComponent, waypointEditComponent);
-//       };
-//
-//       const escKeyDownHandler = (evt) => {
-//         if (isEscapeKey(evt)) {
-//           evt.preventDefault();
-//           replaceFormToCard();
-//           document.removeEventListener(`keydown`, escKeyDownHandler);
-//         }
-//       };
-//
-//       waypointComponent.setRollupButtonClickHandler(() => {
-//         replaceCardToForm();
-//         document.addEventListener(`keydown`, escKeyDownHandler);
-//       });
-//
-//       waypointEditComponent.setFormSubmitHandler(() => {
-//         replaceFormToCard();
-//         document.removeEventListener(`keydown`, escKeyDownHandler);
-//       });
-//
-//       render(waypointListElement, waypointComponent.getElement());
-//     };
-//   }
-// }
