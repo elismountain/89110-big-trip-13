@@ -1,76 +1,46 @@
-import Info from './view/info.js';
-import Menu from './view/menu.js';
-import Cards from './view/cards.js';
-import Sort from './view/sort.js';
-import Cost from './view/cost.js';
-import Filter from './view/filter.js';
-import Form from './view/form.js';
-import Card from './view/card.js';
-import NewWaypoint from './view/new-waypoint.js';
-// import TripMessage from './view/trip-message.js';
-import {waypoints} from './mocks/waypoint.js';
+import MenuView from './view/menu.js';
+import NewWaypointButtonView from './view/new-waypoint-button.js';
 import {generateMenuItems} from './mocks/menu.js';
-import {generateFilters} from './mocks/filter.js';
-import {render, replace, RenderPosition} from "./utils/render.js"; // add remove
-import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "./mocks/const.js";
-import {isEscapeKey} from "./utils/dom-event.js";
+import {render, RenderPosition} from './utils/render.js';
+import {generateWaypoint, getDataForAllEventTypes, getDataForAllOffers, getDataForAllDestinations} from './mocks/waypoint.js';
+import TripPresenter from './presenter/trip.js';
+import FilterPresenter from './presenter/filter.js';
+import WaypointModel from './model/waypoint.js';
+import FilterModel from './model/filter.js';
+import DataListModel from './model/data-list.js';
 
+// Presenter
+const WAYPOINT_COUNT = 20;
+const generatedWaypoints = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint);
+const waypointTypeInfoMap = getDataForAllEventTypes();
+const offerInfoMap = getDataForAllOffers();
+const destinationInfoMap = getDataForAllDestinations();
 
-const destinations = DESTINATIONS;
-const waypointTypes = WAYPOINT_TYPES;
-const offers = OFFERS;
+const dataListModel = new DataListModel();
+dataListModel.setData(offerInfoMap, waypointTypeInfoMap, destinationInfoMap);
+
+const waypointModel = new WaypointModel();
+waypointModel.setWaypoints(generatedWaypoints);
+
+const filterModel = new FilterModel();
 
 const tripInfoElement = document.querySelector(`.trip-main`);
-render(tripInfoElement, new Info(waypoints[0].startTime, waypoints[waypoints.length - 1].endTime).getElement(), RenderPosition.AFTERBEGIN);
-
-const tripCostElement = document.querySelector(`.trip-main__trip-info`);
-render(tripCostElement, new Cost().getElement(), RenderPosition.BEFOREEND);
-render(tripInfoElement, new NewWaypoint().getElement(), RenderPosition.BEFOREEND);
-
-const tripControlsElement = document.querySelector(`.trip-main__trip-controls`);
-const filterTabs = generateFilters();
-const menuTabs = generateMenuItems();
-render(tripControlsElement, new Filter(filterTabs).getElement(), RenderPosition.AFTERBEGIN);
-render(tripControlsElement, new Menu(menuTabs).getElement(), RenderPosition.AFTERBEGIN);
-
 const tripEventsElement = document.querySelector(`.trip-events`);
-render(tripEventsElement, new Sort().getElement(), RenderPosition.AFTERBEGIN);
-render(tripEventsElement, new Form(waypoints[0], destinations, waypointTypes, offers).getElement(), RenderPosition.BEFOREEND);
-render(tripEventsElement, new Cards().getElement(), RenderPosition.AFTEREND);
 
-const tripCardsElement = document.querySelector(`.trip-events__list`);
+const siteMenuTitleElements = tripInfoElement.querySelectorAll(`.trip-controls h2`);
+const [menuContainer, filterContainer] = siteMenuTitleElements;
 
-const renderWaypoint = (waypointListElement, waypoint) => {
-  const waypointComponent = new Card(waypoint);
-  const waypointEditComponent = new Form(waypoint, destinations, waypointTypes, offers);
-  const replaceCardToForm = () => {
-    replace(waypointEditComponent, waypointComponent);
-  };
+const menuTabs = generateMenuItems();
+render(menuContainer, new MenuView(menuTabs), RenderPosition.AFTEREND);
+render(tripInfoElement, new NewWaypointButtonView().getElement(), RenderPosition.BEFOREEND);
 
-  const replaceFormToCard = () => {
-    replace(waypointComponent, waypointEditComponent);
-  };
+const filterPresenter = new FilterPresenter(filterContainer, filterModel);
+filterPresenter.init();
 
-  const escKeyDownHandler = (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      replaceFormToCard();
-      document.removeEventListener(`keydown`, escKeyDownHandler);
-    }
-  };
+const tripPresenter = new TripPresenter(tripInfoElement, tripEventsElement, waypointModel, filterModel, dataListModel);
+tripPresenter.init();
 
-  waypointComponent.setRollupButtonClickHandler(() => {
-    replaceCardToForm();
-    document.addEventListener(`keydown`, escKeyDownHandler);
-  });
-
-
-  waypointEditComponent.setSubmitHandler(() => {
-    replaceFormToCard();
-    document.removeEventListener(`keydown`, escKeyDownHandler);
-  });
-
-  render(waypointListElement, waypointComponent.getElement());
-};
-
-waypoints.forEach((waypointItem) => renderWaypoint(tripCardsElement, waypointItem));
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (event) => {
+  event.preventDefault();
+  tripPresenter.createEvent();
+});

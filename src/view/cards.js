@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createCardsTemplate = () => {
   return (
@@ -6,8 +6,7 @@ const createCardsTemplate = () => {
   );
 };
 
-
-export default class Cards extends Abstract {
+export default class Cards extends AbstractView {
 
   getTemplate() {
     return createCardsTemplate();

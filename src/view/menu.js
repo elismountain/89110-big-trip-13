@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createMenuTemplate = (menuTabs) => {
   const menuMarkup = menuTabs.map((menu) => {
@@ -15,7 +15,7 @@ const createMenuTemplate = (menuTabs) => {
   );
 };
 
-export default class Menu extends Abstract {
+export default class Menu extends AbstractView {
   constructor(menuTabs) {
     super();
     this._menus = menuTabs;

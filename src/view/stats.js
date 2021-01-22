@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import AbstractView from "./abstract.js";
 
 const createStatisticsTemplate = () => {
   return (
@@ -20,7 +20,7 @@ const createStatisticsTemplate = () => {
   );
 };
 
-export default class Stats extends Abstract {
+export default class Stats extends AbstractView {
 
   getTemplate() {
     return createStatisticsTemplate();
