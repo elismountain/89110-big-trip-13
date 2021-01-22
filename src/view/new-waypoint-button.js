@@ -7,7 +7,7 @@ const createNewWaypointTemplate = () => {
 };
 
 
-export default class NewWaypoint extends AbstractView {
+export default class NewWaypointButton extends AbstractView {
   getTemplate() {
     return createNewWaypointTemplate();
   }

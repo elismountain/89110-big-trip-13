@@ -1,6 +1,6 @@
-import EventEditView from '../view/edit-waypoint.js';
+import EditWaypointView from '../view/edit-waypoint.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
-import {UpdateType} from '../utils/const.js';
+import {UpdateType, UserAction} from '../utils/const.js';
 import {isEscapeKey} from '../utils/dom-event.js';
 import {nanoid} from 'nanoid';
 
@@ -11,21 +11,30 @@ export default class WaypointNew {
 
     this._waypointEditComponent = null;
 
+    this._onFormSubmitHandler = this._onFormSubmitHandler.bind(this);
+    this._onRollupButtonClickHandler = this._onRollupButtonClickHandler.bind(this);
+    this._onDeleteClickHandler = this._onDeleteClickHandler.bind(this);
+
     //  Дописать binds
   }
 
   init(dataListModel) {
-    if (this._pointEditComponent !== null) {
+    if (this._waypointEditComponent !== null) {
       return;
     }
 
-    this._waypointEditComponent = new EventEditView();
+    this._dataListModel = dataListModel;
+
+    this._waypointEditComponent = new EditWaypointView();
+    this._eventEditComponent.setFormSubmitHandler(this._onFormSubmitHandler);
+    this._eventEditComponent.setDeleteClickHandler(this._onDeleteClickHandler);
+    this._eventEditComponent.setRollupButtonClickHandler(this._onRollupButtonClickHandler);
 
     // дописть binds
 
     render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener(`keydown`, this._onEscKeyDown);
+    document.addEventListener(`keydown`, this._handleEscKeyDown);
   }
 
   destroy() {
@@ -36,9 +45,29 @@ export default class WaypointNew {
     remove(this._waypointEditComponent);
     this._waypointEditComponent = null;
 
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+    document.removeEventListener(`keydown`, this._handleKeydown);
   }
 
-  _handleFormSubmit() {
+  _onFormSubmitHandler(waypoint) {
+    this._changeData(
+        UserAction.ADD_EVENT,
+        UpdateType.MINOR,
+        Object.assign({id: nanoid()}, waypoint)
+    );
+    this.destroy();
+  }
+
+  _onDeleteClickHandler() {
+    this.destroy();
+  }
+
+  _handleKeydown(event) {
+    isEscapeKey(event, () => {
+      this.destroy();
+    });
+  }
+
+  _onRollupButtonClickHandler() {
+    this.destroy();
   }
 }

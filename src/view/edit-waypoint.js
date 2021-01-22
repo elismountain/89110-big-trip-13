@@ -184,20 +184,18 @@ export default class EditWaypoint extends AbstractView {
     this._destinations = destinations;
     this._waypointTypes = waypointTypes;
     this._offers = offers;
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+
+    this._onFormSubmitHandler = this._onFormSubmitHandler.bind(this);
+    this._onRollupButtonClickHandler = this._onRollupButtonClickHandler.bind(this);
+    this._onDeleteClickHandler = this._onDeleteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditFormTemplate(this._waypoint, this._destinations, this._waypointTypes, this._offers);
   }
 
-  _clickHandler(evt) {
-    evt.preventDefault();
-    this._callback.click();
-  }
-
-  _submitHandler(evt) {
-    evt.preventDefault();
+  _onRollupButtonClickHandler(event) {
+    event.preventDefault();
     this._callback.submit(this._waypoint);
   }
 
@@ -206,16 +204,28 @@ export default class EditWaypoint extends AbstractView {
 
     this.getElement()
       .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._clickHandler);
+      .addEventListener(`click`, this._onRollupButtonClickHandler);
   }
 
   setFormSubmitHandler(callback) {
     this._callback.submitForm = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._handleFormSubmit);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._onFormSubmitHandler);
   }
 
-  _handleFormSubmit(evt) {
-    evt.preventDefault();
+  _onFormSubmitHandler(event) {
+    event.preventDefault();
     this._callback.submitForm();
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement()
+  .querySelector(`.event__reset-btn`)
+  .addEventListener(`click`, this._onDeleteClickHandler);
+  }
+
+  _onDeleteClickHandler(event) {
+    event.preventDefault();
+    this._callback.click();
   }
 }

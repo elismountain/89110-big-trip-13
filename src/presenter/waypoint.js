@@ -17,11 +17,11 @@ export default class Waypoint {
     this._changeMode = changeMode;
     this._mode = Mode.DEFAULT;
 
-    this._setRollupButtonClickHandlerUp = this._setRollupButtonClickHandlerUp.bind(this);
-    this._setRollupButtonClickHandlerDown = this._setRollupButtonClickHandlerDown.bind(this);
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._onRollupButtonClickHandlerUp = this._onRollupButtonClickHandlerUp.bind(this);
+    this._onRollupButtonClickHandlerDown = this._onRollupButtonClickHandlerDown.bind(this);
+    this._onKeyDown = this._onKeyDown.bind(this);
+    this._onFormSubmitHandler = this._onFormSubmitHandler.bind(this);
+    this._onFavoriteClickHandler = this._onFavoriteClickHandler.bind(this);
   }
 
   init(waypointTypeInfoMap, offerInfoMap) {
@@ -31,10 +31,10 @@ export default class Waypoint {
     this._waypointComponent = new TripWaypointView(offerInfoMap);
     this._waypointEditComponent = new EditWaypointView(waypointTypeInfoMap, offerInfoMap);
 
-    this._waypointComponent.setRollupButtonClickHandler(this._setRollupButtonClickHandlerUp);
-    this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._waypointEditComponent.setRollupButtonClickHandler(this._setRollupButtonClickHandlerDown);
-    this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._waypointComponent.setRollupButtonClickHandler(this._onRollupButtonClickHandlerUp);
+    this._waypointComponent.setFavoriteClickHandler(this._onFavoriteClickHandler);
+    this._waypointEditComponent.setRollupButtonClickHandler(this._onRollupButtonClickHandlerDown);
+    this._waypointEditComponent.setFormSubmitHandler(this._onFormSubmitHandler);
 
     if ((prevWaypointComponent === null) || (prevWaypointEditComponent === null)) {
       render(this._waypointListElements, this._waypointComponent, RenderPosition.BEFOREEND);
@@ -53,37 +53,37 @@ export default class Waypoint {
     remove(prevWaypointEditComponent);
   }
 
-  _setRollupButtonClickHandlerUp() {
+  _onRollupButtonClickHandlerUp() {
     this._switchToDisplay();
   }
 
-  _setRollupButtonClickHandlerDown() {
+  _onRollupButtonClickHandlerDown() {
     this._switchToEdit();
   }
 
-  _handleEscKeyDown(evt) {
+  _onKeyDown(evt) {
     isEscapeKey(evt, () => this._switchToDisplay());
   }
 
-  _handleFormSubmit(waypoint) {
+  _onFormSubmitHandler(waypoint) {
     this._changeData(waypoint);
     this._switchToDisplay();
   }
 
-  _handleFavoriteClick() {
+  _onFavoriteClickHandler() {
     this._changeData(Object.assign({}, this._waypoint, {isFavorite: !this._waypoint.isFavorite}));
   }
 
   _switchToEdit() {
     replace(this._waypointEditComponent, this._waypointComponent);
-    document.addEventListener(`keydown`, this._handleEscKeyDown);
+    document.addEventListener(`keydown`, this._onKeyDown);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _switchToDisplay() {
     replace(this._waypointComponent, this._waypointEditComponent);
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+    document.removeEventListener(`keydown`, this._onKeyDown);
     this._mode = Mode.DEFAULT;
   }
 

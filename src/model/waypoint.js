@@ -1,6 +1,6 @@
-import Subject from '../utils/subject.js';
+import Observer from '../utils/observer.js';
 
-export default class Waypoints extends Subject {
+export default class Waypoint extends Observer {
   constructor() {
     super();
     this._waypoints = [];

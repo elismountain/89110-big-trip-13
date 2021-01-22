@@ -6,7 +6,6 @@ const createCardsTemplate = () => {
   );
 };
 
-
 export default class Cards extends AbstractView {
 
   getTemplate() {

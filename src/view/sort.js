@@ -35,7 +35,7 @@ export default class Sort extends AbstractView {
   constructor(currentSortType) {
     super();
     this._currentSortType = currentSortType;
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._onSortTypeChangeHandler = this._onSortTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -44,15 +44,15 @@ export default class Sort extends AbstractView {
 
   setSortTypeChangeHandler(callback) {
     this._callback.сhangeSortType = callback;
-    this.getElement().addEventListener(`change`, this._handleSortTypeChange);
+    this.getElement().addEventListener(`change`, this._onSortTypeChangeHandler);
   }
 
-  _handleSortTypeChange(evt) {
-    if (evt.target.tagName !== `INPUT`) {
+  _onSortTypeChangeHandler(event) {
+    if (event.target.tagName !== `INPUT`) {
       return;
     }
 
-    evt.preventDefault();
-    this._callback.сhangeSortType(evt.target.value);
+    event.preventDefault();
+    this._callback.сhangeSortType(event.target.value);
   }
 }

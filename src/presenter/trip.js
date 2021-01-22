@@ -8,14 +8,14 @@ import {generateSort} from '../mocks/sort.js';
 import {SortType, FilterType, UpdateType, filter} from '../utils/const.js';
 import {getTripInfo, getTripPrice, sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from '../utils/event.js';
 import WaypointPresenter from '../presenter/waypoint.js';
-import WaypointNewPresenter from '../presenter/event-new.js';
+import WaypointNewPresenter from '../presenter/new-waypoint.js';
 
 
 export default class Trip {
-  constructor(tripContainerElement, waypointContainerElement, waypointsModel, filterModel, dataListModel) {
+  constructor(tripContainerElement, waypointContainerElement, waypointModel, filterModel, dataListModel) {
     this._tripContainerElement = tripContainerElement;
     this._waypointContainerElement = waypointContainerElement;
-    this._waypointsModel = waypointsModel;
+    this._waypointModel = waypointModel;
     this._filterModel = filterModel;
     this._dataListModel = dataListModel;
 
@@ -31,23 +31,18 @@ export default class Trip {
     this._messageComponent = new TripMessageView();
     this._cardsListComponent = new CardsView();
 
-    this._handleViewAction = this._handleViewAction.bind(this);
-    this._handleModelWaypoint = this._handleModelWaypoint.bind(this);
+    this._onViewAction = this._onViewAction.bind(this);
+    this._onModelWaypoint = this._onModelWaypoint.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._onSortTypeChangeHandler = this._onSortTypeChangeHandler.bind(this);
 
-    this._waypointsModel.attach(this._handleModelWaypoint);
-    this._filterModel.attach(this._handleModelWaypoint);
+    this._waypointModel.attach(this._onModelWaypoint);
+    this._filterModel.attach(this._onModelWaypoint);
 
-    this._waypointNewPresenter = new WaypointNewPresenter(this._cardsListComponent, this._handleViewAction);
+    this._waypointNewPresenter = new WaypointNewPresenter(this._cardsListComponent, this._onViewAction);
   }
 
-  init(waypointTypeInfoMap, offerInfoMap, destinationInfoMap) {
-    this._waypointTypeInfoMap = new Map(waypointTypeInfoMap);
-    this._offerInfoMap = new Map(offerInfoMap);
-    this._destinationInfoMap = new Map(destinationInfoMap);
-    this._sortWaypoints();
-
+  init() {
     this._renderMenu();
   }
 
@@ -59,7 +54,7 @@ export default class Trip {
 
   _getWaypoints() {
     const filterType = this._filterModel.getFilter();
-    const waypoints = this._waypointsModel.getWaypoints();
+    const waypoints = this._waypointModel.getWaypoints();
     const filteredEvents = filter[filterType](waypoints);
 
     switch (this._currentSortType) {
@@ -76,12 +71,12 @@ export default class Trip {
 
   _renderSort() {
     render(this._waypointContainerElement, this._sortComponent, RenderPosition.AFTERBEGIN);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChangeHandler);
 
   }
 
   _renderWaypoint(waypoint) {
-    const waypointPresenter = new WaypointPresenter(this._cardsListComponent, this._handleViewAction, this._handleModeChange);
+    const waypointPresenter = new WaypointPresenter(this._cardsListComponent, this._onViewAction, this._handleModeChange);
     waypointPresenter.init(waypoint, this._dataListModel);
     this._waypointPresenterMap.set(waypoint.id, waypointPresenter);
   }
@@ -141,11 +136,11 @@ export default class Trip {
     remove(this._priceComponent);
   }
 
-  _handleViewAction() {
+  _onViewAction() {
 
   }
 
-  _handleModelWaypoint() {
+  _onModelWaypoint() {
 
   }
 
@@ -155,7 +150,7 @@ export default class Trip {
 
   }
 
-  _handleSortTypeChange(sortType) {
+  _onSortTypeChangeHandler(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }

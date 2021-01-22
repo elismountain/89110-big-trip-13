@@ -1,6 +1,6 @@
-import Subject from '../utils/subject.js';
+import Observer from '../utils/observer.js';
 
-export default class DataList extends Subject {
+export default class DataList extends Observer {
   constructor() {
     super();
     this._offers = new Map();

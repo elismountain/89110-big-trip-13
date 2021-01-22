@@ -1,7 +1,7 @@
-import Subject from '../utils/subject.js';
+import Observer from '../utils/observer.js';
 import {FilterType} from '../utils/const.js';
 
-export default class Filter extends Subject {
+export default class Filter extends Observer {
   constructor() {
     super();
     this._activeFilter = FilterType.EVERYTHING;

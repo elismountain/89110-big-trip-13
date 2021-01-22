@@ -31,7 +31,7 @@ const getDestinationsForTrip = (waypoints) => {
   }
 
   const destinations = [];
-  waypoints.forEach((evt) => destinations.push(evt.destination));
+  waypoints.forEach((event) => destinations.push(event.destination));
   return destinations;
 };
 
@@ -78,4 +78,12 @@ export const sortWaypointDurationDesc = (lhsWaypoint, rhsWaypoint) => {
   const rhsDurationMs = dayjs.duration(dayjs(rhsWaypoint.endTime).diff(dayjs(rhsWaypoint.startTime))).asMilliseconds();
 
   return rhsDurationMs - lhsDurationMs;
+};
+
+export const isPastDate = (date) => {
+  return date === null ? false : dayjs().isAfter(date);
+};
+
+export const isFutureDate = (date) => {
+  return date === null ? false : dayjs().isBefore(date, `day`) || dayjs().isSame(date, `day`);
 };
