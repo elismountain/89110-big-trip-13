@@ -1,8 +1,8 @@
 import {getRandomInteger, getRandomItems} from "../mocks/random.js";
-// import {OFFERS, DESTINATIONS, WAYPOINT_TYPES} from "../mocks/const.js";
 const WAYPOINTS_COUNT = 4;
 import {nanoid} from 'nanoid';
 import dayjs from 'dayjs';
+
 
 const waypointTypeInfoMap = new Map(
     [
