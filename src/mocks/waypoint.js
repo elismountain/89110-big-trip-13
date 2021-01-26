@@ -4,7 +4,7 @@ import {nanoid} from 'nanoid';
 import dayjs from 'dayjs';
 
 
-const waypointTypeInfoMap = new Map(
+export const waypointTypeInfoMap = new Map(
     [
       [
         `taxi`,
@@ -203,7 +203,7 @@ export const generateWaypoint = () => {
 
   const endTime = dayjs(startTime).add(Math.abs(randomOffsetDays), `d`).add(Math.abs(randomOffsetHours), `h`).add(Math.abs(randomOffsetMinutes), `m`);
 
-  return {
+  const waypoint = {
     id: nanoid(),
     destination: generateDestination(),
     price: generatePrice(),
@@ -213,6 +213,7 @@ export const generateWaypoint = () => {
     offers: generateOffers(type),
     isFavorite: Boolean(getRandomInteger(0, 1))
   };
+  return waypoint;
 };
 
 export const generateWaypointsArray = (count) => {
