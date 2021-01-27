@@ -2,6 +2,10 @@ import dayjs from 'dayjs';
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
+export const humanizeDate = (date, formatter = `YYYY-MM-DD`) => {
+  return dayjs(date).format(formatter);
+};
+
 const getDestinationsForTrip = (waypoints) => {
   if (!waypoints || waypoints.length === 0) {
     return null;

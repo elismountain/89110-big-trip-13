@@ -29,7 +29,7 @@ export const MenuItem = {
   STATISTICS: `statistics`
 };
 
-export const pointTypes = new Map(
+export const waypointTypes = new Map(
     [
       [
         `taxi`,
