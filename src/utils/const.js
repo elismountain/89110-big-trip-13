@@ -26,6 +26,11 @@ export const UpdateType = {
   MAJOR: `MAJOR`
 };
 
+export const MenuItem = {
+  TABLE: `table`,
+  STATISTICS: `statistics`
+};
+
 export const filter = {
   [FilterType.EVERYTHING]: (waypoints) => waypoints.slice(),
   [FilterType.FUTURE]: (waypoints) => waypoints.filter((waypoint) => isFutureDate(waypoint.startTime)),
