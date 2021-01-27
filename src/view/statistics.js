@@ -1,13 +1,13 @@
 import SmartView from '../view/smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getPointTypes, sumPriceByType, countDurationByPointType} from '../utils/statistics.js';
+import {getWayointTypes, sumPriceByType, countDurationByWaypointType} from '../utils/statistics.js';
 import {formatDurationMs} from '../utils/point.js';
 
-const renderMoneyChart = (moneyCtx, points) => {
-  const types = getPointTypes(points);
+const renderMoneyChart = (moneyCtx, waypoints) => {
+  const types = getWayointTypes(waypoints);
   const upperCaseTypes = types.map((type) => type.toUpperCase());
-  const prices = types.map((type) => sumPriceByType(points, type));
+  const prices = types.map((type) => sumPriceByType(waypoints, type));
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -75,10 +75,10 @@ const renderMoneyChart = (moneyCtx, points) => {
   });
 };
 
-const renderTypeChart = (typeCtx, points) => {
-  const types = getPointTypes(points);
+const renderTypeChart = (typeCtx, waypoints) => {
+  const types = getWayointTypes(waypoints);
   const upperCaseTypes = types.map((type) => type.toUpperCase());
-  const typeCounts = types.map((type) => points.filter((point) => point.type === type).length);
+  const typeCounts = types.map((type) => waypoints.filter((waypoint) => waypoint.type === type).length);
 
   return new Chart(typeCtx, {
     plugins: [ChartDataLabels],
@@ -146,10 +146,10 @@ const renderTypeChart = (typeCtx, points) => {
   });
 };
 
-const renderTimeChart = (moneyCtx, points) => {
-  const types = getPointTypes(points);
+const renderTimeChart = (moneyCtx, waypoints) => {
+  const types = getWayointTypes(waypoints);
   const upperCaseTypes = types.map((type) => type.toUpperCase());
-  const durationsByType = types.map((type) => countDurationByPointType(points, type));
+  const durationsByType = types.map((type) => countDurationByWaypointType(waypoints, type));
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -236,11 +236,11 @@ const createStatisticsTemplate = () => {
 };
 
 export default class Statistics extends SmartView {
-  constructor(points) {
+  constructor(waypoints) {
     super();
 
     this._state = {
-      points
+      waypoints
     };
 
     this._moneyChart = null;
@@ -275,15 +275,15 @@ export default class Statistics extends SmartView {
       this._timeChart = null;
     }
 
-    const {points} = this._state;
+    const {waypoints} = this._state;
 
     const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
     const typeCtx = this.getElement().querySelector(`.statistics__chart--transport`);
     const timeCtx = this.getElement().querySelector(`.statistics__chart--time`);
 
-    this._moneyChart = renderMoneyChart(moneyCtx, points);
-    this._typeChart = renderTypeChart(typeCtx, points);
-    this._timeChart = renderTimeChart(timeCtx, points);
+    this._moneyChart = renderMoneyChart(moneyCtx, waypoints);
+    this._typeChart = renderTypeChart(typeCtx, waypoints);
+    this._timeChart = renderTimeChart(timeCtx, waypoints);
   }
 
 
