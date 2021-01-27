@@ -1,5 +1,5 @@
 import SmartView from './smart.js';
-import {humanizeDate} from '../utils/waypoint.js';
+import {formatDate} from '../utils/waypoint.js';
 import {waypointTypes} from '../utils/const.js';
 import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
@@ -110,10 +110,10 @@ const createWaypointEditTemplate = (state) => {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateFrom, `DD/MM/YY HH:mm`)}" ${isDisabled ? `disabled` : ``}>
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(startTime, `DD/MM/YY HH:mm`)}" ${isDisabled ? `disabled` : ``}>
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateTo, `DD/MM/YY HH:mm`)}" ${isDisabled ? `disabled` : ``}>
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(endTime, `DD/MM/YY HH:mm`)}" ${isDisabled ? `disabled` : ``}>
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -187,8 +187,8 @@ export default class EditWaypoint extends SmartView {
           enableTime: true,
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
-          defaultDate: this._state.dateFrom,
-          maxDate: dayjs(this._state.dateTo).second(0).subtract(1, `m`).toDate(),
+          defaultDate: this._state.startTime,
+          maxDate: dayjs(this._state.endTime).second(0).subtract(1, `m`).toDate(),
           onClose: this._dateFromCloseHandler,
         }
     );
@@ -206,8 +206,8 @@ export default class EditWaypoint extends SmartView {
           enableTime: true,
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
-          defaultDate: this._state.dateTo,
-          minDate: dayjs(this._state.dateFrom).second(0).add(1, `m`).toDate(),
+          defaultDate: this._state.startTime,
+          minDate: dayjs(this._state.endTime).second(0).add(1, `m`).toDate(),
           onClose: this._dateToCloseHandler,
         }
     );

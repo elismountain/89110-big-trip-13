@@ -37,4 +37,32 @@ export default class DataList extends Observer {
   getDestinations() {
     return this._destinations;
   }
+
+  static adaptOffersToClient(serverOffers) {
+    if (!serverOffers || serverOffers.length === 0) {
+      return new Map();
+    }
+
+    const clientOffers = new Map();
+
+    serverOffers.forEach((serverOffer) => {
+      serverOffer.offers.forEach((offer) => clientOffers.set(offer.title, {title: offer.title, price: offer.price, pointTypeKey: serverOffer.type}));
+    });
+
+    return clientOffers;
+  }
+
+  static adaptDestinationsToClient(serverDestinations) {
+    if (!serverDestinations || serverDestinations.length === 0) {
+      return new Map();
+    }
+
+    const clientDestinations = new Map();
+    serverDestinations.forEach((serverDestination) => {
+      const photos = serverDestination.pictures.map((picture) => picture.src);
+      clientDestinations.set(serverDestination.name, {description: serverDestination.description, photos});
+    });
+
+    return clientDestinations;
+  }
 }

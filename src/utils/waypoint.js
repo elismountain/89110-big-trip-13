@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-export const humanizeDate = (date, formatter = `YYYY-MM-DD`) => {
+export const formatDate = (date, formatter = `YYYY-MM-DD`) => {
   return dayjs(date).format(formatter);
 };
 
@@ -71,8 +71,8 @@ export const isFutureDate = (date) => {
 };
 
 
-export const formatDuration = (dateFrom, dateTo) => {
-  const durationInMs = dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom)));
+export const formatDuration = (startTime, endTime) => {
+  const durationInMs = dayjs.duration(dayjs(startTime).diff(dayjs(endTime)));
 
   return formatDurationMs(durationInMs.asMilliseconds());
 };
@@ -98,57 +98,3 @@ export const formatDurationMs = (ms) => {
   const formattedDuration = dayjs(durationBeforeFormat).format(template);
   return formattedDuration;
 };
-//
-//
-// //
-//
-// import {getDataForAllOffers} from '../mocks/waypoint.js';
-//
-//
-// const getDuration = (time) => dayjs.duration(time).$d;
-//
-// const castTimeDateFormat = (value) => String(value).padStart(2, `0`);
-//
-// export const formatDateTime = (date) => (date) ? dayjs(date) : dayjs();
-//
-// export const formatDuration = (time) => {
-//   const {days, hours, minutes} = getDuration(time);
-//   let result = ``;
-//   if (days !== 0) {
-//     result = castTimeDateFormat(days) + `D ` + castTimeDateFormat(hours) + `H ` + castTimeDateFormat(minutes) + `M`;
-//   } else if (hours !== 0) {
-//     result = castTimeDateFormat(hours) + `H ` + castTimeDateFormat(minutes) + `M`;
-//   } else {
-//     result = castTimeDateFormat(minutes) + `M`;
-//   }
-//
-//   return result;
-// };
-//
-// const getDestinationsForTrip = (waypoints) => {
-//
-//   if (!waypoints || waypoints.length === 0) {
-//     return null;
-//   }
-//
-//   const destinations = [];
-//   waypoints.forEach((event) => destinations.push(event.destination));
-//   return destinations;
-// };
-//
-//
-//
-// export const getTripPrice = (waypoints) => {
-//   if (!waypoints || waypoints.length === 0) {
-//     return 0;
-//   }
-//
-//   const offersData = getDataForAllOffers();
-//
-//
-//
-//
-//
-//
-//
-//

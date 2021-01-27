@@ -14,7 +14,7 @@ export const sumPriceByType = (waypoints, type) => {
 };
 
 const getWaypointDurationInMs = (waypoint) => {
-  return dayjs.duration(dayjs(waypoint.dateTo).diff(dayjs(waypoint.dateFrom))).asMilliseconds();
+  return dayjs.duration(dayjs(waypoint.startTime).diff(dayjs(waypoint.endTime))).asMilliseconds();
 };
 
 const sumWaypointDurationsInMs = (waypoints) => waypoints.reduce((totalMs, waypoint) =>

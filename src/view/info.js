@@ -1,4 +1,4 @@
-import {humanizeDate} from '../utils/waypoint.js';
+import {formatDate} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
 const createTripInfoTemplate = (info, isLoading) => {
@@ -33,7 +33,7 @@ const createTripInfoTemplate = (info, isLoading) => {
       <div class="trip-info__main">
         <h1 class="trip-info__title">${tripInfoTitle}</h1>
 
-        <p class="trip-info__dates">${humanizeDate(startTime, `MMM DD`)}&nbsp;&mdash;&nbsp;${humanizeDate(endTime, `DD`)}</p>
+        <p class="trip-info__dates">${formatDate(startTime, `MMM DD`)}&nbsp;&mdash;&nbsp;${formatDate(endTime, `DD`)}</p>
       </div>
     </section>`
   );

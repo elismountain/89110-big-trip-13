@@ -1,0 +1,106 @@
+import Observer from '../utils/observer.js';
+
+export default class Waypoints extends Observer {
+  constructor() {
+    super();
+    this._waypoints = [];
+  }
+
+  setPoints(updateType, waypoints) {
+    this._waypoints = waypoints.slice();
+    this._notify(updateType);
+  }
+
+  getPoints() {
+    return this._waypoints;
+  }
+
+  updatePoint(updateType, update) {
+    const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
+
+    if (index === -1) {
+      throw new Error(`Can't update a non existing point`);
+    }
+
+    this._waypoints = [
+      ...this._waypoints.slice(0, index),
+      update,
+      ...this._waypoints.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  addPoint(updateType, update) {
+    this._waypoints = [
+      update,
+      ...this._waypoints
+    ];
+
+    this._notify(updateType, updateType);
+  }
+
+  deletePoint(updateType, update) {
+    const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
+
+    if (index === -1) {
+      throw new Error(`Can't delete a non existing point`);
+    }
+
+    this._waypoints = [
+      ...this._waypoints.slice(0, index),
+      ...this._waypoints.slice(index + 1)
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  static adaptToClient(waypoint) {
+    const destination = Object.assign({}, waypoints.destination, {photos: waypoint.destination.pictures});
+    delete destination.pictures;
+
+    const adaptedPoint = Object.assign(
+        {},
+        waypoint,
+        {
+          startTime: waypoint.date_from !== null ? new Date(waypoint.date_from) : waypoint.date_from,
+          endTime: waypoint.date_to !== null ? new Date(waypoint.date_to) : waypoint.date_to,
+          destination,
+          price: waypoint.base_price,
+          isFavorite: waypoint.is_favorite
+        }
+    );
+
+    delete adaptedWaypoint.date_from;
+    delete adaptedWaypoint.date_to;
+    delete adaptedWaypoint.base_price;
+    delete adaptedWaypoint.is_favorite;
+
+    return adaptedWaypoint;
+  }
+
+  static adaptToServer(waypoint) {
+    const destination = Object.assign({}, waypoint.destination, {pictures: waypoint.destination.photos});
+    delete destination.photos;
+
+    const adaptedWaypoint = Object.assign(
+        {},
+        waypoint,
+        {
+          "date_from": waypoint.startTime instanceof Date ? waypoint.startTime.toISOString() : null,
+          "date_to": waypoint.endTime instanceof Date ? waypoint.endTime.toISOString() : null,
+          "destination": destination,
+          "base_price": waypoint.price,
+          "is_favorite": waypoint.isFavorite,
+          "offers": waypoint.offers
+        }
+    );
+
+    delete adaptedWaypoint.startTime;
+    delete adaptedWaypoint.endTime;
+    delete adaptedWaypoint.price;
+    delete adaptedWaypoint.isFavorite;
+
+    return adaptedWaypoint;
+  }
+}

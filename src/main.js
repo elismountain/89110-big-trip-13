@@ -1,10 +1,28 @@
 import MenuView from './view/menu.js';
+import StatisticsView from './view/statistics.js';
+import {remove, render, RenderPosition} from './utils/render.js';
+import {isOnline} from './utils/common.js';
+import TripPresenter from './presenter/trip.js';
+import FilterPresenter from './presenter/filter.js';
+import SummaryPresenter from './presenter/summary.js';
+import PointsModel from './model/points.js';
+import FilterModel from './model/filter.js';
+import OffersModel from './model/offers.js';
+import DestinationsModel from './model/destinations.js';
+// import Api from './api/api.js';
+// import Store from './api/store.js';
+// import Provider from './api/provider.js';
+
+import {MenuItem, UpdateType, FilterType} from './utils/const.js';
+
+
+
 import NewWaypointButtonView from './view/new-waypoint-button.js';
 import {generateMenuItems} from './mocks/menu.js';
 import {render, RenderPosition} from './utils/render.js';
 import {generateWaypoint, getDataForAllEventTypes, getDataForAllOffers, getDataForAllDestinations} from './mocks/waypoint.js';
-import TripPresenter from './presenter/trip.js';
-import FilterPresenter from './presenter/filter.js';
+
+
 import WaypointModel from './model/waypoint.js';
 import FilterModel from './model/filter.js';
 import DataListModel from './model/data-list.js';
@@ -16,22 +34,29 @@ const waypointTypeInfoMap = getDataForAllEventTypes();
 const offerInfoMap = getDataForAllOffers();
 const destinationInfoMap = getDataForAllDestinations();
 
-const dataListModel = new DataListModel();
-dataListModel.setData(offerInfoMap, waypointTypeInfoMap, destinationInfoMap);
 
-const waypointModel = new WaypointModel();
-waypointModel.setWaypoints(generatedWaypoints);
 
-const filterModel = new FilterModel();
+
+
+
+
 
 const tripInfoElement = document.querySelector(`.trip-main`);
 const tripEventsElement = document.querySelector(`.trip-events`);
+
+const waypointModel = new WaypointModel();
+waypointModel.setWaypoints(generatedWaypoints);
+const filterModel = new FilterModel();
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
 
 const siteMenuTitleElements = tripInfoElement.querySelectorAll(`.trip-controls h2`);
 const [menuContainer, filterContainer] = siteMenuTitleElements;
 
 const menuTabs = generateMenuItems();
 render(menuContainer, new MenuView(menuTabs), RenderPosition.AFTEREND);
+let statisticsComponent = null;
+
 render(tripInfoElement, new NewWaypointButtonView().getElement(), RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(filterContainer, filterModel);

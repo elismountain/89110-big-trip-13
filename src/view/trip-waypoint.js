@@ -1,11 +1,10 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import {waypointTypes} from '../utils/const.js';
-import {humanizeDate, formatDuration} from '../utils/waypoint.js';
+import {formateDate, formatDuration} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
 dayjs.extend(duration);
-
 
 const createWaypointOfferTemplates = ({title, price}) => {
   return `<li class="event__offer">
@@ -37,7 +36,7 @@ const createCardTemplate = (waypoint) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${humanizeDate(dateFrom, `YYYY-MM-DD`)}">${humanizeDate(dateFrom, `MMM D`)}</time>
+        <time class="event__date" datetime="${formatDate(dateFrom, `YYYY-MM-DD`)}">${formatDate(dateFrom, `MMM D`)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
@@ -45,9 +44,9 @@ const createCardTemplate = (waypoint) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${humanizeDate(dateFrom, `YYYY-MM-DDTHH:mm`)}">${humanizeDate(dateFrom, `HH:mm`)}</time>
+            <time class="event__start-time" datetime="${formatDate(startTime, `YYYY-MM-DDTHH:mm`)}">${formatDate(startTime, `HH:mm`)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${humanizeDate(dateTo, `YYYY-MM-DDTHH:mm`)}">${humanizeDate(dateTo, `HH:mm`)}</time>
+            <time class="event__end-time" datetime="${formatDate(endTime, `YYYY-MM-DDTHH:mm`)}">${formatDate(endTime, `HH:mm`)}</time>
           </p>
           <p class="event__duration">${formattedDuration}</p>
         </div>
