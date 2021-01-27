@@ -234,7 +234,7 @@ export default class EditWaypoint extends SmartView {
   }
 
   reset(waypoint) {
-    this.updateData(PointEdit.parsePointToState(point, this._offers, this._destinations));
+    this.updateData(EditWaypoint.parsePointToState(waypoint, this._offers, this._destinations));
   }
 
   restoreHandlers() {
@@ -329,7 +329,7 @@ export default class EditWaypoint extends SmartView {
 
   _onDeleteClickHandler(event) {
     event.preventDefault();
-    this._callback.deleteClick(EditWaypoint.parseStateToPoint(this._state));
+    this._callback.deleteClick(EditWaypoint.parseStateToWaypoint(this._state));
   }
 
   _onDestinationInputHandler(event) {
@@ -412,7 +412,7 @@ export default class EditWaypoint extends SmartView {
     );
   }
 
-  static parseStateToPoint(state) {
+  static parseStateToWayoint(state) {
     const waypoint = Object.assign({}, state);
 
     const offers = [];

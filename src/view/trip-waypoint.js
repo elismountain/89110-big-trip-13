@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {formatDateTime, formatDuration} from "../utils/event.js";
+import {waypointTypes} from '../utils/const.js';
+import {humanizeDate, formatDuration} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
 dayjs.extend(duration);
@@ -21,14 +22,22 @@ const createWaypointOffersTemplate = (offers) => {
   </ul>` : ``;
 };
 
-const createCardTemplate = (state) => {
-  const {type, destination, startTime, endTime, price, offers, isFavorite} = state;
+const createCardTemplate = (waypoint) => {
+
+  const {type, startTime, endTime, destination, price, isFavorite, offers} = waypoint;
+
   const offersTemplate = createWaypointOffersTemplate(offers);
+
+  const formattedDuration = formatDuration(startTime, endTime);
+
+  const typeIcon = waypointTypes.get(type).src;
+
+  const favoriteClassName = isFavorite ? `event__favorite-btn event__favorite-btn--active` : `event__favorite-btn`;
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${formatDateTime(startTime).format(`YYYY-MM-DD`)}">${formatDateTime(startTime).format(`MMM D`)}</time>
+        <time class="event__date" datetime="${humanizeDate(dateFrom, `YYYY-MM-DD`)}">${humanizeDate(dateFrom, `MMM D`)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
@@ -36,22 +45,20 @@ const createCardTemplate = (state) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${formatDateTime(startTime).format(`YYYY-MM-DDTHH:mm:ss`)}">${formatDateTime(startTime).format(`HH:mm`)}</time>
+            <time class="event__start-time" datetime="${humanizeDate(dateFrom, `YYYY-MM-DDTHH:mm`)}">${humanizeDate(dateFrom, `HH:mm`)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${formatDateTime(endTime).format(`YYYY-MM-DDTHH:mm:ss`)}">${formatDateTime(endTime).format(`HH:mm`)}</time>
+            <time class="event__end-time" datetime="${humanizeDate(dateTo, `YYYY-MM-DDTHH:mm`)}">${humanizeDate(dateTo, `HH:mm`)}</time>
           </p>
-          <p class="event__duration">${formatDuration(endTime - startTime)}</p>
+          <p class="event__duration">${formattedDuration}</p>
         </div>
 
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
-        <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-        ${offersTemplate(offers)}
-        </ul>
 
-        <button class="event__favorite-btn ${isFavorite ? `event__favorite-btn--active` : `` }" type="button">
+        ${offersTemplate}
+
+        <button class="${favoriteClassName}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
             <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -79,16 +86,6 @@ export default class TripWaypoint extends AbstractView {
     return createCardTemplate(this._waypoint);
   }
 
-  _rollupButtonClickHandler(event) {
-    event.preventDefault();
-    this._callback.click();
-  }
-
-  _onFavoriteClickHandler(event) {
-    event.preventDefault();
-    this._callback.favoriteClick();
-  }
-
   setRollupButtonClickHandler(callback) {
     this._callback.clickCard = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onRollupButtonClickHandler);
@@ -103,5 +100,10 @@ export default class TripWaypoint extends AbstractView {
   _onRollupButtonClickHandler(event) {
     event.preventDefault();
     this._callback.clickCard();
+  }
+
+  _onFavoriteClickHandler(event) {
+    event.preventDefault();
+    this._callback.favoriteClick();
   }
 }
