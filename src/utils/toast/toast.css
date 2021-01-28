@@ -1,0 +1,26 @@
+.toast-container {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 0.4em;
+  padding-left: 0.4em;
+  height: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.toast-item {
+  display: inline-flex;
+  margin-bottom: 0.4em;
+  padding: 0.4em;
+  border-radius: 0.2em;
+  border-color: #ffeeee;
+  background-color: #900900;
+  color: #ffffff;
+}
