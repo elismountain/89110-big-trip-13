@@ -6,16 +6,16 @@ export default class Waypoints extends Observer {
     this._waypoints = [];
   }
 
-  setPoints(updateType, waypoints) {
+  setWaypoints(updateType, waypoints) {
     this._waypoints = waypoints.slice();
     this._notify(updateType);
   }
 
-  getPoints() {
+  getWaypoints() {
     return this._waypoints;
   }
 
-  updatePoint(updateType, update) {
+  updateWaypoint(updateType, update) {
     const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
@@ -31,7 +31,7 @@ export default class Waypoints extends Observer {
     this._notify(updateType, update);
   }
 
-  addPoint(updateType, update) {
+  addWaypoint(updateType, update) {
     this._waypoints = [
       update,
       ...this._waypoints
@@ -56,10 +56,10 @@ export default class Waypoints extends Observer {
   }
 
   static adaptToClient(waypoint) {
-    const destination = Object.assign({}, waypoints.destination, {photos: waypoint.destination.pictures});
+    const destination = Object.assign({}, waypoint.destination, {photos: waypoint.destination.pictures});
     delete destination.pictures;
 
-    const adaptedPoint = Object.assign(
+    const adaptedWaypoint = Object.assign(
         {},
         waypoint,
         {

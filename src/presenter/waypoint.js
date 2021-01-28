@@ -1,6 +1,7 @@
 import TripWaypointView from '../view/trip-waypoint.js';
 import EditWaypointView from '../view/edit-waypoint.js';
 import {isEscEvent, isOnline} from '../utils/common.js';
+import {toast} from '../utils/toast/toast.js';
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
 import {UserAction, UpdateType} from '../utils/const.js';
 
@@ -84,21 +85,21 @@ export default class Waypoint {
 
     switch (state) {
       case State.SAVING:
-      this._waypointEditComponent.updateData({
-        isDisabled: true,
-        isSaving: true
-      });
-      break;
-    case State.DELETING:
-      this._waypointEditComponent.updateData({
-        isDisabled: true,
-        isDeleting: true
-      });
-      break;
-    case State.ABORTING:
-      this._waypointComponent.shake(resetFormState);
-      this._waypointEditComponent.shake(resetFormState);
-      break;
+        this._waypointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._waypointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABORTING:
+        this._waypointComponent.shake(resetFormState);
+        this._waypointEditComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -125,6 +126,10 @@ export default class Waypoint {
   }
 
   _onRollupButtonClickHandlerDown() {
+    if (!isOnline()) {
+      toast(`You can't edit while offline`);
+      return;
+    }
     this._switchToEdit();
   }
 
@@ -135,25 +140,35 @@ export default class Waypoint {
   }
 
   _onFormSubmitHandler(waypoint) {
+    if (!isOnline()) {
+      toast(`You can't save while offline`);
+      return;
+    }
+
     this._changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      waypoint
+        UserAction.UPDATE_POINT,
+        UpdateType.MINOR,
+        waypoint
     );
   }
 
   _onFavoriteClickHandler() {
     this._changeData(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      Object.assign({}, this._waypoint, {isFavorite: !this._waypoint.isFavorite}));
+        UserAction.UPDATE_POINT,
+        UpdateType.MINOR,
+        Object.assign({}, this._waypoint, {isFavorite: !this._waypoint.isFavorite}));
   }
 
   _handleDeleteClick(waypoint) {
+    if (!isOnline()) {
+      toast(`You can't delete while offline`);
+      return;
+    }
+
     this._changeData(
-      UserAction.DELETE_POINT,
-      UpdateType.MINOR,
-      waypoint
+        UserAction.DELETE_POINT,
+        UpdateType.MINOR,
+        waypoint
     );
   }
 }

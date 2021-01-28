@@ -7,8 +7,6 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-
-
 const EMPTY_WAYPOINT = {
   type: waypointTypes.keys().next().value,
   startTime: dayjs().startOf(`day`).toDate(),
@@ -84,7 +82,7 @@ const createWaypointEditTemplate = (state) => {
 
   const offersTemplate = createOffersTemplate(offers, isDisabled);
 
-  const destinationInfoTemplate = createDestinationInfoTemplate(destination);
+  const destinationInfoTemplate = createDestinationsTemplate(destination);
 
   const availableDestinationsTemplate = createAvailableDestinationsTemplate(availableDestinations);
 
@@ -94,7 +92,7 @@ const createWaypointEditTemplate = (state) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="${pointTypes.get(type).src}" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="${waypointTypes.get(type).src}" alt="Event type icon">
         </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? `disabled` : ``}>
       ${typesMenuTemplate}
@@ -145,7 +143,7 @@ const createWaypointEditTemplate = (state) => {
 
 export default class EditWaypoint extends SmartView {
 
-  constructor(offers, destinations, waypoint = EMPTY_WAYPOINT ) {
+  constructor(offers, destinations, waypoint = EMPTY_WAYPOINT) {
     super();
     this._offers = offers;
     this._destinations = destinations;
@@ -215,20 +213,20 @@ export default class EditWaypoint extends SmartView {
 
   _dateFromCloseHandler([userDate]) {
     this.updateData(
-      {
-        startTime: dayjs(userDate).second(0).toDate(),
-      },
-      true
+        {
+          startTime: dayjs(userDate).second(0).toDate(),
+        },
+        true
     );
     this._setDateToPicker();
   }
 
   _dateToCloseHandler([userDate]) {
     this.updateData(
-      {
-        endTime: dayjs(userDate).second(0).toDate(),
-      },
-      true
+        {
+          endTime: dayjs(userDate).second(0).toDate(),
+        },
+        true
     );
     this._setDateFromPicker();
   }
@@ -396,7 +394,7 @@ export default class EditWaypoint extends SmartView {
 
     const offerSelectionMap = EditWaypoint._createOfferSelectionForType(waypoint.offers, offersForType);
 
-    const allDestinations = [...destinations.keys()];
+    const availableDestinations = [...destinations.keys()];
 
     return Object.assign(
         {},

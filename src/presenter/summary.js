@@ -14,9 +14,9 @@ export default class Summary {
     this._priceComponent = null;
     this._isLoading = true;
 
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
 
-    this._waypointsModel.attach(this._handleModelEvent);
+    this._waypointsModel.attach(this._onModelEvent);
   }
 
   init() {
@@ -30,7 +30,7 @@ export default class Summary {
       this._infoComponent = null;
     }
 
-    const info = getTripInfo(this._pointsModel.getPoints());
+    const info = getTripInfo(this._waypointsModel.getWaypoints());
     this._infoComponent = new InfoView(info, this._isLoading);
     render(this._summaryContainer, this._infoComponent, RenderPosition.AFTERBEGIN);
   }
@@ -42,12 +42,12 @@ export default class Summary {
       this._priceComponent = null;
     }
 
-    const total = getTripPrice(this._waypointsModel.getPoints());
+    const total = getTripPrice(this._waypointsModel.getWaypoints());
     this._priceComponent = new TripPriceView(total);
     render(this._infoComponent, this._priceComponent, RenderPosition.BEFOREEND);
   }
 
-  _handleModelEvent(updateType) {
+  _onModelEvent(updateType) {
     switch (updateType) {
       case UpdateType.INIT:
         this._isLoading = false;

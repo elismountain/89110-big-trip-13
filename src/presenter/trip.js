@@ -1,18 +1,17 @@
 import SortView from '../view/sort.js';
-import NoPointView from '../view/no-point.js';
+import NoWaypointView from '../view/no-waypoint.js';
 import CardsView from '../view/cards.js';
 import LoadingView from '../view/loading.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
-import {sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from '../utils/point.js';
+import {sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from '../utils/waypoint.js';
 import {filter} from '../utils/filter.js';
 import {SortType, UserAction, UpdateType} from '../utils/const.js';
-import {getTripInfo, getTripPrice, sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from '../utils/event.js';
-import WaypointPresenter, {State as PointPresenterViewState} from '../presenter/waypoint.js';
+import WaypointPresenter, {State as WaypointPresenterViewState} from '../presenter/waypoint.js';
 import WaypointNewPresenter from '../presenter/new-waypoint.js';
 
 
 export default class Trip {
-  constructor(tripContainerElement, waypointContainerElement, waypointModel, filterModel, offersModel, destinationsModel, api) {
+  constructor(tripContainerElement, waypointContainerElement, waypointsModel, filterModel, offersModel, destinationsModel, api) {
     this._tripContainerElement = tripContainerElement;
     this._waypointContainerElement = waypointContainerElement;
     this._waypointsModel = waypointsModel;
@@ -27,12 +26,12 @@ export default class Trip {
     this._currentSortType = SortType.DAY;
     this._sortComponent = null;
 
-    this._noPointComponent = new NoPointView();
+    this._noWaypointComponent = new NoWaypointView();
     this._waypointListComponent = new CardsView();
     this._loadingComponent = new LoadingView();
 
     this._onViewAction = this._onViewAction.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
     this._onModeChange = this._onModeChange.bind(this);
     this._onSortTypeChangeHandler = this._onSortTypeChangeHandler.bind(this);
 
@@ -40,13 +39,13 @@ export default class Trip {
   }
 
   init() {
-    this._waypointsModel.attach(this._handleModelEvent);
-    this._filterModel.attach(this._handleModelEvent);
+    this._waypointsModel.attach(this._onModelEvent);
+    this._filterModel.attach(this._onModelEvent);
 
     this._renderTrip();
   }
 
-  createPoint(callback) {
+  createWaypoint(callback) {
     this._waypointNewPresenter.init(this._offersModel, this._destinationsModel, callback);
   }
 
@@ -54,24 +53,24 @@ export default class Trip {
     this._clearTrip({resetSortType: true});
     remove(this._pointListComponent);
 
-    this._waypointsModel.detach(this._handleModelEvent);
-    this._filterModel.detach(this._handleModelEvent);
+    this._waypointsModel.detach(this._onModelEvent);
+    this._filterModel.detach(this._onModelEvent);
   }
 
-  _getPoints() {
+  _getWaypoints() {
     const filterType = this._filterModel.getFilter();
-    const points = this._waypointsModel.getPoints();
-    const filteredPoints = filter[filterType](points);
+    const waypoints = this._waypointsModel.getWaypoints();
+    const filteredWaypoints = filter[filterType](waypoints);
 
     switch (this._currentSortType) {
       case SortType.DAY:
-        return filteredPoints.sort(sortPointDateAsc);
+        return filteredWaypoints.sort(sortWaypointDateAsc);
       case SortType.TIME:
-        return filteredPoints.sort(sortPointDurationDesc);
+        return filteredWaypoints.sort(sortWaypointDurationDesc);
       case SortType.PRICE:
-        return filteredPoints.sort(sortPointPriceDesc);
+        return filteredWaypoints.sort(sortWaypointPriceDesc);
       default:
-        return filteredPoints;
+        return filteredWaypoints;
     }
   }
 
@@ -90,18 +89,18 @@ export default class Trip {
     render(this.__waypointContainerElement, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._pointListComponent, this._onViewAction, this._onModeChange);
-    pointPresenter.init(point, this._offersModel, this._destinationsModel);
-    this._pointPresenterMap.set(point.id, pointPresenter);
+  _renderPoint(waypoint) {
+    const waypointPresenter = new WaypointPresenter(this._pointListComponent, this._onViewAction, this._onModeChange);
+    waypointPresenter.init(waypoint, this._offersModel, this._destinationsModel);
+    this._pointPresenterMap.set(waypoint.id, waypointPresenter);
   }
 
-  _renderPoints(points) {
-    points.forEach((point) => this._renderPoint(point));
+  _renderWaypoints(waypoints) {
+    waypoints.forEach((waypoint) => this._renderWaypoints(waypoint));
   }
 
-  _renderNoPoints() {
-    render(this.__waypointContainerElement, this._noPointComponent, RenderPosition.AFTERBEGIN);
+  _renderNoWaypoints() {
+    render(this.__waypointContainerElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderTrip() {
@@ -110,16 +109,16 @@ export default class Trip {
       return;
     }
 
-    const points = this._getPoints();
+    const waypoints = this._getWaypoints();
 
-    if (points.length === 0) {
-      this._renderNoPoints();
+    if (waypoints.length === 0) {
+      this._renderNoWaypoints();
       return;
     }
 
     this._renderSort();
     render(this.__waypointContainerElement, this._pointListComponent, RenderPosition.BEFOREEND);
-    this._renderPoints(points);
+    this._renderWaypoints(waypoints);
   }
 
   _clearTrip({resetSortType = false} = {}) {
@@ -130,7 +129,7 @@ export default class Trip {
 
     remove(this._loadingComponent);
     remove(this._sortComponent);
-    remove(this._noPointComponent);
+    remove(this._noWaypointComponent);
 
     if (resetSortType) {
       this._currentSortType = SortType.DAY;
@@ -141,21 +140,21 @@ export default class Trip {
     switch (actionType) {
       case UserAction.ADD_POINT:
         this._waypointNewPresenter.setSaving();
-        this._api.addPoint(update)
-        .then((response) => this._waypointsModel.addPoint(updateType, response))
+        this._api.addWaypoint(update)
+        .then((response) => this._waypointsModel.addWaypoint(updateType, response))
         .catch(() => this._waypointNewPresenter.setAborting());
         break;
       case UserAction.UPDATE_POINT:
-        this._waypointPresenterMap.get(update.id).setViewState(PointPresenterViewState.SAVING);
-        this._api.updatePoint(update)
-        .then((response) => this._waypointsModel.updatePoint(updateType, response))
-        .catch(() => this._waypointPresenterMap.get(update.id).setViewState(PointPresenterViewState.ABORTING));
+        this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.SAVING);
+        this._api.updateWaypoint(update)
+        .then((response) => this._waypointsModel.updateWaypoint(updateType, response))
+        .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
       case UserAction.DELETE_POINT:
-        this._waypointPresenterMap.get(update.id).setViewState(PointPresenterViewState.DELETING);
-        this._api.deletePoint(update)
-        .then(() => this._waypointsModel.deletePoint(updateType, update))
-        .catch(() => this._waypointPresenterMap.get(update.id).setViewState(PointPresenterViewState.ABORTING));
+        this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.DELETING);
+        this._api.deleteWaypoint(update)
+        .then(() => this._waypointsModel.deleteWaypoint(updateType, update))
+        .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
     }
   }

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import {waypointTypes} from '../utils/const.js';
-import {formateDate, formatDuration} from '../utils/waypoint.js';
+import {formatDate, formatDuration} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
 dayjs.extend(duration);
@@ -36,9 +36,9 @@ const createCardTemplate = (waypoint) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${formatDate(dateFrom, `YYYY-MM-DD`)}">${formatDate(dateFrom, `MMM D`)}</time>
+        <time class="event__date" datetime="${formatDate(startTime, `YYYY-MM-DD`)}">${formatDate(startTime, `MMM D`)}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="${typeIcon}" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
 

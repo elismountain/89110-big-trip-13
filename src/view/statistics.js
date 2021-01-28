@@ -2,7 +2,7 @@ import SmartView from '../view/smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getWayointTypes, sumPriceByType, countDurationByWaypointType} from '../utils/statistics.js';
-import {formatDurationMs} from '../utils/point.js';
+import {formatDurationMs} from '../utils/waypoint.js';
 
 const renderMoneyChart = (moneyCtx, waypoints) => {
   const types = getWayointTypes(waypoints);
