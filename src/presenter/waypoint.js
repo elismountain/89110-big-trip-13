@@ -25,12 +25,12 @@ export default class Waypoint {
     this._changeMode = changeMode;
     this._mode = Mode.DEFAULT;
 
-    this._onRollupButtonClickHandlerUp = this._onRollupButtonClickHandlerUp.bind(this);
-    this._onRollupButtonClickHandlerDown = this._onRollupButtonClickHandlerDown.bind(this);
+    this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
+    this._handleClickRollupButtonDown = this._handleClickRollupButtonDown.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
-    this._onFormSubmitHandler = this._onFormSubmitHandler.bind(this);
-    this._onFavoriteClickHandler = this._onFavoriteClickHandler.bind(this);
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleWaypointEditDeleteClick = this._handleWaypointEditDeleteClick.bind(this);
   }
 
   init(waypoint, offersModel, destinationsModel) {
@@ -44,11 +44,11 @@ export default class Waypoint {
     this._waypointComponent = new TripWaypointView(waypoint);
     this._waypointEditComponent = new EditWaypointView(this._offersModel.getOffers(), this._destinationsModel.getDestinations(), waypoint);
 
-    this._waypointComponent.setRollupButtonClickHandler(this._onRollupButtonClickHandlerUp);
-    this._waypointComponent.setFavoriteClickHandler(this._onFavoriteClickHandler);
-    this._waypointEditComponent.setRollupButtonClickHandler(this._onRollupButtonClickHandlerDown);
-    this._waypointEditComponent.setFormSubmitHandler(this._onFormSubmitHandler);
-    this._waypointEditComponent.setDeleteClickHandler(this._onDeleteClickHandler);
+    this._waypointComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
+    this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._waypointEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonDown);
+    this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._waypointEditComponent.setDeleteClickHandler(this._handleWaypointEditDeleteClick);
 
     if ((prevWaypointComponent === null) || (prevWaypointEditComponent === null)) {
       render(this._waypointListElements, this._waypointComponent, RenderPosition.BEFOREEND);
@@ -121,11 +121,11 @@ export default class Waypoint {
     this._mode = Mode.DEFAULT;
   }
 
-  _onRollupButtonClickHandlerUp() {
+  _handleClickRollupButtonUp() {
     this._switchToDisplay();
   }
 
-  _onRollupButtonClickHandlerDown() {
+  _handleClickRollupButtonDown() {
     if (!isOnline()) {
       toast(`You can't edit while offline`);
       return;
@@ -139,7 +139,7 @@ export default class Waypoint {
     });
   }
 
-  _onFormSubmitHandler(waypoint) {
+  _handleFormSubmit(waypoint) {
     if (!isOnline()) {
       toast(`You can't save while offline`);
       return;
@@ -152,14 +152,14 @@ export default class Waypoint {
     );
   }
 
-  _onFavoriteClickHandler() {
+  _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_POINT,
         UpdateType.MINOR,
         Object.assign({}, this._waypoint, {isFavorite: !this._waypoint.isFavorite}));
   }
 
-  _handleDeleteClick(waypoint) {
+  _handleWaypointEditDeleteClick(waypoint) {
     if (!isOnline()) {
       toast(`You can't delete while offline`);
       return;

@@ -91,7 +91,7 @@ export default class TripWaypoint extends AbstractView {
   }
 
   setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
+    this._callback.clickFavorite = callback;
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, this._onFavoriteClickHandler);
   }
@@ -103,6 +103,6 @@ export default class TripWaypoint extends AbstractView {
 
   _onFavoriteClickHandler(event) {
     event.preventDefault();
-    this._callback.favoriteClick();
+    this._callback.clickFavorite();
   }
 }

@@ -14,9 +14,9 @@ export default class Summary {
     this._priceComponent = null;
     this._isLoading = true;
 
-    this._onModelEvent = this._onModelEvent.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._waypointsModel.attach(this._onModelEvent);
+    this._waypointsModel.attach(this._handleModelEvent);
   }
 
   init() {
@@ -47,7 +47,7 @@ export default class Summary {
     render(this._infoComponent, this._priceComponent, RenderPosition.BEFOREEND);
   }
 
-  _onModelEvent(updateType) {
+  _handleModelEvent(updateType) {
     switch (updateType) {
       case UpdateType.INIT:
         this._isLoading = false;
