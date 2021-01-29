@@ -86,7 +86,7 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
-    render(this.__waypointContainerElement, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._waypointContainerElement, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(waypoint) {
@@ -100,7 +100,7 @@ export default class Trip {
   }
 
   _renderNoWaypoints() {
-    render(this.__waypointContainerElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
+    render(this._waypointContainerElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderTrip() {
@@ -117,7 +117,7 @@ export default class Trip {
     }
 
     this._renderSort();
-    render(this.__waypointContainerElement, this._pointListComponent, RenderPosition.BEFOREEND);
+    render(this._waypointContainerElement, this._pointListComponent, RenderPosition.BEFOREEND);
     this._renderWaypoints(waypoints);
   }
 

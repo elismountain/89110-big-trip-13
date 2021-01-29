@@ -16,7 +16,7 @@ export default class WaypointNew {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this); _handleEscKeyDown
+    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
   }
 
   init(offersModel, destinationsModel, callback) {
