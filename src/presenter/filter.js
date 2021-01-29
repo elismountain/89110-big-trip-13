@@ -12,11 +12,11 @@ export default class Filter {
     this._currentFilter = null;
     this._filterComponent = null;
 
-    this._onModelEvent = this._onModelEvent.bind(this);
-    this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
-    this._filterModel.attach(this._onModelEvent);
-    this._waypointsModel.attach(this._onModelEvent);
+    this._filterModel.attach(this._handleModelEvent);
+    this._waypointsModel.attach(this._handleModelEvent);
   }
 
   init() {
@@ -26,7 +26,7 @@ export default class Filter {
 
     const filters = this._getFilters();
     this._filterComponent = new FilterView(this._currentFilter, filters);
-    this._filterComponent.setOnFilterTypeChange(this._onFilterTypeChange);
+    this._filterComponent.setOnFilterTypeChange(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.AFTEREND);
@@ -47,7 +47,7 @@ export default class Filter {
     };
   }
 
-  _onFilterTypeChange(filterType) {
+  _handleFilterTypeChange(filterType) {
     if (this._currentFilter === filterType) {
       return;
     }
@@ -56,7 +56,7 @@ export default class Filter {
     this._filterModel.setFilter(UpdateType.MAJOR, this._currentFilter);
   }
 
-  _onModelEvent() {
+  _handleModelEvent() {
     this.init();
   }
 }

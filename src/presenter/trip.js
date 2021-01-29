@@ -30,17 +30,17 @@ export default class Trip {
     this._waypointListComponent = new CardsView();
     this._loadingComponent = new LoadingView();
 
-    this._onViewAction = this._onViewAction.bind(this);
-    this._onModelEvent = this._onModelEvent.bind(this);
-    this._onModeChange = this._onModeChange.bind(this);
-    this._onSortTypeChangeHandler = this._onSortTypeChangeHandler.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._waypointNewPresenter = new WaypointNewPresenter(this._waypointListComponent, this._onViewAction);
+    this._waypointNewPresenter = new WaypointNewPresenter(this._waypointListComponent, this._handleViewAction);
   }
 
   init() {
-    this._waypointsModel.attach(this._onModelEvent);
-    this._filterModel.attach(this._onModelEvent);
+    this._waypointsModel.attach(this._handleModelEvent);
+    this._filterModel.attach(this._handleModelEvent);
 
     this._renderTrip();
   }
@@ -53,8 +53,8 @@ export default class Trip {
     this._clearTrip({resetSortType: true});
     remove(this._pointListComponent);
 
-    this._waypointsModel.detach(this._onModelEvent);
-    this._filterModel.detach(this._onModelEvent);
+    this._waypointsModel.detach(this._handleModelEvent);
+    this._filterModel.detach(this._handleModelEvent);
   }
 
   _getWaypoints() {
@@ -84,13 +84,13 @@ export default class Trip {
     }
 
     this._sortComponent = new SortView(this._currentSortType);
-    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChangeHandler);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
     render(this.__waypointContainerElement, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(waypoint) {
-    const waypointPresenter = new WaypointPresenter(this._pointListComponent, this._onViewAction, this._onModeChange);
+    const waypointPresenter = new WaypointPresenter(this._pointListComponent, this._handleViewAction, this._handleModeChange);
     waypointPresenter.init(waypoint, this._offersModel, this._destinationsModel);
     this._pointPresenterMap.set(waypoint.id, waypointPresenter);
   }
@@ -136,7 +136,7 @@ export default class Trip {
     }
   }
 
-  _onViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.ADD_POINT:
         this._waypointNewPresenter.setSaving();
@@ -159,7 +159,7 @@ export default class Trip {
     }
   }
 
-  _onModelEvent(updateType, data) {
+  _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
         this._waypointPresenterMap.get(data.id).init(data);
@@ -180,12 +180,12 @@ export default class Trip {
     }
   }
 
-  _onModeChange() {
+  _handleModeChange() {
     this._waypointNewPresenter.destroy();
     this._waypointPresenterMap.forEach((presenter) => presenter.resetView());
   }
 
-  _onSortTypeChangeHandler(sortType) {
+  _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }

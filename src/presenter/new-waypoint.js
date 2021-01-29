@@ -13,10 +13,10 @@ export default class WaypointNew {
     this._waypointEditComponent = null;
     this._destroyCallback = null;
 
-    this._onFormSubmitHandler = this._onFormSubmitHandler.bind(this);
-    this._onRollupButtonClickHandler = this._onRollupButtonClickHandler.bind(this);
-    this._onDeleteClickHandler = this._onDeleteClickHandler.bind(this);
-    this._onKeyDown = this._onKeyDown.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleEscKeyDown = this._handleEscKeyDown.bind(this); _handleEscKeyDown
   }
 
   init(offersModel, destinationsModel, callback) {
@@ -27,13 +27,13 @@ export default class WaypointNew {
     }
 
     this._waypointEditComponent = new EditWaypointView(offersModel.getOffers(), destinationsModel.getDestinations());
-    this._eventEditComponent.setFormSubmitHandler(this._onFormSubmitHandler);
-    this._eventEditComponent.setDeleteClickHandler(this._onDeleteClickHandler);
-    this._eventEditComponent.setRollupButtonClickHandler(this._onRollupButtonClickHandler);
+    this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
 
     render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener(`keydown`, this._onKeyDown);
+    document.addEventListener(`keydown`, this._handleEscKeyDown);
   }
 
   destroy() {
@@ -48,7 +48,7 @@ export default class WaypointNew {
     remove(this._waypointEditComponent);
     this._waypointEditComponent = null;
 
-    document.removeEventListener(`keydown`, this._onKeyDown);
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
   }
 
   setSaving() {
@@ -70,7 +70,7 @@ export default class WaypointNew {
     this._waypointEditComponent.shake(resetFormState);
   }
 
-  _onFormSubmitHandler(waypoint) {
+  _handleFormSubmit(waypoint) {
     if (!isOnline()) {
       toast(`You can't save while offline`);
       return;
@@ -84,17 +84,17 @@ export default class WaypointNew {
   }
 
 
-  _onDeleteClickHandler() {
+  _handleDeleteClick() {
     this.destroy();
   }
 
-  _onKeyDown(event) {
+  _handleEscKeyDown(event) {
     isEscEvent(event, () => {
       this.destroy();
     });
   }
 
-  _onRollupButtonClickHandler() {
+  _handleClickRollupButtonUp() {
     this.destroy();
   }
 }

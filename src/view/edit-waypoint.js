@@ -238,7 +238,7 @@ export default class EditWaypoint extends SmartView {
   restoreHandlers() {
     this._destinationOptions = this._buildDestinationOptions();
     this._setInnerHandlers();
-    this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
+    this.setRollupButtonClickHandler(this._callback.clickRollupButton);
     this.setFormSubmitHandler(this._callback.submitForm);
     this.setDeleteClickHandler(this._callback.deleteClick);
     this._setDateFromPicker();
@@ -247,7 +247,7 @@ export default class EditWaypoint extends SmartView {
   }
 
   setRollupButtonClickHandler(callback) {
-    this._callback.rollupButtonClick = callback;
+    this._callback.clickRollupButton = callback;
 
     this.getElement()
       .querySelector(`.event__rollup-btn`)
@@ -310,7 +310,7 @@ export default class EditWaypoint extends SmartView {
 
   _onRollupButtonClickHandler(event) {
     event.preventDefault();
-    this._callback.rollupButtonClick(this._waypoint);
+    this._callback.clickRollupButton(this._waypoint);
   }
 
 

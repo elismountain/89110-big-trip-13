@@ -285,6 +285,4 @@ export default class Statistics extends SmartView {
     this._typeChart = renderTypeChart(typeCtx, waypoints);
     this._timeChart = renderTimeChart(timeCtx, waypoints);
   }
-
-
 }
