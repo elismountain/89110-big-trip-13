@@ -10,6 +10,7 @@ export const render = (container, child, place) => {
 
   if (container instanceof Abstract) {
     container = container.getElement();
+    console.log("container");
   }
 
   if (child instanceof Abstract) {
