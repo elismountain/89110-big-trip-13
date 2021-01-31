@@ -47,12 +47,12 @@ export default class Sort extends AbstractView {
     this.getElement().addEventListener(`change`, this._onSortTypeChangeHandler);
   }
 
-  _onSortTypeChangeHandler(event) {
-    if (event.target.tagName !== `INPUT`) {
+  _onSortTypeChangeHandler(evt) {
+    if (evt.target.tagName !== `INPUT`) {
       return;
     }
 
-    event.preventDefault();
-    this._callback.сhangeSortType(event.target.value);
+    evt.preventDefault();
+    this._callback.сhangeSortType(evt.target.value);
   }
 }

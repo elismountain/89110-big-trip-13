@@ -11,9 +11,9 @@ import WaypointNewPresenter from '../presenter/new-waypoint.js';
 
 
 export default class Trip {
-  constructor(tripContainerElement, waypointContainerElement, waypointsModel, filterModel, offersModel, destinationsModel, api) {
-    this._tripContainerElement = tripContainerElement;
-    this._waypointContainerElement = waypointContainerElement;
+  constructor(tripElement, waypointElement, waypointsModel, filterModel, offersModel, destinationsModel, api) {
+    this._tripElement = tripElement;
+    this._waypointElement = waypointElement;
     this._waypointsModel = waypointsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
@@ -51,7 +51,7 @@ export default class Trip {
 
   destroy() {
     this._clearTrip({resetSortType: true});
-    remove(this._pointListComponent);
+    remove(this._waypointListComponent);
 
     this._waypointsModel.detach(this._handleModelEvent);
     this._filterModel.detach(this._handleModelEvent);
@@ -75,7 +75,7 @@ export default class Trip {
   }
 
   _renderLoading() {
-    render(this._waypointContainerElement, this._loadingComponent, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderSort() {
@@ -86,11 +86,11 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
-    render(this._waypointContainerElement, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(waypoint) {
-    const waypointPresenter = new WaypointPresenter(this._pointListComponent, this._handleViewAction, this._handleModeChange);
+    const waypointPresenter = new WaypointPresenter(this._waypointListComponent, this._handleViewAction, this._handleModeChange);
     waypointPresenter.init(waypoint, this._offersModel, this._destinationsModel);
     this._pointPresenterMap.set(waypoint.id, waypointPresenter);
   }
@@ -100,7 +100,7 @@ export default class Trip {
   }
 
   _renderNoWaypoints() {
-    render(this._waypointContainerElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
+    render(this._waypointElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderTrip() {
@@ -117,7 +117,7 @@ export default class Trip {
     }
 
     this._renderSort();
-    render(this._waypointContainerElement, this._pointListComponent, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._waypointListComponent, RenderPosition.BEFOREEND);
     this._renderWaypoints(waypoints);
   }
 

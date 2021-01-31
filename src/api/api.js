@@ -21,14 +21,14 @@ export default class Api {
   }
 
   getWaypoints() {
-    return this._load({url: `waypoints`})
+    return this._load({url: `points`})
     .then(Api.toJSON)
     .then((waypoints) => waypoints.map(WaypointsModel.adaptToClient));
   }
 
   addWaypoint(waypoint) {
     return this._load({
-      url: `waypoints`,
+      url: `points`,
       method: Method.POST,
       body: JSON.stringify(WaypointsModel.adaptToServer(waypoint)),
       headers: new Headers({"Content-Type": `application/json`})
@@ -39,14 +39,14 @@ export default class Api {
 
   deleteWaypoint(waypoint) {
     return this._load({
-      url: `waypoints/${waypoint.id}`,
+      url: `points/${waypoint.id}`,
       method: Method.DELETE
     });
   }
 
   updateWaypoint(waypoint) {
     return this._load({
-      url: `waypoints/${waypoint.id}`,
+      url: `points/${waypoint.id}`,
       method: Method.PUT,
       body: JSON.stringify(WaypointsModel.adaptToServer(waypoint)),
       headers: new Headers({"Content-Type": `application/json`})
@@ -86,7 +86,7 @@ export default class Api {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(
-        `${this._endPoint}/${url}`,
+        `${this._endWaypoint}/${url}`,
         {method, body, headers}
     )
     .then(Api.checkStatus)

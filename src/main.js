@@ -63,10 +63,10 @@ const tripPresenter = new TripPresenter(
     apiWithProvider
 );
 
-const waypointNewButton = document.querySelector(`.trip-main__event-add-btn`);
-waypointNewButton.disabled = true;
+const waypointNewButtonElement = document.querySelector(`.trip-main__event-add-btn`);
+waypointNewButtonElement.disabled = true;
 
-waypointNewButton.addEventListener(`click`, (evt) => {
+waypointNewButtonElement.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   remove(statisticsComponent);
   siteMenuComponent.setMenuItem(MenuItem.TABLE);
@@ -78,11 +78,11 @@ waypointNewButton.addEventListener(`click`, (evt) => {
     return;
   }
   tripPresenter.createWaypoint(handleWaypointNewFormClose);
-  waypointNewButton.disabled = true;
+  waypointNewButtonElement.disabled = true;
 });
 
 const handleWaypointNewFormClose = () => {
-  waypointNewButton.disabled = false;
+  waypointNewButtonElement.disabled = false;
 };
 
 const handleSiteMenuClick = (menuItem) => {
@@ -111,12 +111,12 @@ promises
   offersModel.setOffers(offers);
   destinationsModel.setDestinations(destinations);
   waypointsModel.setWaypoints(UpdateType.INIT, waypoints);
-  waypointNewButton.disabled = false;
+  waypointNewButtonElement.disabled = false;
   render(menuContainer, siteMenuComponent, RenderPosition.AFTEREND);
 })
 .catch(() => {
   waypointsModel.setWaypoints(UpdateType.INIT, []);
-  waypointNewButton.disabled = false;
+  waypointNewButtonElement.disabled = false;
   render(menuContainer, siteMenuComponent, RenderPosition.AFTEREND);
 });
 

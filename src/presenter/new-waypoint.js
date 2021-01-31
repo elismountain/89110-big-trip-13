@@ -16,7 +16,7 @@ export default class WaypointNew {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init(offersModel, destinationsModel, callback) {
@@ -28,12 +28,12 @@ export default class WaypointNew {
 
     this._waypointEditComponent = new EditWaypointView(offersModel.getOffers(), destinationsModel.getDestinations());
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setResetButtonClickHandler(this._handleDeleteClick);
     this._eventEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
 
     render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener(`keydown`, this._handleEscKeyDown);
+    document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   destroy() {
@@ -48,7 +48,7 @@ export default class WaypointNew {
     remove(this._waypointEditComponent);
     this._waypointEditComponent = null;
 
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   setSaving() {
@@ -88,8 +88,8 @@ export default class WaypointNew {
     this.destroy();
   }
 
-  _handleEscKeyDown(event) {
-    isEscEvent(event, () => {
+  _escKeyDownHandler(evt) {
+    isEscEvent(evt, () => {
       this.destroy();
     });
   }

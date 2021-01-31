@@ -1,20 +1,18 @@
 import {formatDate} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
-const MAX_ITEMS_TO_SHOW = 3;
-
-const createTripInfoTemplate = (info, isLoading) => {
+const createTripInfoTemplate = (tripInfo, isLoading) => {
   let tripInfoTitle = ``;
 
   if (isLoading) {
     tripInfoTitle = `Loading trip summary...`;
   }
 
-  if (info === null && !isLoading) {
+  if (tripInfo === null && !isLoading) {
     tripInfoTitle = `Trip doesn't contain any points`;
   }
 
-  if (isLoading || info === null) {
+  if (isLoading || tripInfo === null) {
     return `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${tripInfoTitle}</h1>
@@ -22,12 +20,14 @@ const createTripInfoTemplate = (info, isLoading) => {
     </section>`;
   }
 
-  const {startTime, endTime, destinations} = info;
+  const {startTime, endTime, destinations} = tripInfo;
 
-  const titleDestinations = destinations.length > MAX_ITEMS_TO_SHOW ?
-    [destinations[0], `...`, destinations[destinations.length - 1]] : [...destinations];
 
-  tripInfoTitle = titleDestinations.join(` &mdash; `);
+  if (destinations.length > 3) {
+    destinations.splice(1, destinations.length - 2, `...`);
+  }
+
+  tripInfoTitle = destinations.join(` &mdash; `);
 
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -43,8 +43,8 @@ const createTripInfoTemplate = (info, isLoading) => {
 export default class Info extends AbstractView {
   constructor(tripInfo, isLoading) {
     super();
-    this._tripInfo = tripInfo;
     this._isLoading = isLoading;
+    this._tripInfo = tripInfo;
   }
 
   getTemplate() {
