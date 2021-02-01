@@ -40,7 +40,7 @@ export default class Waypoints extends Observer {
     this._notify(updateType, updateType);
   }
 
-  deletePoint(updateType, update) {
+  deleteWaypoint(updateType, update) {
     const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {

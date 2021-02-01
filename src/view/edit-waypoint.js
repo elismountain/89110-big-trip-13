@@ -158,7 +158,7 @@ export default class EditWaypoint extends SmartView {
     this._onPriceInputHandler = this._onPriceInputHandler.bind(this);
     this._onOfferToggleHandler = this._onOfferToggleHandler.bind(this);
     this._onDestinationInputHandler = this._onDestinationInputHandler.bind(this);
-    this._onDeleteClickHandler = this._onDeleteClickHandler.bind(this);
+    this._onResetButtonClickHandler = this._onResetButtonClickHandler.bind(this);
     this._dateFromCloseHandler = this._dateFromCloseHandler.bind(this);
     this._dateToCloseHandler = this._dateToCloseHandler.bind(this);
 
@@ -183,7 +183,7 @@ export default class EditWaypoint extends SmartView {
         this.getElement().querySelector(`input[name='event-start-time']`),
         {
           enableTime: true,
-          time_24hr: true,
+          [`time_24hr`]: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._state.startTime,
           maxDate: dayjs(this._state.endTime).second(0).subtract(1, `m`).toDate(),
@@ -240,7 +240,7 @@ export default class EditWaypoint extends SmartView {
     this._setInnerHandlers();
     this.setRollupButtonClickHandler(this._callback.clickRollupButton);
     this.setFormSubmitHandler(this._callback.submitForm);
-    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setResetButtonClickHandler(this._callback.resetButtonClick);
     this._setDateFromPicker();
     this._setDateToPicker();
     this._validateAll();
@@ -259,11 +259,11 @@ export default class EditWaypoint extends SmartView {
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._onFormSubmitHandler);
   }
 
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
+  setResetButtonClickHandler(callback) {
+    this._callback.resetButtonClick = callback;
     this.getElement()
   .querySelector(`.event__reset-btn`)
-  .addEventListener(`click`, this._onDeleteClickHandler);
+  .addEventListener(`click`, this._onResetButtonClickHandler);
   }
 
   _buildDestinationOptions() {
@@ -285,11 +285,11 @@ export default class EditWaypoint extends SmartView {
 
   _validateAll() {
     this._validateDestination();
-    const isValid = this.getElement().querySelector(`.event--edit`).checkValidity();
-    const saveButton = this.getElement().querySelector(`.event__save-btn`);
+    const isValidElement = this.getElement().querySelector(`.event--edit`).checkValidity();
+    const saveButtonElement = this.getElement().querySelector(`.event__save-btn`);
 
-    saveButton.disabled = !isValid;
-    return isValid;
+    saveButtonElement.disabled = !isValidElement;
+    return isValidElement;
   }
 
   _setInnerHandlers() {
@@ -299,61 +299,53 @@ export default class EditWaypoint extends SmartView {
     const priceElement = this.getElement().querySelector(`.event__input--price`);
     priceElement.addEventListener(`input`, this._onPriceInputHandler);
 
-    const offersRendered = this.getElement().querySelector(`.event__available-offers`);
-    if (offersRendered) {
-      offersRendered.addEventListener(`change`, this._onOfferToggleHandler);
+    const offersRenderedElement = this.getElement().querySelector(`.event__available-offers`);
+    if (offersRenderedElement) {
+      offersRenderedElement.addEventListener(`change`, this._onOfferToggleHandler);
     }
 
     const destinationElement = this.getElement().querySelector(`.event__input--destination`);
     destinationElement.addEventListener(`input`, this._onDestinationInputHandler);
   }
 
-  _onRollupButtonClickHandler(event) {
-    event.preventDefault();
+  _onRollupButtonClickHandler(evt) {
+    evt.preventDefault();
     this._callback.clickRollupButton(this._waypoint);
   }
 
-
-  _buildDestinationOptions() {
-    const destinations = this.getElement().querySelector(`#destination-list-1`);
-    const options = Array.from(destinations.options).map((option) => option.value);
-    return new Set(options);
-  }
-
-  _onFormSubmitHandler(event) {
-    event.preventDefault();
+  _onFormSubmitHandler(evt) {
+    evt.preventDefault();
     this._callback.submitForm();
   }
 
-  _onDeleteClickHandler(event) {
-    event.preventDefault();
-    this._callback.deleteClick(EditWaypoint.parseStateToWaypoint(this._state));
+  _onResetButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.resetButtonClick(EditWaypoint.parseStateToWaypoint(this._state));
   }
 
-  _onDestinationInputHandler(event) {
-    event.preventDefault();
-
+  _onDestinationInputHandler(evt) {
+    evt.preventDefault();
     this._validateAll();
 
-    let destination = this._destinations.get(event.target.value);
+    let destination = this._destinations.get(evt.target.value);
 
-    if (!destination || event.target.value === this._state.destination.name) {
+    if (!destination || evt.target.value === this._state.destination.name) {
       return;
     }
 
     this.updateData(
-        {destination: Object.assign({}, destination, {name: event.target.value})}
+        {destination: Object.assign({}, destination, {name: evt.target.value})}
     );
   }
 
-  _offerToggleHandler(event) {
-    if (event.target.tagName !== `INPUT`) {
+  _onOfferToggleHandler(evt) {
+    if (evt.target.tagName !== `INPUT`) {
       return;
     }
-    event.preventDefault();
+    evt.preventDefault();
 
     const offers = new Map(this._state.offers);
-    const offer = offers.get(event.target.dataset.offerKey);
+    const offer = offers.get(evt.target.dataset.offerKey);
     offer.selected = !offer.selected;
     this.updateData({
       offers
@@ -361,28 +353,26 @@ export default class EditWaypoint extends SmartView {
   }
 
 
-  _onWaypointTypeChangeHandler(event) {
+  _onWaypointTypeChangeHandler(evt) {
 
-    if (event.target.tagName !== `INPUT`) {
+    if (evt.target.tagName !== `INPUT`) {
       return;
     }
-    event.preventDefault();
+    evt.preventDefault();
     this.updateData({
-      type: event.target.value,
+      type: evt.target.value,
       offers: EditWaypoint._createOfferSelectionForType(
           [],
-          this._offers.get(event.target.value)
+          this._offers.get(evt.target.value)
       )
     });
   }
 
-  _onPriceInputHandler(event) {
-    event.preventDefault();
-
+  _onPriceInputHandler(evt) {
+    evt.preventDefault();
     this._validateAll();
-
     this.updateData({
-      price: parseInt(event.target.value, 10)
+      price: parseInt(evt.target.value, 10)
     }, true);
   }
 

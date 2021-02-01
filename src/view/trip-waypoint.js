@@ -96,13 +96,13 @@ export default class TripWaypoint extends AbstractView {
       .addEventListener(`click`, this._onFavoriteClickHandler);
   }
 
-  _onRollupButtonClickHandler(event) {
-    event.preventDefault();
+  _onRollupButtonClickHandler(evt) {
+    evt.preventDefault();
     this._callback.clickCard();
   }
 
-  _onFavoriteClickHandler(event) {
-    event.preventDefault();
+  _onFavoriteClickHandler(evt) {
+    evt.preventDefault();
     this._callback.clickFavorite();
   }
 }

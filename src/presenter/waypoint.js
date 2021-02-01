@@ -17,41 +17,46 @@ export const State = {
 };
 
 export default class Waypoint {
-  constructor(waypointListElements, changeData, changeMode) {
-    this._waypointListElements = waypointListElements;
+  constructor(waypointListContainer, changeData, changeMode, _destinationsModel, _offersModel) {
+    this._waypointListContainer = waypointListContainer;
     this._waypointComponent = null;
     this._waypointEditComponent = null;
     this._changeData = changeData;
     this._changeMode = changeMode;
+
+    this.destinations = Object.assign({}, _destinationsModel.getDestinations());
+    this.offers = Object.assign({}, _offersModel.getOffers());
+
     this._mode = Mode.DEFAULT;
+
 
     this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
     this._handleClickRollupButtonDown = this._handleClickRollupButtonDown.bind(this);
-    this._onKeyDown = this._onKeyDown.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleWaypointEditDeleteClick = this._handleWaypointEditDeleteClick.bind(this);
+    this._handleWaypointEditResetButtonClick = this._handleWaypointEditResetButtonClick.bind(this);
   }
 
-  init(waypoint, offersModel, destinationsModel) {
+  init(waypoint, destinations, offers) {
     this._waypoint = waypoint;
-    this._offersModel = offersModel;
-    this._destinationsModel = destinationsModel;
+    this._offers = offers;
+    this._destinations = destinations;
 
     const prevWaypointComponent = this._waypointComponent;
     const prevWaypointEditComponent = this._waypointEditComponent;
 
     this._waypointComponent = new TripWaypointView(waypoint);
-    this._waypointEditComponent = new EditWaypointView(this._offersModel.getOffers(), this._destinationsModel.getDestinations(), waypoint);
+    this._waypointEditComponent = new EditWaypointView(this.destinations, this.offers, waypoint);
 
     this._waypointComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
     this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._waypointEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonDown);
     this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._waypointEditComponent.setDeleteClickHandler(this._handleWaypointEditDeleteClick);
+    this._waypointEditComponent.setResetButtonClickHandler(this._handleWaypointEditResetButtonClick);
 
     if ((prevWaypointComponent === null) || (prevWaypointEditComponent === null)) {
-      render(this._waypointListElements, this._waypointComponent, RenderPosition.BEFOREEND);
+      render(this._waypointListContainer, this._waypointComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -110,14 +115,14 @@ export default class Waypoint {
 
   _switchToEdit() {
     replace(this._waypointEditComponent, this._waypointComponent);
-    document.addEventListener(`keydown`, this._onKeyDown);
+    document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _switchToDisplay() {
     replace(this._waypointComponent, this._waypointEditComponent);
-    document.removeEventListener(`keydown`, this._onKeyDown);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
 
@@ -133,7 +138,7 @@ export default class Waypoint {
     this._switchToEdit();
   }
 
-  _onKeyDown(evt) {
+  _escKeyDownHandler(evt) {
     isEscEvent(evt, () => {
       this._switchToDisplay();
     });
@@ -146,7 +151,7 @@ export default class Waypoint {
     }
 
     this._changeData(
-        UserAction.UPDATE_POINT,
+        UserAction.UPDATE_WAYPOINT,
         UpdateType.MINOR,
         waypoint
     );
@@ -154,19 +159,19 @@ export default class Waypoint {
 
   _handleFavoriteClick() {
     this._changeData(
-        UserAction.UPDATE_POINT,
+        UserAction.UPDATE_WAYPOINT,
         UpdateType.MINOR,
         Object.assign({}, this._waypoint, {isFavorite: !this._waypoint.isFavorite}));
   }
 
-  _handleWaypointEditDeleteClick(waypoint) {
+  _handleWaypointEditResetButtonClick(waypoint) {
     if (!isOnline()) {
       toast(`You can't delete while offline`);
       return;
     }
 
     this._changeData(
-        UserAction.DELETE_POINT,
+        UserAction.DELETE_WAYPOINT,
         UpdateType.MINOR,
         waypoint
     );

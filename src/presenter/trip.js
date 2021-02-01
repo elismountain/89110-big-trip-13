@@ -11,9 +11,9 @@ import WaypointNewPresenter from '../presenter/new-waypoint.js';
 
 
 export default class Trip {
-  constructor(tripContainerElement, waypointContainerElement, waypointsModel, filterModel, offersModel, destinationsModel, api) {
-    this._tripContainerElement = tripContainerElement;
-    this._waypointContainerElement = waypointContainerElement;
+  constructor(tripElement, waypointElement, waypointsModel, filterModel, offersModel, destinationsModel, api) {
+    this._tripElement = tripElement;
+    this._waypointElement = waypointElement;
     this._waypointsModel = waypointsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
@@ -25,7 +25,6 @@ export default class Trip {
     this._waypointPresenterMap = new Map();
     this._currentSortType = SortType.DAY;
     this._sortComponent = null;
-
     this._noWaypointComponent = new NoWaypointView();
     this._waypointListComponent = new CardsView();
     this._loadingComponent = new LoadingView();
@@ -39,6 +38,8 @@ export default class Trip {
   }
 
   init() {
+    render(this._waypointElement, this._waypointListComponent, RenderPosition.BEFOREEND);
+
     this._waypointsModel.attach(this._handleModelEvent);
     this._filterModel.attach(this._handleModelEvent);
 
@@ -51,7 +52,7 @@ export default class Trip {
 
   destroy() {
     this._clearTrip({resetSortType: true});
-    remove(this._pointListComponent);
+    remove(this._waypointListComponent);
 
     this._waypointsModel.detach(this._handleModelEvent);
     this._filterModel.detach(this._handleModelEvent);
@@ -74,10 +75,6 @@ export default class Trip {
     }
   }
 
-  _renderLoading() {
-    render(this._waypointContainerElement, this._loadingComponent, RenderPosition.BEFOREEND);
-  }
-
   _renderSort() {
     if (this._sortComponent !== null) {
       this._sortComponent = null;
@@ -86,11 +83,15 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
-    render(this._waypointContainerElement, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._sortComponent, RenderPosition.AFTERBEGIN);
+  }
+
+  _renderLoading() {
+    render(this._waypointElement, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(waypoint) {
-    const waypointPresenter = new WaypointPresenter(this._pointListComponent, this._handleViewAction, this._handleModeChange);
+    const waypointPresenter = new WaypointPresenter(this._waypointListComponent, this._handleViewAction, this._handleModeChange);
     waypointPresenter.init(waypoint, this._offersModel, this._destinationsModel);
     this._pointPresenterMap.set(waypoint.id, waypointPresenter);
   }
@@ -100,7 +101,7 @@ export default class Trip {
   }
 
   _renderNoWaypoints() {
-    render(this._waypointContainerElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
+    render(this._waypointElement, this._noWaypointComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {
@@ -117,7 +118,7 @@ export default class Trip {
     }
 
     this._renderSort();
-    render(this._waypointContainerElement, this._pointListComponent, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._waypointListComponent, RenderPosition.BEFOREEND);
     this._renderWaypoints(waypoints);
   }
 
@@ -138,19 +139,19 @@ export default class Trip {
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
-      case UserAction.ADD_POINT:
+      case UserAction.ADD_WAYPOINT:
         this._waypointNewPresenter.setSaving();
         this._api.addWaypoint(update)
         .then((response) => this._waypointsModel.addWaypoint(updateType, response))
         .catch(() => this._waypointNewPresenter.setAborting());
         break;
-      case UserAction.UPDATE_POINT:
+      case UserAction.UPDATE_WAYPOINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.SAVING);
         this._api.updateWaypoint(update)
         .then((response) => this._waypointsModel.updateWaypoint(updateType, response))
         .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
-      case UserAction.DELETE_POINT:
+      case UserAction.DELETE_WAYPOINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.DELETING);
         this._api.deleteWaypoint(update)
         .then(() => this._waypointsModel.deleteWaypoint(updateType, update))

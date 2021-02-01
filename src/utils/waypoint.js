@@ -18,7 +18,6 @@ const getDestinationsForTrip = (waypoints) => {
 
 
 export const getTripInfo = (waypoints) => {
-
   if (!waypoints || waypoints.length === 0) {
     return null;
   }
@@ -28,7 +27,7 @@ export const getTripInfo = (waypoints) => {
   return {
     startTime: waypointsByDateAsc[0].startTime,
     endTime: waypointsByDateAsc[waypointsByDateAsc.length - 1].endTime,
-    destination: getDestinationsForTrip(waypointsByDateAsc)
+    destinations: getDestinationsForTrip(waypointsByDateAsc)
   };
 };
 

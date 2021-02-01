@@ -19,9 +19,9 @@ export default class Destinations extends Observer {
 
     destinations.forEach((destination) =>
       adaptedDestinations.set(destination.name, {
-        description: destination.description, photos: [...destination.pictures]
+        description: destination.description,
+        photos: [...destination.pictures]
       }));
-
     return adaptedDestinations;
   }
 }

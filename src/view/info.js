@@ -1,9 +1,8 @@
 import {formatDate} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
-const MAX_ITEMS_TO_SHOW = 3;
-
 const createTripInfoTemplate = (info, isLoading) => {
+
   let tripInfoTitle = ``;
 
   if (isLoading) {
@@ -24,10 +23,12 @@ const createTripInfoTemplate = (info, isLoading) => {
 
   const {startTime, endTime, destinations} = info;
 
-  const titleDestinations = destinations.length > MAX_ITEMS_TO_SHOW ?
-    [destinations[0], `...`, destinations[destinations.length - 1]] : [...destinations];
 
-  tripInfoTitle = titleDestinations.join(` &mdash; `);
+  if (destinations.length > 3) {
+    destinations.splice(1, destinations.length - 2, `...`);
+  }
+
+  tripInfoTitle = destinations.join(` &mdash; `);
 
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -41,13 +42,13 @@ const createTripInfoTemplate = (info, isLoading) => {
 };
 
 export default class Info extends AbstractView {
-  constructor(tripInfo, isLoading) {
+  constructor(info, isLoading) {
     super();
-    this._tripInfo = tripInfo;
     this._isLoading = isLoading;
+    this._info = info;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._tripInfo, this._isLoading);
+    return createTripInfoTemplate(this._info, this._isLoading);
   }
 }
