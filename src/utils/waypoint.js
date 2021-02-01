@@ -18,7 +18,6 @@ const getDestinationsForTrip = (waypoints) => {
 
 
 export const getTripInfo = (waypoints) => {
-
   if (!waypoints || waypoints.length === 0) {
     return null;
   }

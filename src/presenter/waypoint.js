@@ -17,8 +17,8 @@ export const State = {
 };
 
 export default class Waypoint {
-  constructor(listOfWaypoints, changeData, changeMode, _destinationsModel, _offersModel) {
-    this._listOfWaypoints = listOfWaypoints;
+  constructor(waypointListContainer, changeData, changeMode, _destinationsModel, _offersModel) {
+    this._waypointListContainer = waypointListContainer;
     this._waypointComponent = null;
     this._waypointEditComponent = null;
     this._changeData = changeData;
@@ -56,7 +56,7 @@ export default class Waypoint {
     this._waypointEditComponent.setResetButtonClickHandler(this._handleWaypointEditResetButtonClick);
 
     if ((prevWaypointComponent === null) || (prevWaypointEditComponent === null)) {
-      render(this._listOfWaypoints, this._waypointComponent, RenderPosition.BEFOREEND);
+      render(this._waypointListContainer, this._waypointComponent, RenderPosition.BEFOREEND);
       return;
     }
 

@@ -338,7 +338,7 @@ export default class EditWaypoint extends SmartView {
     );
   }
 
-  _offerToggleHandler(evt) {
+  _onOfferToggleHandler(evt) {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }

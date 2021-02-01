@@ -25,7 +25,6 @@ export default class Trip {
     this._waypointPresenterMap = new Map();
     this._currentSortType = SortType.DAY;
     this._sortComponent = null;
-
     this._noWaypointComponent = new NoWaypointView();
     this._waypointListComponent = new CardsView();
     this._loadingComponent = new LoadingView();
@@ -39,6 +38,8 @@ export default class Trip {
   }
 
   init() {
+    render(this._waypointElement, this._waypointListComponent, RenderPosition.BEFOREEND);
+
     this._waypointsModel.attach(this._handleModelEvent);
     this._filterModel.attach(this._handleModelEvent);
 
@@ -74,10 +75,6 @@ export default class Trip {
     }
   }
 
-  _renderLoading() {
-    render(this._waypointElement, this._loadingComponent, RenderPosition.BEFOREEND);
-  }
-
   _renderSort() {
     if (this._sortComponent !== null) {
       this._sortComponent = null;
@@ -86,7 +83,11 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
-    render(this._waypointElement, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._sortComponent, RenderPosition.AFTERBEGIN);
+  }
+
+  _renderLoading() {
+    render(this._waypointElement, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(waypoint) {
@@ -100,7 +101,7 @@ export default class Trip {
   }
 
   _renderNoWaypoints() {
-    render(this._waypointElement, this._noWaypointComponent, RenderPosition.AFTERBEGIN);
+    render(this._waypointElement, this._noWaypointComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {

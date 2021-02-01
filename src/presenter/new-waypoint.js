@@ -6,17 +6,16 @@ import {toast} from '../utils/toast/toast.js';
 import {isEscEvent} from '../utils/common.js';
 
 export default class WaypointNew {
-  constructor(waypointListElements, changeData) {
-    this._waypointListElements = waypointListElements;
+  constructor(waypointListContainer, changeData) {
+    this._waypointListContainer = waypointListContainer;
     this._changeData = changeData;
 
     this._waypointEditComponent = null;
     this._destroyCallback = null;
-
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
   }
 
   init(offersModel, destinationsModel, callback) {
@@ -27,13 +26,14 @@ export default class WaypointNew {
     }
 
     this._waypointEditComponent = new EditWaypointView(offersModel.getOffers(), destinationsModel.getDestinations());
-    this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditComponent.setResetButtonClickHandler(this._handleDeleteClick);
-    this._eventEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
+    this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._waypointEditComponent.setResetButtonClickHandler(this._handleDeleteClick);
+    this._waypointEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
 
-    render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
+    render(this._waypointListContainer, this._waypointEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+
   }
 
   destroy() {
@@ -82,7 +82,6 @@ export default class WaypointNew {
         waypoint
     );
   }
-
 
   _handleDeleteClick() {
     this.destroy();
