@@ -77,7 +77,7 @@ export default class WaypointNew {
     }
 
     this._changeData(
-        UserAction.ADD_EVENT,
+        UserAction.ADD_WAYPOINT,
         UpdateType.MINOR,
         waypoint
     );

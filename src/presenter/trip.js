@@ -139,19 +139,19 @@ export default class Trip {
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
-      case UserAction.ADD_POINT:
+      case UserAction.ADD_WAYPOINT:
         this._waypointNewPresenter.setSaving();
         this._api.addWaypoint(update)
         .then((response) => this._waypointsModel.addWaypoint(updateType, response))
         .catch(() => this._waypointNewPresenter.setAborting());
         break;
-      case UserAction.UPDATE_POINT:
+      case UserAction.UPDATE_WAYPOINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.SAVING);
         this._api.updateWaypoint(update)
         .then((response) => this._waypointsModel.updateWaypoint(updateType, response))
         .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
-      case UserAction.DELETE_POINT:
+      case UserAction.DELETE_WAYPOINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.DELETING);
         this._api.deleteWaypoint(update)
         .then(() => this._waypointsModel.deleteWaypoint(updateType, update))

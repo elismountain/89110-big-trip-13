@@ -7,9 +7,9 @@ export const SortType = {
 };
 
 export const UserAction = {
-  UPDATE_EVENT: `UPDATE_EVENT`,
-  ADD_EVENT: `ADD_EVENT`,
-  DELETE_EVENT: `DELETE_EVENT`
+  UPDATE_WAYPOINT: `UPDATE_EVENT`,
+  ADD_WAYPOINT: `ADD_EVENT`,
+  DELETE_WAYPOINT: `DELETE_EVENT`
 };
 
 export const FilterType = {

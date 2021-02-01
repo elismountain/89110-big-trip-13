@@ -151,7 +151,7 @@ export default class Waypoint {
     }
 
     this._changeData(
-        UserAction.UPDATE_POINT,
+        UserAction.UPDATE_WAYPOINT,
         UpdateType.MINOR,
         waypoint
     );
@@ -159,7 +159,7 @@ export default class Waypoint {
 
   _handleFavoriteClick() {
     this._changeData(
-        UserAction.UPDATE_POINT,
+        UserAction.UPDATE_WAYPOINT,
         UpdateType.MINOR,
         Object.assign({}, this._waypoint, {isFavorite: !this._waypoint.isFavorite}));
   }
@@ -171,7 +171,7 @@ export default class Waypoint {
     }
 
     this._changeData(
-        UserAction.DELETE_POINT,
+        UserAction.DELETE_WAYPOINT,
         UpdateType.MINOR,
         waypoint
     );
