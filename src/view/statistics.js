@@ -1,26 +1,21 @@
 import SmartView from '../view/smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {getWayointTypes, sumPriceByType, countDurationByWaypointType} from '../utils/statistics.js';
+import {formatDurationMs} from '../utils/waypoint.js';
 
-import {
-  calculateCost,
-  calculateUniqType,
-  calculateTime,
-  getTypes
-} from "../utils/statistics.js";
+const renderMoneyChart = (moneyCtx, waypoints) => {
+  const types = getWayointTypes(waypoints);
+  const upperCaseTypes = types.map((type) => type.toUpperCase());
+  const prices = types.map((type) => sumPriceByType(waypoints, type));
 
-const BAR_HEIGHT = 55;
-
-const renderMoneyChart = (ctx, waypoints) => {
-  const labels = getTypes(waypoints);
-  const costs = calculateCost(waypoints);
-  return new Chart(ctx, {
+  return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels,
+      labels: upperCaseTypes,
       datasets: [{
-        data: labels.map((t) => costs.get(t)),
+        data: prices,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -50,7 +45,7 @@ const renderMoneyChart = (ctx, waypoints) => {
           ticks: {
             fontColor: `#000000`,
             padding: 5,
-            fontSize: 15,
+            fontSize: 13,
           },
           gridLines: {
             display: false,
@@ -80,16 +75,18 @@ const renderMoneyChart = (ctx, waypoints) => {
   });
 };
 
-const renderTypeChart = (ctx, waypoints) => {
-  const labels = getTypes(waypoints);
-  const counts = calculateUniqType(waypoints);
-  return new Chart(ctx, {
+const renderTypeChart = (typeCtx, waypoints) => {
+  const types = getWayointTypes(waypoints);
+  const upperCaseTypes = types.map((type) => type.toUpperCase());
+  const typeCounts = types.map((type) => waypoints.filter((waypoint) => waypoint.type === type).length);
+
+  return new Chart(typeCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels,
+      labels: upperCaseTypes,
       datasets: [{
-        data: labels.map((t) => counts.get(t)),
+        data: typeCounts,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -99,7 +96,7 @@ const renderTypeChart = (ctx, waypoints) => {
       plugins: {
         datalabels: {
           font: {
-            size: 15
+            size: 13
           },
           color: `#000000`,
           anchor: `end`,
@@ -119,7 +116,7 @@ const renderTypeChart = (ctx, waypoints) => {
           ticks: {
             fontColor: `#000000`,
             padding: 5,
-            fontSize: 15,
+            fontSize: 13,
           },
           gridLines: {
             display: false,
@@ -149,16 +146,18 @@ const renderTypeChart = (ctx, waypoints) => {
   });
 };
 
-const renderTimeChart = (ctx, waypoints) => {
-  const labels = getTypes(waypoints);
-  const times = calculateTime(waypoints);
-  return new Chart(ctx, {
+const renderTimeChart = (moneyCtx, waypoints) => {
+  const types = getWayointTypes(waypoints);
+  const upperCaseTypes = types.map((type) => type.toUpperCase());
+  const durationsByType = types.map((type) => countDurationByWaypointType(waypoints, type));
+
+  return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels,
+      labels: upperCaseTypes,
       datasets: [{
-        data: labels.map((t) => times.get(t)),
+        data: durationsByType,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -173,7 +172,7 @@ const renderTimeChart = (ctx, waypoints) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${val}D`
+          formatter: (val) => `${formatDurationMs(val)}`
         }
       },
       title: {
@@ -220,20 +219,17 @@ const renderTimeChart = (ctx, waypoints) => {
 
 const createStatisticsTemplate = () => {
   return `<section class="statistics">
-      <h2 class="visually-hidden">Trip statistics</h2>
-
-      <div class="statistics__item statistics__item--money">
-        <canvas class="statistics__chart  statistics__chart--money" width="900" height="100"></canvas>
-      </div>
-
-      <div class="statistics__item statistics__item--transport">
-        <canvas class="statistics__chart  statistics__chart--transport" width="900" height="100"></canvas>
-      </div>
-
-      <div class="statistics__item statistics__item--time-spend">
-        <canvas class="statistics__chart  statistics__chart--time" width="900" height="100"></canvas>
-      </div>
-    </section>`;
+    <h2 class="visually-hidden">Trip statistics</h2>
+    <div class="statistics__item statistics__item--money">
+      <canvas class="statistics__chart  statistics__chart--money" width="900"></canvas>
+    </div>
+    <div class="statistics__item statistics__item--transport">
+      <canvas class="statistics__chart  statistics__chart--transport" width="900"></canvas>
+    </div>
+    <div class="statistics__item statistics__item--time-spend">
+      <canvas class="statistics__chart  statistics__chart--time" width="900"></canvas>
+    </div>
+  </section>`;
 };
 
 export default class Statistics extends SmartView {
@@ -251,6 +247,10 @@ export default class Statistics extends SmartView {
     this._setCharts();
   }
 
+  getTemplate() {
+    return createStatisticsTemplate(this._state);
+  }
+
   removeElement() {
     super.removeElement();
 
@@ -259,10 +259,6 @@ export default class Statistics extends SmartView {
       this._typeChart = null;
       this._timeChart = null;
     }
-  }
-
-  getTemplate() {
-    return createStatisticsTemplate(this._state);
   }
 
   restoreHandlers() {
@@ -275,16 +271,12 @@ export default class Statistics extends SmartView {
       this._typeChart = null;
       this._timeChart = null;
     }
-    const waypoints = this._state.waypoints;
+
+    const {waypoints} = this._state;
 
     const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
     const typeCtx = this.getElement().querySelector(`.statistics__chart--transport`);
     const timeCtx = this.getElement().querySelector(`.statistics__chart--time`);
-
-    const itemCount = getTypes(waypoints).length;
-    moneyCtx.height = BAR_HEIGHT * itemCount;
-    typeCtx.height = BAR_HEIGHT * itemCount;
-    timeCtx.height = BAR_HEIGHT * itemCount;
 
     this._moneyChart = renderMoneyChart(moneyCtx, waypoints);
     this._typeChart = renderTypeChart(typeCtx, waypoints);

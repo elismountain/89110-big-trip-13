@@ -44,12 +44,12 @@ const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const siteMenuTitleElements = tripInfoElement.querySelectorAll(`.trip-controls h2`);
 
-const [menuContainer, filterContainer] = siteMenuTitleElements;
+const [menuElement, controlElement] = siteMenuTitleElements;
 
 const siteMenuComponent = new MenuView();
 let statisticsComponent = null;
 
-const filterPresenter = new FilterPresenter(filterContainer, filterModel, waypointsModel);
+const filterPresenter = new FilterPresenter(controlElement, filterModel, waypointsModel);
 const summaryPresenter = new SummaryPresenter(tripInfoElement, waypointsModel);
 summaryPresenter.init();
 
@@ -112,12 +112,12 @@ promises
   destinationsModel.setDestinations(destinations);
   waypointsModel.setWaypoints(UpdateType.INIT, waypoints);
   waypointNewButtonElement.disabled = false;
-  render(menuContainer, siteMenuComponent, RenderPosition.AFTEREND);
+  render(menuElement, siteMenuComponent, RenderPosition.AFTEREND);
 })
 .catch(() => {
   waypointsModel.setWaypoints(UpdateType.INIT, []);
   waypointNewButtonElement.disabled = false;
-  render(menuContainer, siteMenuComponent, RenderPosition.AFTEREND);
+  render(menuElement, siteMenuComponent, RenderPosition.AFTEREND);
 });
 
 window.addEventListener(`load`, () => {

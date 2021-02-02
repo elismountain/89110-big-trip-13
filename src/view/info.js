@@ -1,68 +1,56 @@
-import dayjs from "dayjs";
+import {formatDate} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
-import {sortByDate} from '../utils/common.js';
 
 export const INFO_DESTINATIONS = 3;
 
-const createTripInfoTemplate = (waypoints) => {
-  let sortedDate = [];
-  let dates = ``;
-  let totalPrice = Number(0);
-  let titleText = ``;
+const createTripInfoTemplate = (info, isLoading) => {
 
-  if (waypoints.length >= INFO_DESTINATIONS) {
-    sortedDate.push(waypoints.sort(sortByDate));
+  let tripInfoTitle = ``;
 
-    const waypointFirst = sortedDate[0][0];
-    const waypointLast = sortedDate[0][sortedDate[0].length - 1];
-    const waypointFirstCity = waypointFirst.city.name;
-    const waypointLastCity = waypointLast.city.name;
-    const waypointFirstDate = dayjs(waypointFirst.startTime).format(`D MMM`);
-    const waypointLastDate = dayjs(waypointLast.endTime).format(`D MMM`);
-
-    if (waypoints.length <= INFO_DESTINATIONS) {
-      titleText = `${waypointFirstCity} &mdash; ${waypointLastCity}`;
-    } else {
-      titleText = `${waypointFirstCity} &mdash; ... &mdash; ${waypointLastCity}`;
-    }
-
-    if (waypointFirstDate && waypointLastDate) {
-      dates = `${waypointFirstDate} &mdash; ${waypointLastDate}`;
-    } else {
-      dates = ``;
-    }
-
-    waypoints.forEach((item) => {
-      totalPrice += item.price;
-      item.eventType.offers.forEach((offer) => {
-        totalPrice += offer.price;
-      });
-    });
+  if (isLoading) {
+    tripInfoTitle = `Loading trip summary...`;
   }
 
-  return `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${titleText}</h1>
+  if (info === null && !isLoading) {
+    tripInfoTitle = `Trip doesn't contain any points`;
+  }
 
-      <p class="trip-info__dates">${dates}</p>
-    </div>
+  if (isLoading || info === null) {
+    return `<section class="trip-main__trip-info  trip-info">
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">${tripInfoTitle}</h1>
+      </div>
+    </section>`;
+  }
 
-    <p class="trip-info__cost">
-      Total: &euro;&nbsp;
-      <span class="trip-info__cost-value">
-        ${totalPrice}
-      </span>
-    </p>
-  </section>`;
+  const {startTime, endTime, destinations} = info;
+
+
+  if (destinations.length > INFO_DESTINATIONS) {
+    destinations.splice(1, destinations.length - 2, `...`);
+  }
+
+  tripInfoTitle = destinations.join(` &mdash; `);
+
+  return (
+    `<section class="trip-main__trip-info  trip-info">
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">${tripInfoTitle}</h1>
+
+        <p class="trip-info__dates">${formatDate(startTime, `MMM DD`)}&nbsp;&mdash;&nbsp;${formatDate(endTime, `DD`)}</p>
+      </div>
+    </section>`
+  );
 };
 
 export default class Info extends AbstractView {
-  constructor(waypoints) {
+  constructor(info, isLoading) {
     super();
-    this._waypoints = waypoints;
+    this._isLoading = isLoading;
+    this._info = info;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._waypoints);
+    return createTripInfoTemplate(this._info, this._isLoading);
   }
 }

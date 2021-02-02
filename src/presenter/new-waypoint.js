@@ -6,11 +6,11 @@ import {toast} from '../utils/toast/toast.js';
 import {isEscEvent} from '../utils/common.js';
 
 export default class WaypointNew {
-  constructor(waypointListContainer, changeData) {
-    this._waypointListContainer = waypointListContainer;
+  constructor(cardsListElement, changeData) {
+    this._cardsListElement = cardsListElement;
     this._changeData = changeData;
 
-    this._waypointEditComponent = null;
+    this._cardEditElement = null;
     this._destroyCallback = null;
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
@@ -21,23 +21,23 @@ export default class WaypointNew {
   init(offersModel, destinationsModel, callback) {
     this._destroyCallback = callback;
 
-    if (this._waypointEditComponent !== null) {
+    if (this._cardEditElement !== null) {
       return;
     }
 
-    this._waypointEditComponent = new EditWaypointView(offersModel.getOffers(), destinationsModel.getDestinations());
-    this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._waypointEditComponent.setResetButtonClickHandler(this._handleDeleteClick);
-    this._waypointEditComponent.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
+    this._cardEditElement = new EditWaypointView(offersModel.getOffers(), destinationsModel.getDestinations());
+    this._cardEditElement.setFormSubmitHandler(this._handleFormSubmit);
+    this._cardEditElement.setResetButtonClickHandler(this._handleDeleteClick);
+    this._cardEditElement.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
 
-    render(this._waypointListContainer, this._waypointEditComponent, RenderPosition.AFTERBEGIN);
+    render(this._cardsListElement, this._cardEditElement, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
 
   }
 
   destroy() {
-    if (this._waypointEditComponent === null) {
+    if (this._cardEditElement === null) {
       return;
     }
 
@@ -45,14 +45,14 @@ export default class WaypointNew {
       this._destroyCallback();
     }
 
-    remove(this._waypointEditComponent);
-    this._waypointEditComponent = null;
+    remove(this._cardEditElement);
+    this._cardEditElement = null;
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   setSaving() {
-    this._waypointEditComponent.updateData({
+    this._cardEditElement.updateData({
       isDisabled: true,
       isSaving: true
     });
@@ -60,14 +60,14 @@ export default class WaypointNew {
 
   setAborting() {
     const resetFormState = () => {
-      this._waypointEditComponent.updateData({
+      this._cardEditElement.updateData({
         isDisabled: false,
         isSaving: false,
         isDeleting: false
       });
     };
 
-    this._waypointEditComponent.shake(resetFormState);
+    this._cardEditElement.shake(resetFormState);
   }
 
   _handleFormSubmit(waypoint) {

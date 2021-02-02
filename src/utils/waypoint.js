@@ -11,12 +11,14 @@ const getDestinationsForTrip = (waypoints) => {
     return null;
   }
 
-  const destinations = waypoints.map((waypoint) => waypoint.city.name);
+  const destinations = waypoints.map((waypoint) => waypoint.destination.name);
 
   return destinations;
 };
 
+
 export const getTripInfo = (waypoints) => {
+
   if (!waypoints || waypoints.length === 0) {
     return null;
   }

@@ -6,8 +6,8 @@ import {UpdateType} from '../utils/const.js';
 
 
 export default class Summary {
-  constructor(summaryContainer, waypointsModel) {
-    this._summaryContainer = summaryContainer;
+  constructor(headerContainer, waypointsModel) {
+    this._headerContainer = headerContainer;
     this._waypointsModel = waypointsModel;
 
     this._infoComponent = null;
@@ -31,8 +31,8 @@ export default class Summary {
     }
 
     const info = getTripInfo(this._waypointsModel.getWaypoints());
-    this._infoComponent = new InfoView();
-    render(this._summaryContainer, this._infoComponent, RenderPosition.AFTERBEGIN);
+    this._infoComponent = new InfoView(info);
+    render(this._headerContainer, this._infoComponent, RenderPosition.AFTERBEGIN);
   }
 
 

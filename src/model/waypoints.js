@@ -40,7 +40,7 @@ export default class Waypoints extends Observer {
     this._notify(updateType, updateType);
   }
 
-  deleteWaypoint(updateType, update) {
+  deletePoint(updateType, update) {
     const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
@@ -63,19 +63,11 @@ export default class Waypoints extends Observer {
         {},
         waypoint,
         {
-          price: waypoint.base_price,
           startTime: waypoint.date_from !== null ? new Date(waypoint.date_from) : waypoint.date_from,
           endTime: waypoint.date_to !== null ? new Date(waypoint.date_to) : waypoint.date_to,
-          isFavorite: waypoint.is_favorite,
-          city: {
-            name: waypoint.destination.name,
-            text: waypoint.destination.description,
-            photos: waypoint.destination.pictures,
-          },
-          eventType: {
-            type: waypoint.type,
-            offers: waypoint.offers,
-          },
+          destination,
+          price: waypoint.base_price,
+          isFavorite: waypoint.is_favorite
         }
     );
 
@@ -87,30 +79,25 @@ export default class Waypoints extends Observer {
     return adaptedWaypoint;
   }
 
-
   static adaptToServer(waypoint) {
+    const destination = Object.assign({}, waypoint.destination, {pictures: waypoint.destination.photos});
+    delete destination.photos;
+
     const adaptedWaypoint = Object.assign(
         {},
         waypoint,
         {
-          "base_price": Number(waypoint.price),
           "date_from": waypoint.startTime instanceof Date ? waypoint.startTime.toISOString() : null,
           "date_to": waypoint.endTime instanceof Date ? waypoint.endTime.toISOString() : null,
-          "type": waypoint.eventType.type.toLowerCase(),
-          "offers": waypoint.eventType.offers,
+          "destination": destination,
+          "base_price": waypoint.price,
           "is_favorite": waypoint.isFavorite,
-          "destination": {
-            name: waypoint.city.name,
-            description: waypoint.city.text,
-            pictures: waypoint.city.photos,
-          },
+          "offers": waypoint.offers
         }
     );
 
-    delete adaptedWaypoint.dateStart;
-    delete adaptedWaypoint.dateEnd;
-    delete adaptedWaypoint.city;
-    delete adaptedWaypoint.eventType;
+    delete adaptedWaypoint.startTime;
+    delete adaptedWaypoint.endTime;
     delete adaptedWaypoint.price;
     delete adaptedWaypoint.isFavorite;
 

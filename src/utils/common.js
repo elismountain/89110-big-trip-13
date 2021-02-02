@@ -23,7 +23,3 @@ export const isEscEvent = (evt, action) => {
 export const isOnline = () => {
   return window.navigator.onLine;
 };
-
-export const sortByDate = (a, b) => {
-  return new Date(a.startTime).getTime() - new Date(b.endTime).getTime();
-};
