@@ -31,7 +31,7 @@ export default class Summary {
     }
 
     const info = getTripInfo(this._waypointsModel.getWaypoints());
-    this._infoComponent = new InfoView(info, this._isLoading);
+    this._infoComponent = new InfoView();
     render(this._summaryContainer, this._infoComponent, RenderPosition.AFTERBEGIN);
   }
 
