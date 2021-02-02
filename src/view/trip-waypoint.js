@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {waypointTypes} from '../utils/const.js';
 import {formatDate, formatDuration} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
@@ -23,13 +22,13 @@ const createWaypointOffersTemplate = (offers) => {
 
 const createCardTemplate = (waypoint) => {
 
-  const {type, startTime, endTime, destination, price, isFavorite, offers} = waypoint;
+  const {city, eventType, startTime, endTime, price, isFavorite, offers} = waypoint;
 
   const offersTemplate = createWaypointOffersTemplate(offers);
 
   const formattedDuration = formatDuration(startTime, endTime);
 
-  const typeIcon = waypointTypes.get(type).src;
+  const typeIcon = eventType.type.toLowerCase();
 
   const favoriteClassName = isFavorite ? `event__favorite-btn event__favorite-btn--active` : `event__favorite-btn`;
 
@@ -40,7 +39,7 @@ const createCardTemplate = (waypoint) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="${typeIcon}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destination.name}</h3>
+        <h3 class="event__title">${eventType.type} ${city.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

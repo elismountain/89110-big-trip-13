@@ -63,11 +63,19 @@ export default class Waypoints extends Observer {
         {},
         waypoint,
         {
+          price: waypoint.base_price,
           startTime: waypoint.date_from !== null ? new Date(waypoint.date_from) : waypoint.date_from,
           endTime: waypoint.date_to !== null ? new Date(waypoint.date_to) : waypoint.date_to,
-          destination,
-          price: waypoint.base_price,
-          isFavorite: waypoint.is_favorite
+          isFavorite: waypoint.is_favorite,
+          city: {
+            name: waypoint.destination.name,
+            text: waypoint.destination.description,
+            photos: waypoint.destination.pictures,
+          },
+          eventType: {
+            type: waypoint.type,
+            offers: waypoint.offers,
+          },
         }
     );
 
@@ -79,25 +87,30 @@ export default class Waypoints extends Observer {
     return adaptedWaypoint;
   }
 
-  static adaptToServer(waypoint) {
-    const destination = Object.assign({}, waypoint.destination, {pictures: waypoint.destination.photos});
-    delete destination.photos;
 
+  static adaptToServer(waypoint) {
     const adaptedWaypoint = Object.assign(
         {},
         waypoint,
         {
+          "base_price": Number(waypoint.price),
           "date_from": waypoint.startTime instanceof Date ? waypoint.startTime.toISOString() : null,
           "date_to": waypoint.endTime instanceof Date ? waypoint.endTime.toISOString() : null,
-          "destination": destination,
-          "base_price": waypoint.price,
+          "type": waypoint.eventType.type.toLowerCase(),
+          "offers": waypoint.eventType.offers,
           "is_favorite": waypoint.isFavorite,
-          "offers": waypoint.offers
+          "destination": {
+            name: waypoint.city.name,
+            description: waypoint.city.text,
+            pictures: waypoint.city.photos,
+          },
         }
     );
 
-    delete adaptedWaypoint.startTime;
-    delete adaptedWaypoint.endTime;
+    delete adaptedWaypoint.dateStart;
+    delete adaptedWaypoint.dateEnd;
+    delete adaptedWaypoint.city;
+    delete adaptedWaypoint.eventType;
     delete adaptedWaypoint.price;
     delete adaptedWaypoint.isFavorite;
 
