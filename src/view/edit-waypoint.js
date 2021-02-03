@@ -28,7 +28,6 @@ const createOffersTemplate = (waypoints, isDisabled) => {
   if (offers && (offers.length > 0)) {
     offers.pop();
   }
-  console.log(offers);
   return offers && (offers.length > 0) ? `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
