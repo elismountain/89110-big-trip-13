@@ -58,12 +58,24 @@ const createAvailableDestinationsTemplate = (availableDestinations) => {
   </datalist>` : ``;
 };
 
-const createTypesMenuTemplate = (types) => {
+// const createTypesMenuTemplate = (types) => {
+//   return `<div class="event__type-list">
+//     <fieldset class="event__type-group">
+//       <legend class="visually-hidden">Event type</legend>
+//       ${Array.from(types).map(([key, value]) => `<div class="event__type-item">
+//       <input id="event-type-${key}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${key}">
+//       <label class="event__type-label  event__type-label--${key}" for="event-type-${key}-1">${value.title}</label>
+//     </div>`).join(``)}
+//     </fieldset>
+//   </div>`;
+// };
+
+const createTypesMenuTemplate = (types, waypointType) => {
   return `<div class="event__type-list">
     <fieldset class="event__type-group">
       <legend class="visually-hidden">Event type</legend>
       ${Array.from(types).map(([key, value]) => `<div class="event__type-item">
-      <input id="event-type-${key}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${key}">
+      <input id="event-type-${key}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${key}" ${key === waypointType ? `checked` : ``}>
       <label class="event__type-label  event__type-label--${key}" for="event-type-${key}-1">${value.title}</label>
     </div>`).join(``)}
     </fieldset>
@@ -304,7 +316,7 @@ export default class EditWaypoint extends SmartView {
 
   _onFormSubmit(evt) {
     evt.preventDefault();
-    this._callback.submitForm();
+    this._callback.submitForm(EditWaypoint.parseStateToWayoint(this._state));
   }
 
   _onResetButtonClick(evt) {
@@ -367,13 +379,12 @@ export default class EditWaypoint extends SmartView {
   static parsePointToState(waypoint, offers, destinations) {
     const deleteButtonLabel = (waypoint === EMPTY_WAYPOINT) ? DeleteButtonLabel.ADD : DeleteButtonLabel.EDIT;
 
-    const offersForType = offers.getOffers(waypoint.type);
+    const offersForType = offers.get(waypoint.type); //  не раюботает!!!
+    // const offersForType = [...offers.get().keys()];
 
     const offerSelectionMap = EditWaypoint._createOfferSelectionForType(waypoint.offers, offersForType);
 
     const availableDestinations = [...destinations.get().keys()];
-    // const availableDestinations = [...destinations.getDestinations().keys()];
-    // const availableDestinations = [...destinations.keys()];
 
     return Object.assign(
         {},

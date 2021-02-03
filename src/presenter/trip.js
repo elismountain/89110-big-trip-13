@@ -120,7 +120,8 @@ export default class Trip {
 
     this._renderSort();
     render(this._waypointElement, this._cardsListComponent, RenderPosition.BEFOREEND);
-    this._renderWaypoint(waypoint);
+    this._renderWaypoint();
+    // this._renderWaypoint(waypoint);
   }
 
   _clearAll({resetSortType = false} = {}) {

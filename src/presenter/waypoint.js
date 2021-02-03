@@ -43,7 +43,7 @@ export default class Waypoint {
     const prevWaypointEditComponent = this._cardEdit;
 
     this._card = new TripWaypointView(waypoint);
-    this._cardEditElement = new EditWaypointView(this._destinations, this._offers, waypoint);
+    this._cardEdit = new EditWaypointView(this._destinations, this._offers, waypoint);
 
     this._card.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
     this._card.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -119,7 +119,7 @@ export default class Waypoint {
   _switchToDisplay() {
     this._cardEdit.reset(this._waypoint);
     replace(this._card, this._cardEdit);
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
 
@@ -135,12 +135,6 @@ export default class Waypoint {
     this._switchToDisplay();
   }
 
-  _escKeyDownHandler(evt) {
-    isEscEvent(evt, () => {
-      this._switchToDisplay();
-    });
-  }
-
   _handleFormSubmit(waypoint) {
     if (!isOnline()) {
       toast(`You can't save while offline`);
@@ -152,6 +146,12 @@ export default class Waypoint {
         UpdateType.MINOR,
         waypoint
     );
+  }
+
+  _escKeyDownHandler(evt) {
+    isEscEvent(evt, () => {
+      this._switchToDisplay();
+    });
   }
 
   _handleFavoriteClick() {

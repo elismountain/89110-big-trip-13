@@ -11,7 +11,7 @@ export default class Offers extends Observer {
   }
 
   get() {
-    return this._offers;
+    return this._items;
   }
 
   static adaptToClient(offers) {
