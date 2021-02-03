@@ -22,16 +22,22 @@ const DeleteButtonLabel = {
   EDIT: `Delete`
 };
 
-const createOffersTemplate = (offers, isDisabled) => {
-  return offers && (offers.size > 0) ? `<section class="event__section  event__section--offers">
+const createOffersTemplate = (waypoints, isDisabled) => {
+  const offersObject = Array.from(waypoints)[0][1];
+  const offers = Object.entries(offersObject);
+  if (offers && (offers.length > 0)) {
+    offers.pop();
+  }
+  console.log(offers);
+  return offers && (offers.length > 0) ? `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
       ${Array.from(offers).map(([key, value]) => `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${key}-1" type="checkbox" data-offer-key="${key}" name="event-offer-${key}" ${value.selected ? `checked` : ``} ${isDisabled ? `disabled` : ``}>
         <label class="event__offer-label" for="event-offer-${key}-1">
-          <span class="event__offer-title">${Object.entries(value)[0][1].title}</span>
+          <span class="event__offer-title">${value.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${Object.entries(value)[0][1].price}</span>
+          <span class="event__offer-price">${value.price}</span>
         </label>
       </div>`).join(``)}
     </div>
@@ -316,7 +322,7 @@ export default class EditWaypoint extends SmartView {
     evt.preventDefault();
     this._validateAll();
 
-    let destination = this._destinations.get(evt.target.value);
+    const destination = this._destinations.get(evt.target.value);
 
     if (!destination || evt.target.value === this._state.destination.name) {
       return;
