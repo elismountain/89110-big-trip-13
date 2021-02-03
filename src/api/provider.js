@@ -10,8 +10,8 @@ const createStoreStructure = (items) => {
   if (items instanceof Map) {
     return Object.fromEntries(items.entries());
   }
-  return items.reduce((acc, current) => {
-    return Object.assign({}, acc, {
+  return items.reduce((accumulator, current) => {
+    return Object.assign({}, accumulator, {
       [current.id]: current,
     });
   }, {});

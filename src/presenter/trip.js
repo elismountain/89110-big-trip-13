@@ -39,7 +39,7 @@ export default class Trip {
   }
 
   init() {
-    render(this._waypointElement, this._cardsListElement, RenderPosition.BEFOREEND);
+    render(this._waypointElement, this._cardsListComponent, RenderPosition.BEFOREEND);
 
     this._waypointsModel.attach(this._handleModelEvent);
     this._filterModel.attach(this._handleModelEvent);
@@ -60,8 +60,8 @@ export default class Trip {
   }
 
   _getWaypoints() {
-    const filterType = this._filterModel.getFilter();
-    const waypoints = this._waypointsModel.getWaypoints();
+    const filterType = this._filterModel.get();
+    const waypoints = this._waypointsModel.get();
     const filteredWaypoints = filter[filterType](waypoints);
 
     switch (this._currentSortType) {
@@ -81,7 +81,7 @@ export default class Trip {
       this._sortComponent = null;
     }
     this._sortComponent = new SortView(this._currentSortType);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
 
     render(this._waypointElement, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
@@ -90,18 +90,19 @@ export default class Trip {
     render(this._waypointElement, this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
-  _renderPoint(waypoint) {
+  _renderWaypoint(waypoint) {
     const waypointPresenter = new WaypointPresenter(this._cardsListComponent, this._handleViewAction, this._handleModeChange);
     waypointPresenter.init(waypoint, this._offersModel, this._destinationsModel);
-    this._pointPresenterMap.set(waypoint.id, waypointPresenter);
+    this._waypointPresenterMap.set(waypoint.id, waypointPresenter);
   }
 
   _renderWaypoints(waypoints) {
-    waypoints.forEach((waypoint) => this._renderWaypoints(waypoint));
+    waypoints.forEach((waypoint) => this._renderWaypoint(waypoint));
   }
 
   _renderNoWaypoints() {
     render(this._waypointElement, this._noWaypointComponent, RenderPosition.BEFOREEND);
+    remove(this._sortComponent);
   }
 
   _renderAll() {
@@ -119,7 +120,7 @@ export default class Trip {
 
     this._renderSort();
     render(this._waypointElement, this._cardsListComponent, RenderPosition.BEFOREEND);
-    this._renderWaypoints(waypoints);
+    this._renderWaypoint(waypoint);
   }
 
   _clearAll({resetSortType = false} = {}) {
@@ -142,19 +143,19 @@ export default class Trip {
       case UserAction.ADD_POINT:
         this._waypointNewPresenter.setSaving();
         this._api.addWaypoint(update)
-        .then((response) => this._waypointsModel.addWaypoint(updateType, response))
+        .then((response) => this._waypointsModel.add(updateType, response))
         .catch(() => this._waypointNewPresenter.setAborting());
         break;
       case UserAction.UPDATE_POINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.SAVING);
         this._api.updateWaypoint(update)
-        .then((response) => this._waypointsModel.updateWaypoint(updateType, response))
+        .then((response) => this._waypointsModel.update(updateType, response))
         .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
       case UserAction.DELETE_POINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.DELETING);
         this._api.deleteWaypoint(update)
-        .then(() => this._waypointsModel.deleteWaypoint(updateType, update))
+        .then(() => this._waypointsModel.delete(updateType, update))
         .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
     }

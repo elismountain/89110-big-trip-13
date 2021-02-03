@@ -10,7 +10,7 @@ export default class WaypointNew {
     this._cardsListElement = cardsListElement;
     this._changeData = changeData;
 
-    this._cardEditElement = null;
+    this._cardEdit = null;
     this._destroyCallback = null;
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
@@ -21,23 +21,23 @@ export default class WaypointNew {
   init(offersModel, destinationsModel, callback) {
     this._destroyCallback = callback;
 
-    if (this._cardEditElement !== null) {
+    if (this._cardEdit !== null) {
       return;
     }
 
-    this._cardEditElement = new EditWaypointView(offersModel.getOffers(), destinationsModel.getDestinations());
-    this._cardEditElement.setFormSubmitHandler(this._handleFormSubmit);
-    this._cardEditElement.setResetButtonClickHandler(this._handleDeleteClick);
-    this._cardEditElement.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
+    this._cardEdit = new EditWaypointView(offersModel.get(), destinationsModel.get());
+    this._cardEdit.setFormSubmitHandler(this._handleFormSubmit);
+    this._cardEdit.setResetButtonClickHandler(this._handleDeleteClick);
+    this._cardEdit.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
 
-    render(this._cardsListElement, this._cardEditElement, RenderPosition.AFTERBEGIN);
+    render(this._cardsListElement, this._cardEdit, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
 
   }
 
   destroy() {
-    if (this._cardEditElement === null) {
+    if (this._cardEdit === null) {
       return;
     }
 
@@ -45,14 +45,14 @@ export default class WaypointNew {
       this._destroyCallback();
     }
 
-    remove(this._cardEditElement);
-    this._cardEditElement = null;
+    remove(this._cardEdit);
+    this._cardEdit = null;
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   setSaving() {
-    this._cardEditElement.updateData({
+    this._cardEdit.updateData({
       isDisabled: true,
       isSaving: true
     });
@@ -60,14 +60,14 @@ export default class WaypointNew {
 
   setAborting() {
     const resetFormState = () => {
-      this._cardEditElement.updateData({
+      this._cardEdit.updateData({
         isDisabled: false,
         isSaving: false,
         isDeleting: false
       });
     };
 
-    this._cardEditElement.shake(resetFormState);
+    this._cardEdit.shake(resetFormState);
   }
 
   _handleFormSubmit(waypoint) {
@@ -77,7 +77,7 @@ export default class WaypointNew {
     }
 
     this._changeData(
-        UserAction.ADD_WAYPOINT,
+        UserAction.ADD_POINT,
         UpdateType.MINOR,
         waypoint
     );

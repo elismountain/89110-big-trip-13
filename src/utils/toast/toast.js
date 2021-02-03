@@ -2,19 +2,19 @@ import "./toast.css";
 
 const SHOW_TIME = 5000;
 
-const toastContainer = document.createElement(`div`);
-toastContainer.classList.add(`toast-container`);
-document.body.append(toastContainer);
+const toastElement = document.createElement(`div`);
+toastElement.classList.add(`toast-container`);
+document.body.append(toastElement);
 
 const toast = (message) => {
-  const toastItem = document.createElement(`div`);
-  toastItem.textContent = message;
-  toastItem.classList.add(`toast-item`);
+  const toastItemElement = document.createElement(`div`);
+  toastItemElement.textContent = message;
+  toastItemElement.classList.add(`toast-item`);
 
-  toastContainer.append(toastItem);
+  toastElement.append(toastItemElement);
 
   setTimeout(() => {
-    toastItem.remove();
+    toastItemElement.remove();
   }, SHOW_TIME);
 };
 

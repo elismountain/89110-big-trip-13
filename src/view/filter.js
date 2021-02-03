@@ -22,22 +22,21 @@ const createFilterTemplate = (currentFilterType) => {
 export default class Filter extends AbstractView {
   constructor(currentFilterType) {
     super();
-    this._currentFilter = currentFilterType;
-
-    this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
+    this._currentType = currentFilterType;
+    this._onTypeChange = this._onTypeChange.bind(this);
   }
 
   getTemplate() {
-    return createFilterTemplate(this._currentFilter);
+    return createFilterTemplate(this._currentType);
   }
 
-  setOnFilterTypeChange(callback) {
-    this._callback.changeFilterType = callback;
-    this.getElement().addEventListener(`change`, this._onFilterTypeChange);
+  setOnTypeChange(callback) {
+    this._callback.changeType = callback;
+    this.getElement().addEventListener(`change`, this._onTypeChange);
   }
 
-  _onFilterTypeChange(evt) {
+  _onTypeChange(evt) {
     evt.preventDefault();
-    this._callback.changeFilterType(evt.target.value);
+    this._callback.changeType(evt.target.value);
   }
 }

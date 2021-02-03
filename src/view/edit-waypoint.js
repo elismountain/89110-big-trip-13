@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
 import he from 'he';
 import flatpickr from 'flatpickr';
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const EMPTY_WAYPOINT = {
   type: waypointTypes.keys().next().value,
@@ -141,15 +141,15 @@ export default class EditWaypoint extends SmartView {
     this._dateFromPicker = null;
     this._dateToPicker = null;
 
-    this._onRollupButtonClickHandler = this._onRollupButtonClickHandler.bind(this);
-    this._onFormSubmitHandler = this._onFormSubmitHandler.bind(this);
-    this._onWaypointTypeChangeHandler = this._onWaypointTypeChangeHandler.bind(this);
-    this._onPriceInputHandler = this._onPriceInputHandler.bind(this);
-    this._onOfferToggleHandler = this._onOfferToggleHandler.bind(this);
-    this._onDestinationInputHandler = this._onDestinationInputHandler.bind(this);
-    this._onResetButtonClickHandler = this._onResetButtonClickHandler.bind(this);
-    this._dateFromCloseHandler = this._dateFromCloseHandler.bind(this);
-    this._dateToCloseHandler = this._dateToCloseHandler.bind(this);
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
+    this._onFormSubmit = this._onFormSubmit.bind(this);
+    this._onWaypointTypeListChange = this._onWaypointTypeListChange.bind(this);
+    this._onPriceInput = this._onPriceInput.bind(this);
+    this._onAvailableOffersToggle = this._onAvailableOffersToggle.bind(this);
+    this._onDestinationInput = this._onDestinationInput.bind(this);
+    this._onResetButtonClick = this._onResetButtonClick.bind(this);
+    this._onDateFromClose = this._onDateFromClose.bind(this);
+    this._onDateToClose = this._onDateToClose.bind(this);
 
 
     this._setInnerHandlers();
@@ -176,7 +176,7 @@ export default class EditWaypoint extends SmartView {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._state.startTime,
           maxDate: dayjs(this._state.endTime).second(0).subtract(1, `m`).toDate(),
-          onClose: this._dateFromCloseHandler,
+          onClose: this._onDateFromClose,
         }
     );
   }
@@ -195,29 +195,9 @@ export default class EditWaypoint extends SmartView {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._state.startTime,
           minDate: dayjs(this._state.endTime).second(0).add(1, `m`).toDate(),
-          onClose: this._dateToCloseHandler,
+          onClose: this._onDateToClose,
         }
     );
-  }
-
-  _dateFromCloseHandler([userDate]) {
-    this.updateData(
-        {
-          startTime: dayjs(userDate).second(0).toDate(),
-        },
-        true
-    );
-    this._setDateToPicker();
-  }
-
-  _dateToCloseHandler([userDate]) {
-    this.updateData(
-        {
-          endTime: dayjs(userDate).second(0).toDate(),
-        },
-        true
-    );
-    this._setDateFromPicker();
   }
 
   reset(waypoint) {
@@ -240,19 +220,19 @@ export default class EditWaypoint extends SmartView {
 
     this.getElement()
       .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._onRollupButtonClickHandler);
+      .addEventListener(`click`, this._onRollupButtonClick);
   }
 
   setFormSubmitHandler(callback) {
     this._callback.submitForm = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._onFormSubmitHandler);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._onFormSubmit);
   }
 
   setResetButtonClickHandler(callback) {
     this._callback.resetButtonClick = callback;
     this.getElement()
   .querySelector(`.event__reset-btn`)
-  .addEventListener(`click`, this._onResetButtonClickHandler);
+  .addEventListener(`click`, this._onResetButtonClick);
   }
 
   _buildDestinationOptions() {
@@ -284,35 +264,55 @@ export default class EditWaypoint extends SmartView {
   _setInnerHandlers() {
     this.getElement()
       .querySelector(`.event__type-list`)
-      .addEventListener(`change`, this._onWaypointTypeChangeHandler);
+      .addEventListener(`change`, this._onWaypointTypeListChange);
     const priceElement = this.getElement().querySelector(`.event__input--price`);
-    priceElement.addEventListener(`input`, this._onPriceInputHandler);
+    priceElement.addEventListener(`input`, this._onPriceInput);
 
-    const offersRenderedElement = this.getElement().querySelector(`.event__available-offers`);
-    if (offersRenderedElement) {
-      offersRenderedElement.addEventListener(`change`, this._onOfferToggleHandler);
+    const availableOffersElement = this.getElement().querySelector(`.event__available-offers`);
+    if (availableOffersElement) {
+      availableOffersElement.addEventListener(`change`, this._onAvailableOffersToggle);
     }
 
     const destinationElement = this.getElement().querySelector(`.event__input--destination`);
-    destinationElement.addEventListener(`input`, this._onDestinationInputHandler);
+    destinationElement.addEventListener(`input`, this._onDestinationInput);
   }
 
-  _onRollupButtonClickHandler(evt) {
+  _onDateFromClose([userDate]) {
+    this.updateData(
+        {
+          startTime: dayjs(userDate).second(0).toDate(),
+        },
+        true
+    );
+    this._setDateToPicker();
+  }
+
+  _onDateToClose([userDate]) {
+    this.updateData(
+        {
+          endTime: dayjs(userDate).second(0).toDate(),
+        },
+        true
+    );
+    this._setDateFromPicker();
+  }
+
+  _onRollupButtonClick(evt) {
     evt.preventDefault();
     this._callback.clickRollupButton(this._waypoint);
   }
 
-  _onFormSubmitHandler(evt) {
+  _onFormSubmit(evt) {
     evt.preventDefault();
     this._callback.submitForm();
   }
 
-  _onResetButtonClickHandler(evt) {
+  _onResetButtonClick(evt) {
     evt.preventDefault();
     this._callback.resetButtonClick(EditWaypoint.parseStateToWaypoint(this._state));
   }
 
-  _onDestinationInputHandler(evt) {
+  _onDestinationInput(evt) {
     evt.preventDefault();
     this._validateAll();
 
@@ -327,7 +327,7 @@ export default class EditWaypoint extends SmartView {
     );
   }
 
-  _onOfferToggleHandler(evt) {
+  _onAvailableOffersToggle(evt) {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
@@ -341,7 +341,7 @@ export default class EditWaypoint extends SmartView {
     });
   }
 
-  _onWaypointTypeChangeHandler(evt) {
+  _onWaypointTypeListChange(evt) {
 
     if (evt.target.tagName !== `INPUT`) {
       return;
@@ -356,7 +356,7 @@ export default class EditWaypoint extends SmartView {
     });
   }
 
-  _onPriceInputHandler(evt) {
+  _onPriceInput(evt) {
     evt.preventDefault();
     this._validateAll();
     this.updateData({
@@ -364,15 +364,16 @@ export default class EditWaypoint extends SmartView {
     }, true);
   }
 
-
   static parsePointToState(waypoint, offers, destinations) {
     const deleteButtonLabel = (waypoint === EMPTY_WAYPOINT) ? DeleteButtonLabel.ADD : DeleteButtonLabel.EDIT;
 
-    const offersForType = offers.get(waypoint.type);
+    const offersForType = offers.getOffers(waypoint.type);
 
     const offerSelectionMap = EditWaypoint._createOfferSelectionForType(waypoint.offers, offersForType);
 
-    const availableDestinations = [...destinations.keys()];
+    const availableDestinations = [...destinations.get().keys()];
+    // const availableDestinations = [...destinations.getDestinations().keys()];
+    // const availableDestinations = [...destinations.keys()];
 
     return Object.assign(
         {},
@@ -388,7 +389,7 @@ export default class EditWaypoint extends SmartView {
     );
   }
 
-  static parseStateToWayoint(state) {
+  static parseStateToWaypoint(state) {
     const waypoint = Object.assign({}, state);
 
     const offers = [];
@@ -411,15 +412,15 @@ export default class EditWaypoint extends SmartView {
     return waypoint;
   }
 
-  static _createOfferSelectionForType(selectedOffers, allOffersForType) {
+  static _createOfferSelectionForType(selectedOffers, allOffersForTypes) {
     const offerSelectionMap = new Map();
 
-    allOffersForType.forEach((value) => {
-      const findOffer = selectedOffers.find((selectedOffer) => selectedOffer.title === value.title);
+    allOffersForTypes.forEach((value) => {
+      const offer = selectedOffers.find((selectedOffer) => selectedOffer.title === value.title);
 
       let isSelected = false;
 
-      if (findOffer) {
+      if (offer) {
         isSelected = true;
       }
 

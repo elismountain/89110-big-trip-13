@@ -6,8 +6,8 @@ import {UpdateType} from '../utils/const.js';
 
 
 export default class Summary {
-  constructor(headerContainer, waypointsModel) {
-    this._headerContainer = headerContainer;
+  constructor(headerElement, waypointsModel) {
+    this._headerElement = headerElement;
     this._waypointsModel = waypointsModel;
 
     this._infoComponent = null;
@@ -30,9 +30,9 @@ export default class Summary {
       this._infoComponent = null;
     }
 
-    const info = getTripInfo(this._waypointsModel.getWaypoints());
+    const info = getTripInfo(this._waypointsModel.get());
     this._infoComponent = new InfoView(info);
-    render(this._headerContainer, this._infoComponent, RenderPosition.AFTERBEGIN);
+    render(this._headerElement, this._infoComponent, RenderPosition.AFTERBEGIN);
   }
 
 
@@ -42,7 +42,7 @@ export default class Summary {
       this._priceComponent = null;
     }
 
-    const total = getTripPrice(this._waypointsModel.getWaypoints());
+    const total = getTripPrice(this._waypointsModel.get());
     this._priceComponent = new TripPriceView(total);
     render(this._infoComponent, this._priceComponent, RenderPosition.BEFOREEND);
   }

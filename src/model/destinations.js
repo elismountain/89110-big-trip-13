@@ -3,15 +3,15 @@ import Observer from '../utils/observer.js';
 export default class Destinations extends Observer {
   constructor() {
     super();
-    this._destinations = new Map();
+    this._items = new Map();
   }
 
-  setDestinations(destinations) {
-    this._destinations = new Map(destinations);
+  set(destinations) {
+    this._items = new Map(destinations);
   }
 
-  getDestinations() {
-    return this._destinations;
+  get() {
+    return this._items;
   }
 
   static adaptToClient(destinations) {

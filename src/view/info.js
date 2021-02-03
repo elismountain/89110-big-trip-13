@@ -1,9 +1,9 @@
 import {formatDate} from '../utils/waypoint.js';
 import AbstractView from "./abstract.js";
 
-export const INFO_DESTINATIONS = 3;
+const INFO_DESTINATIONS = 3;
 
-const createTripInfoTemplate = (info, isLoading) => {
+const createTripInfoTemplate = (data, isLoading) => {
 
   let tripInfoTitle = ``;
 
@@ -11,11 +11,11 @@ const createTripInfoTemplate = (info, isLoading) => {
     tripInfoTitle = `Loading trip summary...`;
   }
 
-  if (info === null && !isLoading) {
+  if (data === null && !isLoading) {
     tripInfoTitle = `Trip doesn't contain any points`;
   }
 
-  if (isLoading || info === null) {
+  if (isLoading || data === null) {
     return `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${tripInfoTitle}</h1>
@@ -23,7 +23,7 @@ const createTripInfoTemplate = (info, isLoading) => {
     </section>`;
   }
 
-  const {startTime, endTime, destinations} = info;
+  const {startTime, endTime, destinations} = data;
 
 
   if (destinations.length > INFO_DESTINATIONS) {
@@ -44,13 +44,13 @@ const createTripInfoTemplate = (info, isLoading) => {
 };
 
 export default class Info extends AbstractView {
-  constructor(info, isLoading) {
+  constructor(data, isLoading) {
     super();
     this._isLoading = isLoading;
-    this._info = info;
+    this._data = data;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._info, this._isLoading);
+    return createTripInfoTemplate(this._data, this._isLoading);
   }
 }

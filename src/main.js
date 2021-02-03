@@ -69,9 +69,9 @@ waypointNewButtonElement.disabled = true;
 waypointNewButtonElement.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   remove(statisticsComponent);
-  siteMenuComponent.setMenuItem(MenuItem.TABLE);
+  siteMenuComponent.setItem(MenuItem.TABLE);
   tripPresenter.destroy();
-  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
   tripPresenter.init();
   if (!isOnline()) {
     toast(`You can't create a new point while offline`);
@@ -93,14 +93,14 @@ const handleSiteMenuClick = (menuItem) => {
       break;
     case MenuItem.STATISTICS:
       tripPresenter.destroy();
-      statisticsComponent = new StatisticsView(waypointsModel.getWaypoints());
+      statisticsComponent = new StatisticsView(waypointsModel.get());
       render(tripWaypointsElement, statisticsComponent, RenderPosition.AFTEREND);
       break;
   }
-  siteMenuComponent.setMenuItem(menuItem);
+  siteMenuComponent.setItem(menuItem);
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+siteMenuComponent.setClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 tripPresenter.init();
@@ -108,14 +108,14 @@ tripPresenter.init();
 const promises = Promise.all([apiWithProvider.getOffers(), apiWithProvider.getDestinations(), apiWithProvider.getWaypoints()]);
 promises
 .then(([offers, destinations, waypoints]) => {
-  offersModel.setOffers(offers);
-  destinationsModel.setDestinations(destinations);
-  waypointsModel.setWaypoints(UpdateType.INIT, waypoints);
+  offersModel.set(offers);
+  destinationsModel.set(destinations);
+  waypointsModel.set(UpdateType.INIT, waypoints);
   waypointNewButtonElement.disabled = false;
   render(menuElement, siteMenuComponent, RenderPosition.AFTEREND);
 })
 .catch(() => {
-  waypointsModel.setWaypoints(UpdateType.INIT, []);
+  waypointsModel.set(UpdateType.INIT, []);
   waypointNewButtonElement.disabled = false;
   render(menuElement, siteMenuComponent, RenderPosition.AFTEREND);
 });

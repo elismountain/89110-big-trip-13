@@ -19,8 +19,8 @@ export const State = {
 export default class Waypoint {
   constructor(cardsListElement, changeData, changeMode, _destinationsModel, _offersModel) {
     this._cardsListElement = cardsListElement;
-    this._cardElement = null;
-    this._cardEditElement = null;
+    this._card = null; //
+    this._cardEdit = null; //
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -39,29 +39,29 @@ export default class Waypoint {
     this._offers = offers;
     this._destinations = destinations;
 
-    const prevWaypointComponent = this._cardElement;
-    const prevWaypointEditComponent = this._cardEditElement;
+    const prevWaypointComponent = this._card;
+    const prevWaypointEditComponent = this._cardEdit;
 
-    this._cardElement = new TripWaypointView(waypoint);
-    this._cardEditElement = new EditWaypointView(this.destinations, this.offers, waypoint);
+    this._card = new TripWaypointView(waypoint);
+    this._cardEditElement = new EditWaypointView(this._destinations, this._offers, waypoint);
 
-    this._cardElement.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
-    this._cardElement.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._cardEditElement.setRollupButtonClickHandler(this._handleClickRollupButtonDown);
-    this._cardEditElement.setFormSubmitHandler(this._handleFormSubmit);
-    this._cardEditElement.setResetButtonClickHandler(this._handleWaypointEditResetButtonClick);
+    this._card.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
+    this._card.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._cardEdit.setRollupButtonClickHandler(this._handleClickRollupButtonDown);
+    this._cardEdit.setFormSubmitHandler(this._handleFormSubmit);
+    this._cardEdit.setResetButtonClickHandler(this._handleWaypointEditResetButtonClick);
 
     if ((prevWaypointComponent === null) || (prevWaypointEditComponent === null)) {
-      render(this._cardsListElement, this._cardElement, RenderPosition.BEFOREEND);
+      render(this._cardsListElement, this._card, RenderPosition.BEFOREEND);
       return;
     }
 
     if (this._mode === Mode.DEFAULT) {
-      replace(this._cardElement, prevWaypointComponent);
+      replace(this._card, prevWaypointComponent);
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._cardElement, prevWaypointEditComponent);
+      replace(this._card, prevWaypointEditComponent);
     }
 
     remove(prevWaypointComponent);
@@ -77,7 +77,7 @@ export default class Waypoint {
 
   setViewState(state) {
     const resetFormState = () => {
-      this._cardEditElement.updateData({
+      this._cardEdit.updateData({
         isDisabled: false,
         isSaving: false,
         isDeleting: false
@@ -86,45 +86,45 @@ export default class Waypoint {
 
     switch (state) {
       case State.SAVING:
-        this._cardEditElement.updateData({
+        this._cardEdit.updateData({
           isDisabled: true,
           isSaving: true
         });
         break;
       case State.DELETING:
-        this._cardEditElement.updateData({
+        this._cardEdit.updateData({
           isDisabled: true,
           isDeleting: true
         });
         break;
       case State.ABORTING:
-        this._cardElement.shake(resetFormState);
-        this._cardEditElement.shake(resetFormState);
+        this._card.shake(resetFormState);
+        this._cardEdit.shake(resetFormState);
         break;
     }
   }
 
   destroy() {
-    remove(this._cardElement);
-    remove(this._cardEditElement);
+    remove(this._card);
+    remove(this._cardEdit);
   }
 
   _switchToEdit() {
-    replace(this._cardEditElement, this._cardElement);
+    replace(this._cardEdit, this._card);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _switchToDisplay() {
-    this._cardEditElement.reset(this._waypoint);
-    replace(this._cardElement, this._cardEditElement);
+    this._cardEdit.reset(this._waypoint);
+    replace(this._card, this._cardEdit);
     document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._mode = Mode.DEFAULT;
   }
 
   _handleClickRollupButtonUp() {
-    this._switchToDisplay();
+    this._switchToEdit();
   }
 
   _handleClickRollupButtonDown() {
@@ -132,7 +132,7 @@ export default class Waypoint {
       toast(`You can't edit while offline`);
       return;
     }
-    this._switchToEdit();
+    this._switchToDisplay();
   }
 
   _escKeyDownHandler(evt) {

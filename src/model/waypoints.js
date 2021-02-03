@@ -3,53 +3,53 @@ import Observer from '../utils/observer.js';
 export default class Waypoints extends Observer {
   constructor() {
     super();
-    this._waypoints = [];
+    this._points = [];
   }
 
-  setWaypoints(updateType, waypoints) {
-    this._waypoints = waypoints.slice();
+  set(updateType, waypoints) {
+    this._points = waypoints.slice();
     this._notify(updateType);
   }
 
-  getWaypoints() {
-    return this._waypoints;
+  get() {
+    return this._points;
   }
 
-  updateWaypoint(updateType, update) {
-    const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
+  update(updateType, update) {
+    const index = this._points.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
       throw new Error(`Can't update a non existing point`);
     }
 
-    this._waypoints = [
-      ...this._waypoints.slice(0, index),
+    this._points = [
+      ...this._points.slice(0, index),
       update,
-      ...this._waypoints.slice(index + 1)
+      ...this._points.slice(index + 1)
     ];
 
     this._notify(updateType, update);
   }
 
-  addWaypoint(updateType, update) {
-    this._waypoints = [
+  add(updateType, update) {
+    this._points = [
       update,
-      ...this._waypoints
+      ...this._points
     ];
 
     this._notify(updateType, updateType);
   }
 
-  deletePoint(updateType, update) {
-    const index = this._waypoints.findIndex((waypoint) => waypoint.id === update.id);
+  delete(updateType, update) {
+    const index = this._points.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
       throw new Error(`Can't delete a non existing point`);
     }
 
-    this._waypoints = [
-      ...this._waypoints.slice(0, index),
-      ...this._waypoints.slice(index + 1)
+    this._points = [
+      ...this._points.slice(0, index),
+      ...this._points.slice(index + 1)
     ];
 
     this._notify(updateType, update);

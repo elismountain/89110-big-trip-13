@@ -73,8 +73,8 @@ export default class TripWaypoint extends AbstractView {
     super();
     this._waypoint = waypoint;
 
-    this._onRollupButtonClickHandler = this._onRollupButtonClickHandler.bind(this);
-    this._onFavoriteClickHandler = this._onFavoriteClickHandler.bind(this);
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
+    this._onFavoriteClick = this._onFavoriteClick.bind(this);
   }
 
   getTemplate() {
@@ -83,21 +83,21 @@ export default class TripWaypoint extends AbstractView {
 
   setRollupButtonClickHandler(callback) {
     this._callback.clickCard = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onRollupButtonClickHandler);
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onRollupButtonClick);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.clickFavorite = callback;
     this.getElement().querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, this._onFavoriteClickHandler);
+      .addEventListener(`click`, this._onFavoriteClick);
   }
 
-  _onRollupButtonClickHandler(evt) {
+  _onRollupButtonClick(evt) {
     evt.preventDefault();
     this._callback.clickCard();
   }
 
-  _onFavoriteClickHandler(evt) {
+  _onFavoriteClick(evt) {
     evt.preventDefault();
     this._callback.clickFavorite();
   }
