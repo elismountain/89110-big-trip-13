@@ -5,10 +5,9 @@ import LoadingView from '../view/loading.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {sortWaypointDateAsc, sortWaypointPriceDesc, sortWaypointDurationDesc} from '../utils/waypoint.js';
 import {filter} from '../utils/filter.js';
-import {SortType, UserAction, UpdateType} from '../utils/const.js';
-import WaypointPresenter, {State as WaypointPresenterViewState} from '../presenter/waypoint.js';
+import {SortType, UserAction, UpdateType, State as WaypointPresenterViewState} from '../utils/const.js';
+import WaypointPresenter from '../presenter/waypoint.js';
 import WaypointNewPresenter from '../presenter/new-waypoint.js';
-
 
 export default class Trip {
   constructor(pageElement, waypointElement, waypointsModel, filterModel, offersModel, destinationsModel, api) {
@@ -78,11 +77,11 @@ export default class Trip {
 
   _renderSort() {
     if (this._sortComponent !== null) {
+      remove(this._sortComponent);
       this._sortComponent = null;
     }
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
-
     render(this._waypointElement, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
@@ -120,8 +119,7 @@ export default class Trip {
 
     this._renderSort();
     render(this._waypointElement, this._cardsListComponent, RenderPosition.BEFOREEND);
-    this._renderWaypoint();
-    // this._renderWaypoint(waypoint);
+    this._renderWaypoints(waypoints);
   }
 
   _clearAll({resetSortType = false} = {}) {
@@ -156,7 +154,7 @@ export default class Trip {
       case UserAction.DELETE_POINT:
         this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.DELETING);
         this._api.deleteWaypoint(update)
-        .then(() => this._waypointsModel.delete(updateType, update))
+        .then(() => this._waypointPresenterMap.get(update.id).destroy())
         .catch(() => this._waypointPresenterMap.get(update.id).setViewState(WaypointPresenterViewState.ABORTING));
         break;
     }

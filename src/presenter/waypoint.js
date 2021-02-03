@@ -3,24 +3,19 @@ import EditWaypointView from '../view/edit-waypoint.js';
 import {isEscEvent, isOnline} from '../utils/common.js';
 import {toast} from '../utils/toast/toast.js';
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
-import {UserAction, UpdateType} from '../utils/const.js';
+import {UserAction, UpdateType, State} from '../utils/const.js';
 
 const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`
 };
 
-export const State = {
-  SAVING: `SAVING`,
-  DELETING: `DELETING`,
-  ABORTING: `ABORTING`
-};
 
 export default class Waypoint {
-  constructor(cardsListElement, changeData, changeMode, _destinationsModel, _offersModel) {
+  constructor(cardsListElement, changeData, changeMode) {
     this._cardsListElement = cardsListElement;
-    this._card = null; //
-    this._cardEdit = null; //
+    this._card = null;
+    this._cardEdit = null;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -28,7 +23,7 @@ export default class Waypoint {
 
     this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
     this._handleClickRollupButtonDown = this._handleClickRollupButtonDown.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleWaypointEditResetButtonClick = this._handleWaypointEditResetButtonClick.bind(this);
@@ -111,7 +106,7 @@ export default class Waypoint {
 
   _switchToEdit() {
     replace(this._cardEdit, this._card);
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
@@ -119,7 +114,7 @@ export default class Waypoint {
   _switchToDisplay() {
     this._cardEdit.reset(this._waypoint);
     replace(this._card, this._cardEdit);
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEFAULT;
   }
 
@@ -148,7 +143,7 @@ export default class Waypoint {
     );
   }
 
-  _escKeyDownHandler(evt) {
+  _onEscKeyDown(evt) {
     isEscEvent(evt, () => {
       this._switchToDisplay();
     });

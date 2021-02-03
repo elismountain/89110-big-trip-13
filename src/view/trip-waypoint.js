@@ -15,9 +15,9 @@ const createWaypointOfferTemplates = ({title, price}) => {
 };
 
 const createWaypointOffersTemplate = (offers) => {
-  return offers.size > 0 ? `<h4 class="visually-hidden">Offers:</h4>
+  return offers.length > 0 ? `<h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${Array.from(offers).map(([, offerValue]) => createWaypointOfferTemplates(offerValue)).join(``)}
+    ${Array.from(offers).map((offerValue) => createWaypointOfferTemplates(offerValue)).join(``)}
   </ul>` : ``;
 };
 
@@ -26,6 +26,7 @@ const createCardTemplate = (waypoint) => {
   const {type, startTime, endTime, destination, price, isFavorite, offers} = waypoint;
 
   const offersTemplate = createWaypointOffersTemplate(offers);
+
 
   const formattedDuration = formatDuration(startTime, endTime);
 

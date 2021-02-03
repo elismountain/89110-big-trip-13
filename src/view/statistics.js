@@ -2,7 +2,7 @@ import SmartView from '../view/smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getWayointTypes, sumPriceByType, countDurationByWaypointType} from '../utils/statistics.js';
-import {formatDurationMs} from '../utils/waypoint.js';
+import {formatDuration} from '../utils/waypoint.js';
 
 const renderMoneyChart = (moneyCtx, waypoints) => {
   const types = getWayointTypes(waypoints);
@@ -18,7 +18,8 @@ const renderMoneyChart = (moneyCtx, waypoints) => {
         data: prices,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: 44
       }]
     },
     options: {
@@ -89,7 +90,8 @@ const renderTypeChart = (typeCtx, waypoints) => {
         data: typeCounts,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: 44
       }]
     },
     options: {
@@ -160,7 +162,8 @@ const renderTimeChart = (moneyCtx, waypoints) => {
         data: durationsByType,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: 44
       }]
     },
     options: {
@@ -172,7 +175,7 @@ const renderTimeChart = (moneyCtx, waypoints) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${formatDurationMs(val)}`
+          formatter: (val) => `${formatDuration(val)}`
         }
       },
       title: {

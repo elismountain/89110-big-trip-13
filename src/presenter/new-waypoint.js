@@ -14,7 +14,7 @@ export default class WaypointNew {
     this._destroyCallback = null;
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._handleClickRollupButtonUp = this._handleClickRollupButtonUp.bind(this);
   }
 
@@ -25,14 +25,14 @@ export default class WaypointNew {
       return;
     }
 
-    this._cardEdit = new EditWaypointView(offersModel.get(), destinationsModel.get());
+    this._cardEdit = new EditWaypointView(offersModel, destinationsModel);
     this._cardEdit.setFormSubmitHandler(this._handleFormSubmit);
     this._cardEdit.setResetButtonClickHandler(this._handleDeleteClick);
     this._cardEdit.setRollupButtonClickHandler(this._handleClickRollupButtonUp);
 
     render(this._cardsListElement, this._cardEdit, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
 
   }
 
@@ -48,7 +48,7 @@ export default class WaypointNew {
     remove(this._cardEdit);
     this._cardEdit = null;
 
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   setSaving() {
@@ -87,7 +87,7 @@ export default class WaypointNew {
     this.destroy();
   }
 
-  _escKeyDownHandler(evt) {
+  _onEscKeyDown(evt) {
     isEscEvent(evt, () => {
       this.destroy();
     });

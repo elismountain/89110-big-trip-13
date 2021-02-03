@@ -6,6 +6,12 @@ export const SortType = {
   OFFER: `sort-offer`
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
 export const UserAction = {
   UPDATE_POINT: `UPDATE_POINT`,
   ADD_POINT: `ADD_POINT`,
